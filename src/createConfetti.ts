@@ -55,7 +55,7 @@ type UpdatableValueConfigNumber = StaticConfigNumber | LinearConfigNumber;
 type UpdatableValueConfigVector2 = StaticConfigVector2 | LinearConfigVector2;
 type UpdatableValueConfigVector3 = StaticConfigVector3 | LinearConfigVector3;
 
-interface CreateConfettiArgs {
+export interface CreateConfettiArgs {
   position: UpdatableValueConfigVector2;
   velocity: UpdatableValueConfigVector2;
   rotation: UpdatableValueConfigVector3;
