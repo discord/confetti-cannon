@@ -9,12 +9,25 @@ import {
   StaticUpdatableValue,
 } from "./UpdatableValueImplementations";
 
+function calculateAirResistance(
+  externalForce: number,
+  dragCoefficient: number,
+  velocity: number,
+  directionMultiplier: 1 | -1
+) {
+  return (
+    Math.min(externalForce, dragCoefficient * velocity * velocity) *
+    directionMultiplier
+  );
+}
+
 export default class Confetti {
   position: UpdatableVector2Value;
   velocity: UpdatableVector2Value;
   rotation: UpdatableVector3Value;
   width: UpdatableValue;
   height: UpdatableValue;
+  dragCoefficient: UpdatableValue;
 
   _lastUpdatedAt: number;
 
@@ -24,7 +37,7 @@ export default class Confetti {
       new StaticUpdatableValue(y)
     );
     this.velocity = new UpdatableVector2Value(
-      new LinearUpdatableValue(0, 5),
+      new StaticUpdatableValue(0),
       new StaticUpdatableValue(0)
     );
     this.rotation = new UpdatableVector3Value(
@@ -32,6 +45,7 @@ export default class Confetti {
       new LinearUpdatableValue(0, 25),
       new LinearUpdatableValue(0, 5)
     );
+    this.dragCoefficient = new StaticUpdatableValue(0.001);
 
     this.height = new StaticUpdatableValue(10);
     this.width = new StaticUpdatableValue(10);
@@ -45,10 +59,30 @@ export default class Confetti {
 
     this.rotation.update(deltaTime);
 
+    this.dragCoefficient.update(deltaTime);
+
     const gravityForce = -environment.gravity * deltaTime;
+    const windForce = environment.wind * deltaTime;
+
+    const airResistanceMultiplierY = this.velocity.y > 0 ? -1 : 1;
+    const airResistanceForceY = calculateAirResistance(
+      gravityForce,
+      this.dragCoefficient.value,
+      this.velocity.y,
+      airResistanceMultiplierY
+    );
+
+    const airResistanceMultiplierX = this.velocity.x > 0 ? -1 : 1;
+    const airResistanceForceX = calculateAirResistance(
+      windForce,
+      this.dragCoefficient.value,
+      this.velocity.x,
+      airResistanceMultiplierX
+    );
 
     this.velocity.update(deltaTime);
-    this.velocity.y += gravityForce;
+    this.velocity.y += gravityForce + airResistanceForceY;
+    this.velocity.x += windForce + airResistanceForceX;
 
     this.position.update(deltaTime);
     this.position.y += (this.velocity.y / devicePixelRatio) * deltaTime;
