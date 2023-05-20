@@ -4,10 +4,6 @@ import {
   UpdatableVector2Value,
   UpdatableVector3Value,
 } from "./UpdatableValue";
-import {
-  LinearUpdatableValue,
-  StaticUpdatableValue,
-} from "./UpdatableValueImplementations";
 
 function calculateAirResistance(
   externalForce: number,
@@ -21,6 +17,16 @@ function calculateAirResistance(
   );
 }
 
+type ConfettiArgs = {
+  position: UpdatableVector2Value;
+  velocity: UpdatableVector2Value;
+  rotation: UpdatableVector3Value;
+  width: UpdatableValue;
+  height: UpdatableValue;
+  dragCoefficient: UpdatableValue;
+  opacity: UpdatableValue;
+};
+
 export default class Confetti {
   position: UpdatableVector2Value;
   velocity: UpdatableVector2Value;
@@ -32,26 +38,16 @@ export default class Confetti {
 
   _lastUpdatedAt: number;
 
-  constructor(x: number, y: number) {
-    this.position = new UpdatableVector2Value(
-      new StaticUpdatableValue(x),
-      new StaticUpdatableValue(y)
-    );
-    this.velocity = new UpdatableVector2Value(
-      new StaticUpdatableValue(0),
-      new StaticUpdatableValue(0)
-    );
-    this.rotation = new UpdatableVector3Value(
-      new LinearUpdatableValue(0, 10),
-      new LinearUpdatableValue(0, 25),
-      new LinearUpdatableValue(0, 5)
-    );
-    this.dragCoefficient = new StaticUpdatableValue(0.001);
+  constructor(args: ConfettiArgs) {
+    this.position = args.position;
+    this.velocity = args.velocity;
+    this.rotation = args.rotation;
+    this.dragCoefficient = args.dragCoefficient;
 
-    this.height = new StaticUpdatableValue(10);
-    this.width = new StaticUpdatableValue(10);
+    this.width = args.width;
+    this.height = args.height;
 
-    this.opacity = new StaticUpdatableValue(1);
+    this.opacity = args.opacity;
 
     this._lastUpdatedAt = Date.now();
   }
