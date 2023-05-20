@@ -1,23 +1,40 @@
 import Environment from "./Environment";
-import { Vector2, Vector3 } from "./Types";
+import {
+  UpdatableValue,
+  UpdatableVector2Value,
+  UpdatableVector3Value,
+} from "./UpdatableValue";
+import {
+  LinearUpdatableValue,
+  StaticUpdatableValue,
+} from "./UpdatableValueImplementations";
 
 export default class Confetti {
-  position: Vector2;
-  velocity: Vector2;
-  rotation: Vector3;
-
-  width: number;
-  height: number;
+  position: UpdatableVector2Value;
+  velocity: UpdatableVector2Value;
+  rotation: UpdatableVector3Value;
+  width: UpdatableValue;
+  height: UpdatableValue;
 
   _lastUpdatedAt: number;
 
   constructor(x: number, y: number) {
-    this.position = { x, y };
-    this.velocity = { x: 0, y: 0 };
-    this.rotation = { x: 0, y: 0, z: 0 };
+    this.position = new UpdatableVector2Value(
+      new StaticUpdatableValue(x),
+      new StaticUpdatableValue(y)
+    );
+    this.velocity = new UpdatableVector2Value(
+      new LinearUpdatableValue(0, 5),
+      new StaticUpdatableValue(0)
+    );
+    this.rotation = new UpdatableVector3Value(
+      new LinearUpdatableValue(0, 10),
+      new LinearUpdatableValue(0, 25),
+      new LinearUpdatableValue(0, 5)
+    );
 
-    this.height = 10;
-    this.width = 10;
+    this.height = new StaticUpdatableValue(10);
+    this.width = new StaticUpdatableValue(10);
 
     this._lastUpdatedAt = Date.now();
   }
@@ -26,15 +43,19 @@ export default class Confetti {
     const newUpdateTime = Date.now();
     const deltaTime = (newUpdateTime - this._lastUpdatedAt) / 100;
 
-    this.rotation.x += 25 * deltaTime;
-    this.rotation.y += 25 * deltaTime;
-    this.rotation.z += 25 * deltaTime;
+    this.rotation.update(deltaTime);
 
     const gravityForce = -environment.gravity * deltaTime;
 
+    this.velocity.update(deltaTime);
     this.velocity.y += gravityForce;
 
+    this.position.update(deltaTime);
     this.position.y += (this.velocity.y / devicePixelRatio) * deltaTime;
+    this.position.x += (this.velocity.x / devicePixelRatio) * deltaTime;
+
+    this.width.update(deltaTime);
+    this.height.update(deltaTime);
 
     this._lastUpdatedAt = newUpdateTime;
   }
@@ -46,8 +67,8 @@ export default class Confetti {
   ) {
     context.save();
 
-    const rotationPointX = this.width / 2;
-    const rotationPointY = this.width / 2;
+    const rotationPointX = this.width.value / 2;
+    const rotationPointY = this.height.value / 2;
 
     context.setTransform(
       new DOMMatrix()
@@ -60,10 +81,10 @@ export default class Confetti {
 
     context.beginPath();
     context.rect(
-      -this.width,
-      -this.height,
-      this.width * devicePixelRatio,
-      this.height * devicePixelRatio
+      -this.width.value * 1.5,
+      -this.height.value * 1.5,
+      this.width.value * devicePixelRatio,
+      this.height.value * devicePixelRatio
     );
     context.fill();
 
@@ -74,16 +95,17 @@ export default class Confetti {
     return (
       // top
       (this.velocity.y < 0 &&
-        this.position.y + this.height * devicePixelRatio < 0) ||
+        this.position.y + this.height.value * devicePixelRatio < 0) ||
       // bottom
       (this.velocity.y > 0 &&
-        this.position.y - this.height * devicePixelRatio > canvas.height) ||
+        this.position.y - this.height.value * devicePixelRatio >
+          canvas.height) ||
       // left
       (this.velocity.x > 0 &&
-        this.position.x - this.width * devicePixelRatio > canvas.width) ||
+        this.position.x - this.width.value * devicePixelRatio > canvas.width) ||
       // right
       (this.velocity.x < 0 &&
-        this.position.x + this.width * devicePixelRatio < 0)
+        this.position.x + this.width.value * devicePixelRatio < 0)
     );
   }
 }
