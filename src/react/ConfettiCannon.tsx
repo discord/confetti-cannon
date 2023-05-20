@@ -1,0 +1,3 @@
+function ConfettiCannon() {
+  return null;
+}
