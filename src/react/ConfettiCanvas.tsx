@@ -60,7 +60,9 @@ export default function ConfettiCanvas() {
       confetti.update(environment.current, devicePixelRatio);
       confetti.draw(spriteCanvas, context, devicePixelRatio);
 
-      if (confetti.shouldDestroy(canvasRef, devicePixelRatio)) {
+      if (
+        confetti.shouldDestroy(canvasRef, environment.current, devicePixelRatio)
+      ) {
         allConfetti.current.delete(id);
       }
     });

@@ -122,19 +122,30 @@ export default class Confetti {
     context.restore();
   }
 
-  shouldDestroy(canvas: HTMLCanvasElement, devicePixelRatio: number) {
+  shouldDestroy(
+    canvas: HTMLCanvasElement,
+    environment: Environment,
+    devicePixelRatio: number
+  ) {
     return (
       // opacity
       this.opacity.value < 0 ||
+      // top
+      (environment.gravity >= 0 &&
+        this.velocity.y < 0 &&
+        this.position.y + this.height.value * devicePixelRatio < 0) ||
       // bottom
-      (this.velocity.y > 0 &&
+      (environment.gravity <= 0 &&
+        this.velocity.y > 0 &&
         this.position.y - this.height.value * devicePixelRatio >
           canvas.height) ||
       // left
-      (this.velocity.x > 0 &&
+      (environment.wind >= 0 &&
+        this.velocity.x > 0 &&
         this.position.x - this.width.value * devicePixelRatio > canvas.width) ||
       // right
-      (this.velocity.x < 0 &&
+      (environment.wind <= 0 &&
+        this.velocity.x < 0 &&
         this.position.x + this.width.value * devicePixelRatio < 0)
     );
   }
