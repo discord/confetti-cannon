@@ -1,6 +1,7 @@
 import * as React from "react";
 import Confetti from "../Confetti";
 import createConfetti from "../createConfetti";
+import Environment from "../Environment";
 
 function getDevicePixelRatio() {
   return window.devicePixelRatio;
@@ -28,9 +29,9 @@ export default function ConfettiCanvas() {
   const allConfetti = React.useRef<
     Map<string, { confetti: Confetti; spriteCanvas: HTMLCanvasElement }>
   >(new Map());
+  const environment = React.useRef(new Environment());
 
   const animationFrameRequestId = React.useRef<number | null>(null);
-  const lastUpdateTime = React.useRef(Date.now());
 
   const setCanvasSize = React.useCallback(() => {
     if (canvas.current != null) {
@@ -55,18 +56,14 @@ export default function ConfettiCanvas() {
 
     const devicePixelRatio = getDevicePixelRatio();
 
-    const newUpdateTime = Date.now();
-
     allConfetti.current.forEach(({ confetti, spriteCanvas }, id) => {
-      confetti.update(newUpdateTime - lastUpdateTime.current, devicePixelRatio);
+      confetti.update(environment.current, devicePixelRatio);
       confetti.draw(spriteCanvas, context, devicePixelRatio);
 
-      if (confetti.shouldDestroy(canvasRef)) {
+      if (confetti.shouldDestroy(canvasRef, devicePixelRatio)) {
         allConfetti.current.delete(id);
       }
     });
-
-    lastUpdateTime.current = newUpdateTime;
 
     if (allConfetti.current.size > 0) {
       animationFrameRequestId.current =

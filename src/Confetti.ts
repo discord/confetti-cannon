@@ -1,30 +1,42 @@
-export default class Confetti {
-  x: number;
-  y: number;
+import Environment from "./Environment";
+import { Vector2, Vector3 } from "./Types";
 
-  rotationX: number;
-  rotationY: number;
-  rotationZ: number;
+export default class Confetti {
+  position: Vector2;
+  velocity: Vector2;
+  rotation: Vector3;
 
   width: number;
   height: number;
 
-  constructor(x: number, y: number) {
-    this.x = x;
-    this.y = y;
+  _lastUpdatedAt: number;
 
-    this.rotationX = 0;
-    this.rotationY = 0;
-    this.rotationZ = 0;
+  constructor(x: number, y: number) {
+    this.position = { x, y };
+    this.velocity = { x: 0, y: 0 };
+    this.rotation = { x: 0, y: 0, z: 0 };
 
     this.height = 10;
     this.width = 10;
+
+    this._lastUpdatedAt = Date.now();
   }
 
-  update(deltaTime: number, devicePixelRatio: number) {
-    this.rotationX += 0.1 * deltaTime;
-    this.rotationY += 0.1 * deltaTime;
-    this.rotationZ += 0.1 * deltaTime;
+  update(environment: Environment, devicePixelRatio: number) {
+    const newUpdateTime = Date.now();
+    const deltaTime = (newUpdateTime - this._lastUpdatedAt) / 100;
+
+    this.rotation.x += 25 * deltaTime;
+    this.rotation.y += 25 * deltaTime;
+    this.rotation.z += 25 * deltaTime;
+
+    const gravityForce = -environment.gravity * deltaTime;
+
+    this.velocity.y += gravityForce;
+
+    this.position.y += (this.velocity.y / devicePixelRatio) * deltaTime;
+
+    this._lastUpdatedAt = newUpdateTime;
   }
 
   draw(
@@ -39,8 +51,11 @@ export default class Confetti {
 
     context.setTransform(
       new DOMMatrix()
-        .translateSelf(this.x + rotationPointX, this.y + rotationPointY)
-        .rotateSelf(this.rotationX, this.rotationY, this.rotationZ)
+        .translateSelf(
+          this.position.x + rotationPointX,
+          this.position.y + rotationPointY
+        )
+        .rotateSelf(this.rotation.x, this.rotation.y, this.rotation.z)
     );
 
     context.beginPath();
@@ -55,7 +70,20 @@ export default class Confetti {
     context.restore();
   }
 
-  shouldDestroy(canvas: HTMLCanvasElement) {
-    return false;
+  shouldDestroy(canvas: HTMLCanvasElement, devicePixelRatio: number) {
+    return (
+      // top
+      (this.velocity.y < 0 &&
+        this.position.y + this.height * devicePixelRatio < 0) ||
+      // bottom
+      (this.velocity.y > 0 &&
+        this.position.y - this.height * devicePixelRatio > canvas.height) ||
+      // left
+      (this.velocity.x > 0 &&
+        this.position.x - this.width * devicePixelRatio > canvas.width) ||
+      // right
+      (this.velocity.x < 0 &&
+        this.position.x + this.width * devicePixelRatio < 0)
+    );
   }
 }
