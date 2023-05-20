@@ -30,6 +30,7 @@ export default function ConfettiCanvas() {
   >(new Map());
 
   const animationFrameRequestId = React.useRef<number | null>(null);
+  const lastUpdateTime = React.useRef(Date.now());
 
   const setCanvasSize = React.useCallback(() => {
     if (canvas.current != null) {
@@ -54,14 +55,18 @@ export default function ConfettiCanvas() {
 
     const devicePixelRatio = getDevicePixelRatio();
 
+    const newUpdateTime = Date.now();
+
     allConfetti.current.forEach(({ confetti, spriteCanvas }, id) => {
-      confetti.update(devicePixelRatio);
+      confetti.update(newUpdateTime - lastUpdateTime.current, devicePixelRatio);
       confetti.draw(spriteCanvas, context, devicePixelRatio);
 
       if (confetti.shouldDestroy(canvasRef)) {
         allConfetti.current.delete(id);
       }
     });
+
+    lastUpdateTime.current = newUpdateTime;
 
     if (allConfetti.current.size > 0) {
       animationFrameRequestId.current =
@@ -76,9 +81,9 @@ export default function ConfettiCanvas() {
     (e: React.MouseEvent) => {
       const { x, y } = getClickPosition(e, canvas.current);
 
-      // TODO sprite canvas is incorrect
       allConfetti.current.set(`${Math.random()}`, {
         confetti: createConfetti(x, y),
+        // TODO: sprite canvas is incorrect
         spriteCanvas: canvas.current!,
       });
 
