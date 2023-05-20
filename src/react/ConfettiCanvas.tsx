@@ -7,23 +7,19 @@ function getDevicePixelRatio() {
   return window.devicePixelRatio;
 }
 
-function getClickPosition(
-  e: React.MouseEvent,
-  canvas: HTMLCanvasElement | null
-) {
-  if (canvas == null) {
-    throw new Error("Canvas should not be null");
-  }
+type ConfettiCanvasProps = {
+  onClick?: (e: React.MouseEvent) => void;
+};
 
-  const rect = canvas.getBoundingClientRect();
-
-  return {
-    x: e.clientX - rect.left,
-    y: e.clientY - rect.top,
-  };
+interface ConfettiCanvasHandle {
+  addConfetti: (x: number, y: number) => void;
+  getCanvas: () => HTMLCanvasElement | null;
 }
 
-export default function ConfettiCanvas() {
+const ConfettiCanvas: React.ForwardRefRenderFunction<
+  ConfettiCanvasHandle,
+  ConfettiCanvasProps
+> = ({ onClick }, forwardedRef) => {
   const canvas = React.useRef<HTMLCanvasElement | null>(null);
 
   const allConfetti = React.useRef<
@@ -77,9 +73,7 @@ export default function ConfettiCanvas() {
   }, []);
 
   const addConfetti = React.useCallback(
-    (e: React.MouseEvent) => {
-      const { x, y } = getClickPosition(e, canvas.current);
-
+    (x: number, y: number) => {
       allConfetti.current.set(`${Math.random()}`, {
         confetti: createConfetti({
           position: {
@@ -125,6 +119,19 @@ export default function ConfettiCanvas() {
     [handleTick]
   );
 
+  const getCanvas = React.useCallback(() => canvas.current, []);
+
+  React.useImperativeHandle(
+    forwardedRef,
+    () => {
+      return {
+        addConfetti,
+        getCanvas,
+      };
+    },
+    [addConfetti, getCanvas]
+  );
+
   React.useEffect(() => {
     if (canvas.current != null) {
       setCanvasSize();
@@ -134,8 +141,10 @@ export default function ConfettiCanvas() {
   return (
     <canvas
       ref={canvas}
-      onClick={addConfetti}
+      onClick={onClick}
       style={{ border: "1px solid black" }}
     />
   );
-}
+};
+
+export default React.forwardRef(ConfettiCanvas);
