@@ -86,8 +86,9 @@ export default function ConfettiCanvas() {
             maxValue: { x: x + 25, y: y + 25 },
           },
           velocity: {
-            type: "static",
-            value: { x: 0, y: 0 },
+            type: "static-random",
+            minValue: { x: -50, y: -100 },
+            maxValue: { x: 50, y: -150 },
           },
           rotation: {
             type: "linear-random",
