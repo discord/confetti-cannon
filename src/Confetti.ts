@@ -108,22 +108,16 @@ export default class Confetti {
 
     context.globalAlpha = this.opacity.value;
 
-    const rotationPointX = this.width.value / 2;
-    const rotationPointY = this.height.value / 2;
-
     context.setTransform(
       new DOMMatrix()
-        .translateSelf(
-          this.position.x + rotationPointX,
-          this.position.y + rotationPointY
-        )
+        .translateSelf(this.position.x, this.position.y)
         .rotateSelf(this.rotation.x, this.rotation.y, this.rotation.z)
     );
 
     context.beginPath();
     context.rect(
-      -this.width.value * 1.5,
-      -this.height.value * 1.5,
+      -this.width.value,
+      -this.height.value,
       this.width.value * devicePixelRatio,
       this.height.value * devicePixelRatio
     );
