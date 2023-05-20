@@ -3,8 +3,11 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import ConfettiCanvas from "../react/ConfettiCanvas";
 import { CreateConfettiArgs } from "../createConfetti";
+import Environment from "../Environment";
 
 interface ConfettiCanvasStoryWrapperProps {
+  gravity: number;
+  wind: number;
   positionSpreadX: number;
   positionSpreadY: number;
   minVelocityX: number;
@@ -31,6 +34,8 @@ interface ConfettiCanvasStoryWrapperProps {
 }
 
 function ConfettiCanvasStoryWrapper({
+  gravity,
+  wind,
   positionSpreadX,
   positionSpreadY,
   minVelocityX,
@@ -56,6 +61,10 @@ function ConfettiCanvasStoryWrapper({
   maxSize,
 }: ConfettiCanvasStoryWrapperProps) {
   const ref = React.useRef<React.ElementRef<typeof ConfettiCanvas>>(null);
+  const environment = React.useMemo(
+    () => new Environment({ gravity, wind }),
+    [gravity, wind]
+  );
 
   const handleClick = (e) => {
     const { x, y } = getClickPosition(e, ref.current?.getCanvas());
@@ -104,7 +113,9 @@ function ConfettiCanvasStoryWrapper({
     ref.current?.addConfetti(createConfettiArgs);
   };
 
-  return <ConfettiCanvas ref={ref} onClick={handleClick} />;
+  return (
+    <ConfettiCanvas ref={ref} onClick={handleClick} environment={environment} />
+  );
 }
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
@@ -136,6 +147,8 @@ function getClickPosition(
 
 export const Example: Story = {
   args: {
+    gravity: -9.8,
+    wind: 5,
     positionSpreadX: 25,
     positionSpreadY: 25,
     minVelocityX: -50,

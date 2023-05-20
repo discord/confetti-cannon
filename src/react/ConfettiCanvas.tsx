@@ -8,6 +8,7 @@ function getDevicePixelRatio() {
 }
 
 type ConfettiCanvasProps = {
+  environment: Environment;
   onClick?: (e: React.MouseEvent) => void;
 };
 
@@ -19,13 +20,12 @@ interface ConfettiCanvasHandle {
 const ConfettiCanvas: React.ForwardRefRenderFunction<
   ConfettiCanvasHandle,
   ConfettiCanvasProps
-> = ({ onClick }, forwardedRef) => {
+> = ({ environment, onClick }, forwardedRef) => {
   const canvas = React.useRef<HTMLCanvasElement | null>(null);
 
   const allConfetti = React.useRef<
     Map<string, { confetti: Confetti; spriteCanvas: HTMLCanvasElement }>
   >(new Map());
-  const environment = React.useRef(new Environment());
 
   const animationFrameRequestId = React.useRef<number | null>(null);
 
@@ -38,6 +38,7 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
   }, []);
 
   const handleTick = React.useCallback(() => {
+    console.log("environment", environment);
     const canvasRef = canvas.current;
     if (canvasRef == null) {
       return;
@@ -53,12 +54,10 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
     const devicePixelRatio = getDevicePixelRatio();
 
     allConfetti.current.forEach(({ confetti, spriteCanvas }, id) => {
-      confetti.update(environment.current, devicePixelRatio);
+      confetti.update(environment, devicePixelRatio);
       confetti.draw(spriteCanvas, context, devicePixelRatio);
 
-      if (
-        confetti.shouldDestroy(canvasRef, environment.current, devicePixelRatio)
-      ) {
+      if (confetti.shouldDestroy(canvasRef, environment, devicePixelRatio)) {
         allConfetti.current.delete(id);
       }
     });
@@ -70,7 +69,7 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
       context.clearRect(0, 0, canvasRef.width, canvasRef.height);
       animationFrameRequestId.current = null;
     }
-  }, []);
+  }, [environment]);
 
   const addConfetti = React.useCallback(
     (args: CreateConfettiArgs) => {
