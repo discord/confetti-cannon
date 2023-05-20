@@ -79,7 +79,38 @@ export default function ConfettiCanvas() {
       const { x, y } = getClickPosition(e, canvas.current);
 
       allConfetti.current.set(`${Math.random()}`, {
-        confetti: createConfetti(x, y),
+        confetti: createConfetti({
+          position: {
+            type: "static-random",
+            minValue: { x: x - 25, y: y - 25 },
+            maxValue: { x: x + 25, y: y + 25 },
+          },
+          velocity: {
+            type: "static",
+            value: { x: 0, y: 0 },
+          },
+          rotation: {
+            type: "linear-random",
+            minValue: { x: 0, y: 0, z: 0 },
+            maxValue: { x: 360, y: 360, z: 360 },
+            minAddValue: { x: 1, y: 1, z: 1 },
+            maxAddValue: { x: 25, y: 25, z: 25 },
+          },
+          dragCoefficient: {
+            type: "static",
+            value: 0.001,
+          },
+          opacity: {
+            type: "linear",
+            value: 1,
+            addValue: -0.01,
+          },
+          size: {
+            type: "static-random",
+            minValue: 5,
+            maxValue: 25,
+          },
+        }),
         // TODO: sprite canvas is incorrect
         spriteCanvas: canvas.current!,
       });
