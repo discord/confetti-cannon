@@ -72,25 +72,28 @@ export default function ConfettiCanvas() {
     }
   }, []);
 
-  const addConfetti = React.useCallback((e: React.MouseEvent) => {
-    const { x, y } = getClickPosition(e, canvas.current);
+  const addConfetti = React.useCallback(
+    (e: React.MouseEvent) => {
+      const { x, y } = getClickPosition(e, canvas.current);
 
-    // TODO sprite canvas is incorrect
-    allConfetti.current.set(`${Math.random()}`, {
-      confetti: createConfetti(x, y),
-      spriteCanvas: canvas.current!,
-    });
+      // TODO sprite canvas is incorrect
+      allConfetti.current.set(`${Math.random()}`, {
+        confetti: createConfetti(x, y),
+        spriteCanvas: canvas.current!,
+      });
 
-    if (animationFrameRequestId.current == null) {
-      handleTick();
-    }
-  }, []);
+      if (animationFrameRequestId.current == null) {
+        handleTick();
+      }
+    },
+    [handleTick]
+  );
 
   React.useEffect(() => {
     if (canvas.current != null) {
       setCanvasSize();
     }
-  }, []);
+  }, [setCanvasSize]);
 
   return (
     <canvas

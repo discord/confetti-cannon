@@ -14,9 +14,8 @@ export default class Confetti {
     context: CanvasRenderingContext2D,
     devicePixelRatio: number
   ) {
-    console.log("drawing");
     context.beginPath();
-    context.rect(this.x, this.y, 100, 100);
+    context.rect(this.x, this.y, 10 * devicePixelRatio, 10 * devicePixelRatio);
     context.stroke();
   }
 

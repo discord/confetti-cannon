@@ -1,3 +1,3 @@
-function ConfettiCannon() {
+export default function ConfettiCannon() {
   return null;
 }
