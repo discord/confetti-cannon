@@ -28,6 +28,7 @@ export default class Confetti {
   width: UpdatableValue;
   height: UpdatableValue;
   dragCoefficient: UpdatableValue;
+  opacity: UpdatableValue;
 
   _lastUpdatedAt: number;
 
@@ -49,6 +50,8 @@ export default class Confetti {
 
     this.height = new StaticUpdatableValue(10);
     this.width = new StaticUpdatableValue(10);
+
+    this.opacity = new LinearUpdatableValue(1, -0.1);
 
     this._lastUpdatedAt = Date.now();
   }
@@ -91,6 +94,8 @@ export default class Confetti {
     this.width.update(deltaTime);
     this.height.update(deltaTime);
 
+    this.opacity.update(deltaTime);
+
     this._lastUpdatedAt = newUpdateTime;
   }
 
@@ -100,6 +105,8 @@ export default class Confetti {
     devicePixelRatio: number
   ) {
     context.save();
+
+    context.globalAlpha = this.opacity.value;
 
     const rotationPointX = this.width.value / 2;
     const rotationPointY = this.height.value / 2;
@@ -127,6 +134,8 @@ export default class Confetti {
 
   shouldDestroy(canvas: HTMLCanvasElement, devicePixelRatio: number) {
     return (
+      // opacity
+      this.opacity.value < 0 ||
       // top
       (this.velocity.y < 0 &&
         this.position.y + this.height.value * devicePixelRatio < 0) ||
