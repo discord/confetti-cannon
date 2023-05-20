@@ -126,9 +126,6 @@ export default class Confetti {
     return (
       // opacity
       this.opacity.value < 0 ||
-      // top
-      (this.velocity.y < 0 &&
-        this.position.y + this.height.value * devicePixelRatio < 0) ||
       // bottom
       (this.velocity.y > 0 &&
         this.position.y - this.height.value * devicePixelRatio >
