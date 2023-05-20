@@ -51,7 +51,7 @@ export default class Confetti {
     this.height = new StaticUpdatableValue(10);
     this.width = new StaticUpdatableValue(10);
 
-    this.opacity = new LinearUpdatableValue(1, -0.1);
+    this.opacity = new StaticUpdatableValue(1);
 
     this._lastUpdatedAt = Date.now();
   }
