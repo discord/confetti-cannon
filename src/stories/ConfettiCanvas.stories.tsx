@@ -66,52 +66,87 @@ function ConfettiCanvasStoryWrapper({
     [gravity, wind]
   );
 
-  const handleClick = (e) => {
-    const { x, y } = getClickPosition(e, ref.current?.getCanvas());
+  const addConfetti = React.useCallback(
+    (x: number, y: number) => {
+      const createConfettiArgs: CreateConfettiArgs = {
+        position: {
+          type: "static-random",
+          minValue: { x: x - positionSpreadX, y: y - positionSpreadY },
+          maxValue: { x: x + positionSpreadX, y: y + positionSpreadY },
+        },
+        velocity: {
+          type: "static-random",
+          minValue: { x: minVelocityX, y: minVelocityY },
+          maxValue: { x: maxVelocityX, y: maxVelocityY },
+        },
+        rotation: {
+          type: "linear-random",
+          minValue: { x: minRotationX, y: minRotationY, z: minRotationZ },
+          maxValue: { x: maxRotationX, y: maxRotationY, z: maxRotationZ },
+          minAddValue: {
+            x: minRotationAddValueX,
+            y: minRotationAddValueY,
+            z: minRotationAddValueZ,
+          },
+          maxAddValue: {
+            x: maxRotationAddValueX,
+            y: maxRotationAddValueY,
+            z: maxRotationAddValueZ,
+          },
+        },
+        dragCoefficient: {
+          type: "static",
+          value: dragCoefficient,
+        },
+        opacity: {
+          type: "linear",
+          value: opacity,
+          addValue: opacityAddValue,
+        },
+        size: {
+          type: "static-random",
+          minValue: minSize,
+          maxValue: maxSize,
+        },
+      };
+      ref.current?.addConfetti(createConfettiArgs);
+    },
+    [
+      dragCoefficient,
+      maxRotationAddValueX,
+      maxRotationAddValueY,
+      maxRotationAddValueZ,
+      maxRotationX,
+      maxRotationY,
+      maxRotationZ,
+      maxSize,
+      maxVelocityX,
+      maxVelocityY,
+      minRotationAddValueX,
+      minRotationAddValueY,
+      minRotationAddValueZ,
+      minRotationX,
+      minRotationY,
+      minRotationZ,
+      minSize,
+      minVelocityX,
+      minVelocityY,
+      opacity,
+      opacityAddValue,
+      positionSpreadX,
+      positionSpreadY,
+    ]
+  );
 
-    const createConfettiArgs: CreateConfettiArgs = {
-      position: {
-        type: "static-random",
-        minValue: { x: x - positionSpreadX, y: y - positionSpreadY },
-        maxValue: { x: x + positionSpreadX, y: y + positionSpreadY },
-      },
-      velocity: {
-        type: "static-random",
-        minValue: { x: minVelocityX, y: minVelocityY },
-        maxValue: { x: maxVelocityX, y: maxVelocityY },
-      },
-      rotation: {
-        type: "linear-random",
-        minValue: { x: minRotationX, y: minRotationY, z: minRotationZ },
-        maxValue: { x: maxRotationX, y: maxRotationY, z: maxRotationZ },
-        minAddValue: {
-          x: minRotationAddValueX,
-          y: minRotationAddValueY,
-          z: minRotationAddValueZ,
-        },
-        maxAddValue: {
-          x: maxRotationAddValueX,
-          y: maxRotationAddValueY,
-          z: maxRotationAddValueZ,
-        },
-      },
-      dragCoefficient: {
-        type: "static",
-        value: dragCoefficient,
-      },
-      opacity: {
-        type: "linear",
-        value: opacity,
-        addValue: opacityAddValue,
-      },
-      size: {
-        type: "static-random",
-        minValue: minSize,
-        maxValue: maxSize,
-      },
-    };
-    ref.current?.addConfetti(createConfettiArgs);
+  const handleClick = (e: React.MouseEvent) => {
+    const { x, y } = getClickPosition(e, ref.current?.getCanvas());
+    addConfetti(x, y);
   };
+
+  React.useEffect(() => {
+    const interval = setInterval(() => addConfetti(100, 100), 500);
+    return () => clearInterval(interval);
+  }, [addConfetti]);
 
   return (
     <ConfettiCanvas ref={ref} onClick={handleClick} environment={environment} />
