@@ -6,6 +6,7 @@ import { CreateConfettiArgs } from "../createConfetti";
 import Environment from "../Environment";
 
 interface ConfettiCanvasStoryWrapperProps {
+  autoFire: boolean;
   gravity: number;
   wind: number;
   positionSpreadX: number;
@@ -35,6 +36,7 @@ interface ConfettiCanvasStoryWrapperProps {
 }
 
 function ConfettiCanvasStoryWrapper({
+  autoFire,
   gravity,
   wind,
   positionSpreadX,
@@ -148,9 +150,12 @@ function ConfettiCanvasStoryWrapper({
   };
 
   React.useEffect(() => {
-    const interval = setInterval(() => addConfetti(100, 100), 500);
+    let interval: NodeJS.Timer;
+    if (autoFire) {
+      interval = setInterval(() => addConfetti(100, 100), 500);
+    }
     return () => clearInterval(interval);
-  }, [addConfetti]);
+  }, [addConfetti, autoFire]);
 
   return (
     <ConfettiCanvas ref={ref} onClick={handleClick} environment={environment} />
@@ -186,6 +191,7 @@ function getClickPosition(
 
 export const Example: Story = {
   args: {
+    autoFire: false,
     gravity: -9.8,
     wind: 5,
     positionSpreadX: 25,
