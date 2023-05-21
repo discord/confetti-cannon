@@ -3,7 +3,7 @@ import Confetti from "../Confetti";
 import createConfetti, { CreateConfettiArgs } from "../createConfetti";
 import Environment from "../Environment";
 import { getDevicePixelRatio, setCanvasSize } from "../Utils";
-import { SpriteCanvasProps } from "./SpriteCanvas";
+import { SpriteCanvasProps, SpriteProp } from "./SpriteCanvas";
 
 type ConfettiCanvasProps = {
   environment: Environment;
@@ -14,7 +14,9 @@ interface ConfettiCanvasHandle {
   addConfetti: (
     args: CreateConfettiArgs,
     spriteCanvas: HTMLCanvasElement,
-    spriteCanvasProps: SpriteCanvasProps
+    spriteCanvasProps: SpriteCanvasProps,
+    sprite?: SpriteProp,
+    color?: string | null
   ) => void;
   getCanvas: () => HTMLCanvasElement | null;
 }
@@ -76,10 +78,12 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
     (
       args: CreateConfettiArgs,
       spriteCanvas: HTMLCanvasElement,
-      spriteCanvasProps: SpriteCanvasProps
+      spriteCanvasProps: SpriteCanvasProps,
+      sprite?: SpriteProp,
+      color?: string | null
     ) => {
       allConfetti.current.set(`${Math.random()}`, {
-        confetti: createConfetti(args, spriteCanvasProps),
+        confetti: createConfetti(args, spriteCanvasProps, sprite, color),
         spriteCanvas,
       });
 

@@ -231,9 +231,56 @@ function shouldColorizeSprite(sprite: SpriteProp) {
   return sprite.colorize;
 }
 
+function spriteEquals(spriteA: SpriteProp, spriteB: SpriteProp) {
+  if (typeof spriteA !== typeof spriteB) {
+    return false;
+  }
+  if (spriteA === spriteB) {
+    return true;
+  }
+  if (typeof spriteA === "object" && typeof spriteB === "object") {
+    return spriteA.src === spriteB.src && spriteA.colorize === spriteB.colorize;
+  }
+  return false;
+}
+
+function getSpriteWithIndex(
+  requestedSprite: SpriteProp | undefined,
+  spriteCanvasProps: SpriteCanvasProps
+): [SpriteProp, number] {
+  if (requestedSprite != null) {
+    const index = spriteCanvasProps.sprites.findIndex((sprite) =>
+      spriteEquals(sprite, requestedSprite)
+    );
+    if (index !== -1) {
+      return [requestedSprite, index];
+    }
+  }
+  return getRandomFromList(spriteCanvasProps.sprites);
+}
+
+function getColorIndex(
+  sprite: SpriteProp,
+  requestedColor: string | undefined | null,
+  spriteCanvasProps: SpriteCanvasProps
+) {
+  if (!shouldColorizeSprite(sprite)) {
+    return 0;
+  }
+  const index =
+    requestedColor != null
+      ? spriteCanvasProps.colors.findIndex((color) => color === requestedColor)
+      : -1;
+  return index !== -1
+    ? index
+    : getRandomValue(0, spriteCanvasProps.colors.length - 1);
+}
+
 export default function createConfetti(
   rawArgs: CreateConfettiArgs,
-  spriteCanvasProps: SpriteCanvasProps
+  spriteCanvasProps: SpriteCanvasProps,
+  requestedSprite?: SpriteProp,
+  requestedColor?: string | null
 ) {
   const args = annotateArgs(rawArgs);
 
@@ -244,10 +291,15 @@ export default function createConfetti(
   invariant(width != null, "width or size is required");
   invariant(height != null, "height or size is required");
 
-  const [sprite, spriteIndex] = getRandomFromList(spriteCanvasProps.sprites);
-  const colorIndex = shouldColorizeSprite(sprite)
-    ? getRandomValue(0, spriteCanvasProps.colors.length - 1)
-    : 0;
+  const [sprite, spriteIndex] = getSpriteWithIndex(
+    requestedSprite,
+    spriteCanvasProps
+  );
+  const colorIndex = getColorIndex(
+    requestedSprite ?? sprite,
+    requestedColor,
+    spriteCanvasProps
+  );
 
   return new Confetti({
     ...args,
