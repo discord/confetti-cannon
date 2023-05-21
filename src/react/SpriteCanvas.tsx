@@ -13,13 +13,13 @@ export type SpriteProp =
     }
   | string;
 
-interface Sprites {
+export interface Sprite {
   image: HTMLImageElement;
   colorize: boolean;
   src: string;
 }
 
-export interface SpriteCanvasProps {
+interface SpriteCanvasProps {
   visible?: boolean;
   sprites: SpriteProp[];
   colors: string[];
@@ -27,34 +27,42 @@ export interface SpriteCanvasProps {
   spriteHeight: number;
 }
 
-interface SpriteCanvasHandle {
+export interface SpriteCanvasData {
+  sprites: Sprite[];
+  colors: string[];
+  spriteWidth: number;
+  spriteHeight: number;
+}
+
+export interface SpriteCanvasHandle {
   getCanvas: () => HTMLCanvasElement | null;
+  getCreateData: () => SpriteCanvasData;
 }
 
 const SpriteCanvas: React.ForwardRefRenderFunction<
   SpriteCanvasHandle,
   SpriteCanvasProps
 > = (
-  {
-    visible = false,
-    sprites: spriteProps,
-    colors,
-    spriteWidth: spriteWidth,
-    spriteHeight: spriteHeight,
-  },
+  { visible = false, sprites: spriteProps, colors, spriteWidth, spriteHeight },
   forwardedRef
 ) => {
   const canvas = React.useRef<HTMLCanvasElement | null>(null);
-  const sprites = React.useRef<Sprites[]>([]);
+  const sprites = React.useRef<Sprite[]>([]);
 
   React.useImperativeHandle(
     forwardedRef,
     () => {
       return {
         getCanvas: () => canvas.current,
+        getCreateData: () => ({
+          sprites: sprites.current,
+          colors,
+          spriteWidth,
+          spriteHeight,
+        }),
       };
     },
-    []
+    [colors, spriteHeight, spriteWidth]
   );
 
   const drawSprites = React.useCallback(() => {

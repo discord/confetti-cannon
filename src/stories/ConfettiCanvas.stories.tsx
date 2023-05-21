@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import ConfettiCanvas from "../react/ConfettiCanvas";
 import SpriteCanvas from "../react/SpriteCanvas";
+import useConfettiCannon from "../react/useConfettiCannon";
 import { CreateConfettiArgs } from "../createConfetti";
 import Environment from "../Environment";
 
@@ -79,6 +80,7 @@ function ConfettiCanvasStoryWrapper({
     () => new Environment({ gravity, wind }),
     [gravity, wind]
   );
+  const cannon = useConfettiCannon(confettiCanvas, spriteCanvas);
 
   const addConfetti = React.useCallback(
     (x: number, y: number) => {
@@ -130,14 +132,10 @@ function ConfettiCanvasStoryWrapper({
         colors,
       };
 
-      confettiCanvas.current.addConfetti(createConfettiArgs, spriteCanvasRef, {
-        sprites: SPRITES,
-        colors,
-        spriteWidth: maxSize,
-        spriteHeight: maxSize,
-      });
+      cannon.addConfetti(createConfettiArgs);
     },
     [
+      cannon,
       colors,
       dragCoefficient,
       maxRotationAddValueX,

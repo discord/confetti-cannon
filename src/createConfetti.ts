@@ -7,7 +7,8 @@ import {
 } from "./UpdatableValueImplementations";
 import {
   SPRITE_SPACING,
-  SpriteCanvasProps,
+  Sprite,
+  SpriteCanvasData,
   SpriteProp,
 } from "./react/SpriteCanvas";
 
@@ -231,54 +232,48 @@ function shouldColorizeSprite(sprite: SpriteProp) {
   return sprite.colorize;
 }
 
-function spriteEquals(spriteA: SpriteProp, spriteB: SpriteProp) {
-  if (typeof spriteA !== typeof spriteB) {
-    return false;
+function spriteEquals(spriteA: Sprite, spriteB: SpriteProp) {
+  if (typeof spriteB === "string") {
+    return spriteA.src === spriteB && spriteA.colorize;
   }
-  if (spriteA === spriteB) {
-    return true;
-  }
-  if (typeof spriteA === "object" && typeof spriteB === "object") {
-    return spriteA.src === spriteB.src && spriteA.colorize === spriteB.colorize;
-  }
-  return false;
+  return spriteA.src === spriteB.src && spriteA.colorize === spriteB.colorize;
 }
 
 function getSpriteWithIndex(
   requestedSprite: SpriteProp | undefined,
-  spriteCanvasProps: SpriteCanvasProps
+  spriteCanvasData: SpriteCanvasData
 ): [SpriteProp, number] {
   if (requestedSprite != null) {
-    const index = spriteCanvasProps.sprites.findIndex((sprite) =>
+    const index = spriteCanvasData.sprites.findIndex((sprite) =>
       spriteEquals(sprite, requestedSprite)
     );
     if (index !== -1) {
       return [requestedSprite, index];
     }
   }
-  return getRandomFromList(spriteCanvasProps.sprites);
+  return getRandomFromList(spriteCanvasData.sprites);
 }
 
 function getColorIndex(
   sprite: SpriteProp,
   requestedColor: string | undefined | null,
-  spriteCanvasProps: SpriteCanvasProps
+  spriteCanvasData: SpriteCanvasData
 ) {
   if (!shouldColorizeSprite(sprite)) {
     return 0;
   }
   const index =
     requestedColor != null
-      ? spriteCanvasProps.colors.findIndex((color) => color === requestedColor)
+      ? spriteCanvasData.colors.findIndex((color) => color === requestedColor)
       : -1;
   return index !== -1
     ? index
-    : getRandomValue(0, spriteCanvasProps.colors.length - 1);
+    : getRandomValue(0, spriteCanvasData.colors.length - 1);
 }
 
 export default function createConfetti(
   rawArgs: CreateConfettiArgs,
-  spriteCanvasProps: SpriteCanvasProps,
+  spriteCanvasData: SpriteCanvasData,
   requestedSprite?: SpriteProp,
   requestedColor?: string | null
 ) {
@@ -293,12 +288,12 @@ export default function createConfetti(
 
   const [sprite, spriteIndex] = getSpriteWithIndex(
     requestedSprite,
-    spriteCanvasProps
+    spriteCanvasData
   );
   const colorIndex = getColorIndex(
     requestedSprite ?? sprite,
     requestedColor,
-    spriteCanvasProps
+    spriteCanvasData
   );
 
   return new Confetti({
@@ -311,11 +306,11 @@ export default function createConfetti(
     height: height,
     opacity: getValueNumber(args.opacity),
     spriteX:
-      colorIndex * spriteCanvasProps.spriteWidth + colorIndex * SPRITE_SPACING,
+      colorIndex * spriteCanvasData.spriteWidth + colorIndex * SPRITE_SPACING,
     spriteY:
-      spriteIndex * spriteCanvasProps.spriteHeight +
+      spriteIndex * spriteCanvasData.spriteHeight +
       spriteIndex * SPRITE_SPACING,
-    spriteWidth: spriteCanvasProps.spriteWidth,
-    spriteHeight: spriteCanvasProps.spriteHeight,
+    spriteWidth: spriteCanvasData.spriteWidth,
+    spriteHeight: spriteCanvasData.spriteHeight,
   });
 }
