@@ -3,9 +3,9 @@ import { getDevicePixelRatio, hexToRgb } from "../Utils";
 
 import styles from "./SpriteCanvas.module.css";
 
-const SPRITE_SPACING = 2;
+export const SPRITE_SPACING = 2;
 
-type SpriteProp =
+export type SpriteProp =
   | {
       src: string;
       colorize: boolean;
@@ -18,7 +18,7 @@ interface Sprites {
   src: string;
 }
 
-interface SpriteCanvasProps {
+export interface SpriteCanvasProps {
   sprites: SpriteProp[];
   colors: string[];
   spriteWidth: number;

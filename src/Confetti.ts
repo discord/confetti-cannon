@@ -25,7 +25,11 @@ type ConfettiArgs = {
   height: UpdatableValue;
   dragCoefficient: UpdatableValue;
   opacity: UpdatableValue;
-  color: string;
+
+  spriteX: number;
+  spriteY: number;
+  spriteWidth: number;
+  spriteHeight: number;
 };
 
 export default class Confetti {
@@ -36,7 +40,11 @@ export default class Confetti {
   height: UpdatableValue;
   dragCoefficient: UpdatableValue;
   opacity: UpdatableValue;
-  color: string;
+
+  spriteX: number;
+  spriteY: number;
+  spriteWidth: number;
+  spriteHeight: number;
 
   _lastUpdatedAt: number;
 
@@ -51,7 +59,10 @@ export default class Confetti {
 
     this.opacity = args.opacity;
 
-    this.color = args.color;
+    this.spriteX = args.spriteX;
+    this.spriteY = args.spriteY;
+    this.spriteWidth = args.spriteWidth;
+    this.spriteHeight = args.spriteHeight;
 
     this._lastUpdatedAt = Date.now();
   }
@@ -115,14 +126,17 @@ export default class Confetti {
     );
 
     context.beginPath();
-    context.rect(
-      -this.width.value,
-      -this.height.value,
+    context.drawImage(
+      spriteCanvas,
+      this.spriteX * devicePixelRatio,
+      this.spriteY * devicePixelRatio,
+      this.spriteWidth * devicePixelRatio,
+      this.spriteHeight * devicePixelRatio,
+      0,
+      0,
       this.width.value * devicePixelRatio,
       this.height.value * devicePixelRatio
     );
-    context.fillStyle = this.color;
-    context.fill();
 
     context.restore();
   }

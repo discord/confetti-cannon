@@ -8,7 +8,7 @@ import Environment from "../Environment";
 
 const SPRITES = [
   require("./images/square.svg"),
-  require("./images/square.svg"),
+  require("./images/circle.svg"),
 ];
 
 interface ConfettiCanvasStoryWrapperProps {
@@ -129,7 +129,12 @@ function ConfettiCanvasStoryWrapper({
         colors,
       };
 
-      confettiCanvas.current.addConfetti(createConfettiArgs, spriteCanvasRef);
+      confettiCanvas.current.addConfetti(createConfettiArgs, spriteCanvasRef, {
+        sprites: SPRITES,
+        colors,
+        spriteWidth: maxSize,
+        spriteHeight: maxSize,
+      });
     },
     [
       colors,

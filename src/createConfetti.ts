@@ -5,6 +5,11 @@ import {
   LinearUpdatableValue,
   StaticUpdatableValue,
 } from "./UpdatableValueImplementations";
+import {
+  SPRITE_SPACING,
+  SpriteCanvasProps,
+  SpriteProp,
+} from "./react/SpriteCanvas";
 
 interface StaticConfigConstant<T> {
   type: "static";
@@ -92,8 +97,10 @@ function getRandomValue(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-function getRandomFromList<T>(list: T[]): T {
-  return list[getRandomValue(0, list.length - 1)];
+function getRandomFromList<T>(list: T[]): [T, number] {
+  const index = getRandomValue(0, list.length - 1);
+  const value = list[index];
+  return [value, index];
 }
 
 function getValueNumber(config: UpdatableValueConfigNumberAnnotated) {
@@ -217,7 +224,17 @@ function annotateArgs({
   };
 }
 
-export default function createConfetti(rawArgs: CreateConfettiArgs) {
+function shouldColorizeSprite(sprite: SpriteProp) {
+  if (typeof sprite === "string") {
+    return true;
+  }
+  return sprite.colorize;
+}
+
+export default function createConfetti(
+  rawArgs: CreateConfettiArgs,
+  spriteCanvasProps: SpriteCanvasProps
+) {
   const args = annotateArgs(rawArgs);
 
   const size = args.size != null ? getValueNumber(args.size) : null;
@@ -226,6 +243,11 @@ export default function createConfetti(rawArgs: CreateConfettiArgs) {
 
   invariant(width != null, "width or size is required");
   invariant(height != null, "height or size is required");
+
+  const [sprite, spriteIndex] = getRandomFromList(spriteCanvasProps.sprites);
+  const colorIndex = shouldColorizeSprite(sprite)
+    ? getRandomValue(0, spriteCanvasProps.colors.length - 1)
+    : 0;
 
   return new Confetti({
     ...args,
@@ -236,6 +258,12 @@ export default function createConfetti(rawArgs: CreateConfettiArgs) {
     width: width,
     height: height,
     opacity: getValueNumber(args.opacity),
-    color: getRandomFromList(args.colors),
+    spriteX:
+      colorIndex * spriteCanvasProps.spriteWidth + colorIndex * SPRITE_SPACING,
+    spriteY:
+      spriteIndex * spriteCanvasProps.spriteHeight +
+      spriteIndex * SPRITE_SPACING,
+    spriteWidth: spriteCanvasProps.spriteWidth,
+    spriteHeight: spriteCanvasProps.spriteHeight,
   });
 }
