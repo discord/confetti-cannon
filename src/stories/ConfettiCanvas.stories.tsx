@@ -211,6 +211,15 @@ export const Example: Story = {
     opacityAddValue: -0.01,
     minSize: 5,
     maxSize: 25,
-    colors: ["red", "blue", "green"],
+    colors: [
+      "#FF73FA",
+      "#FFC0FF",
+      "#FFD836",
+      "#FF9A15",
+      "#A5F7DE",
+      "#51BC9D",
+      "#AEC7FF",
+      "#3E70DD",
+    ],
   },
 };
