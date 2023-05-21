@@ -17,6 +17,7 @@ const SPRITES = [
 
 interface ConfettiCanvasStoryWrapperProps {
   autoFire: boolean;
+  numberToFire: number;
   gravity: number;
   wind: number;
   positionSpreadX: number;
@@ -47,6 +48,7 @@ interface ConfettiCanvasStoryWrapperProps {
 
 function ConfettiCanvasStoryWrapper({
   autoFire,
+  numberToFire,
   gravity,
   wind,
   positionSpreadX,
@@ -134,7 +136,7 @@ function ConfettiCanvasStoryWrapper({
         colors,
       };
 
-      cannon.addConfetti(createConfettiArgs);
+      cannon.addConfetti(createConfettiArgs, numberToFire);
     },
     [
       cannon,
@@ -158,6 +160,7 @@ function ConfettiCanvasStoryWrapper({
       minSize,
       minVelocityX,
       minVelocityY,
+      numberToFire,
       opacity,
       opacityAddValue,
       positionSpreadX,
@@ -229,6 +232,7 @@ function getClickPosition(
 export const Example: Story = {
   args: {
     autoFire: false,
+    numberToFire: 5,
     gravity: -9.8,
     wind: 5,
     positionSpreadX: 25,
@@ -252,8 +256,8 @@ export const Example: Story = {
     dragCoefficient: 0.001,
     opacity: 1,
     opacityAddValue: -0.01,
-    minSize: 5,
-    maxSize: 25,
+    minSize: 10,
+    maxSize: 20,
     colors: [
       "#FF73FA",
       "#FFC0FF",
