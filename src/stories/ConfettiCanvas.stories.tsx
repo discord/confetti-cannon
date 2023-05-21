@@ -2,8 +2,14 @@ import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import ConfettiCanvas from "../react/ConfettiCanvas";
+import SpriteCanvas from "../react/SpriteCanvas";
 import { CreateConfettiArgs } from "../createConfetti";
 import Environment from "../Environment";
+
+const SPRITES = [
+  require("./images/square.svg"),
+  require("./images/square.svg"),
+];
 
 interface ConfettiCanvasStoryWrapperProps {
   autoFire: boolean;
@@ -158,7 +164,19 @@ function ConfettiCanvasStoryWrapper({
   }, [addConfetti, autoFire]);
 
   return (
-    <ConfettiCanvas ref={ref} onClick={handleClick} environment={environment} />
+    <>
+      <SpriteCanvas
+        sprites={SPRITES}
+        colors={colors}
+        spriteWidth={maxSize}
+        spriteHeight={maxSize}
+      />
+      <ConfettiCanvas
+        ref={ref}
+        onClick={handleClick}
+        environment={environment}
+      />
+    </>
   );
 }
 

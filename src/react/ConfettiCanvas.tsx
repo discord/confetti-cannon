@@ -2,10 +2,7 @@ import * as React from "react";
 import Confetti from "../Confetti";
 import createConfetti, { CreateConfettiArgs } from "../createConfetti";
 import Environment from "../Environment";
-
-function getDevicePixelRatio() {
-  return window.devicePixelRatio;
-}
+import { getDevicePixelRatio, setCanvasSize } from "../Utils";
 
 type ConfettiCanvasProps = {
   environment: Environment;
@@ -28,14 +25,6 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
   >(new Map());
 
   const animationFrameRequestId = React.useRef<number | null>(null);
-
-  const setCanvasSize = React.useCallback(() => {
-    if (canvas.current != null) {
-      const { width, height } = canvas.current.getBoundingClientRect();
-      canvas.current.width = width * getDevicePixelRatio();
-      canvas.current.height = height * getDevicePixelRatio();
-    }
-  }, []);
 
   const handleTick = React.useCallback(() => {
     const canvasRef = canvas.current;
@@ -108,9 +97,9 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
 
   React.useEffect(() => {
     if (canvas.current != null) {
-      setCanvasSize();
+      setCanvasSize(canvas.current);
     }
-  }, [setCanvasSize]);
+  }, []);
 
   return (
     <canvas

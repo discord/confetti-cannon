@@ -1,1 +1,2 @@
-export const TEST = 1;
+export { default as ConfettiCanvas } from "./react/ConfettiCanvas";
+export { default as SpriteCanvas } from "./react/SpriteCanvas";
