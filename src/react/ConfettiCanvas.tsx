@@ -6,6 +6,7 @@ import { getDevicePixelRatio, setCanvasSize } from "../Utils";
 import { SpriteCanvasData, SpriteProp } from "./SpriteCanvas";
 
 type ConfettiCanvasProps = {
+  className?: string;
   environment: Environment;
   onClick?: (e: React.MouseEvent) => void;
 };
@@ -24,7 +25,7 @@ export interface ConfettiCanvasHandle {
 const ConfettiCanvas: React.ForwardRefRenderFunction<
   ConfettiCanvasHandle,
   ConfettiCanvasProps
-> = ({ environment, onClick }, forwardedRef) => {
+> = ({ className, environment, onClick }, forwardedRef) => {
   const canvas = React.useRef<HTMLCanvasElement | null>(null);
 
   const allConfetti = React.useRef<
@@ -113,13 +114,7 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
     }
   }, []);
 
-  return (
-    <canvas
-      ref={canvas}
-      onClick={onClick}
-      style={{ border: "1px solid black" }}
-    />
-  );
+  return <canvas className={className} ref={canvas} onClick={onClick} />;
 };
 
 export default React.forwardRef(ConfettiCanvas);

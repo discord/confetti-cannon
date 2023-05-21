@@ -7,6 +7,8 @@ import useConfettiCannon from "../react/useConfettiCannon";
 import { CreateConfettiArgs } from "../createConfetti";
 import Environment from "../Environment";
 
+import styles from "./ConfettiCanvas.stories.module.css";
+
 const SPRITES = [
   require("./images/square.svg"),
   require("./images/circle.svg"),
@@ -181,6 +183,7 @@ function ConfettiCanvasStoryWrapper({
       <SpriteCanvas
         visible
         ref={spriteCanvas}
+        className={styles.bordered}
         sprites={SPRITES}
         colors={colors}
         spriteWidth={maxSize}
@@ -188,6 +191,7 @@ function ConfettiCanvasStoryWrapper({
       />
       <ConfettiCanvas
         ref={confettiCanvas}
+        className={styles.bordered}
         onClick={handleClick}
         environment={environment}
       />

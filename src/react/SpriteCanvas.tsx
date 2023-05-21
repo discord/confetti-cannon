@@ -20,6 +20,7 @@ export interface Sprite {
 }
 
 interface SpriteCanvasProps {
+  className?: string;
   visible?: boolean;
   sprites: SpriteProp[];
   colors: string[];
@@ -43,7 +44,14 @@ const SpriteCanvas: React.ForwardRefRenderFunction<
   SpriteCanvasHandle,
   SpriteCanvasProps
 > = (
-  { visible = false, sprites: spriteProps, colors, spriteWidth, spriteHeight },
+  {
+    className,
+    visible = false,
+    sprites: spriteProps,
+    colors,
+    spriteWidth,
+    spriteHeight,
+  },
   forwardedRef
 ) => {
   const canvas = React.useRef<HTMLCanvasElement | null>(null);
@@ -163,7 +171,7 @@ const SpriteCanvas: React.ForwardRefRenderFunction<
   return (
     <canvas
       ref={canvas}
-      className={classNames(styles.spriteCanvas, {
+      className={classNames(className, {
         [styles.spriteCanvasHidden]: !visible,
       })}
     />
