@@ -9,6 +9,7 @@ import Environment from "../Environment";
 const SPRITES = [
   require("./images/square.svg"),
   require("./images/circle.svg"),
+  { src: require("./images/duck.svg"), colorize: false },
 ];
 
 interface ConfettiCanvasStoryWrapperProps {
@@ -180,6 +181,7 @@ function ConfettiCanvasStoryWrapper({
   return (
     <>
       <SpriteCanvas
+        visible
         ref={spriteCanvas}
         sprites={SPRITES}
         colors={colors}
