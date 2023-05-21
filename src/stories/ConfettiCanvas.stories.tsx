@@ -7,7 +7,7 @@ import useConfettiCannon from "../react/useConfettiCannon";
 import { CreateConfettiArgs } from "../createConfetti";
 import Environment from "../Environment";
 
-import styles from "./ConfettiCanvas.stories.module.css";
+import styles from "./ConfettiCanvas.module.css";
 
 const SPRITES = [
   require("./images/square.svg"),
