@@ -1,4 +1,5 @@
 import * as React from "react";
+import classNames from "classnames";
 import { getDevicePixelRatio, hexToRgb } from "../Utils";
 
 import styles from "./SpriteCanvas.module.css";
@@ -19,6 +20,7 @@ interface Sprites {
 }
 
 export interface SpriteCanvasProps {
+  visible?: boolean;
   sprites: SpriteProp[];
   colors: string[];
   spriteWidth: number;
@@ -34,6 +36,7 @@ const SpriteCanvas: React.ForwardRefRenderFunction<
   SpriteCanvasProps
 > = (
   {
+    visible = false,
     sprites: spriteProps,
     colors,
     spriteWidth: spriteWidth,
@@ -149,7 +152,14 @@ const SpriteCanvas: React.ForwardRefRenderFunction<
     }
   }, [colors.length, spriteHeight, spriteWidth, spriteProps.length]);
 
-  return <canvas ref={canvas} className={styles.spriteCanvas} />;
+  return (
+    <canvas
+      ref={canvas}
+      className={classNames(styles.spriteCanvas, {
+        [styles.spriteCanvasHidden]: !visible,
+      })}
+    />
+  );
 };
 
 export default React.forwardRef(SpriteCanvas);

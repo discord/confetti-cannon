@@ -1,3 +1,11 @@
 .spriteCanvas {
   border: 1px solid black;
 }
+
+.spriteCanvasHidden {
+  display: none;
+  position: absolute;
+  width: 0;
+  height: 0;
+  left: -100%;
+}
