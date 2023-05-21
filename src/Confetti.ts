@@ -25,6 +25,7 @@ type ConfettiArgs = {
   height: UpdatableValue;
   dragCoefficient: UpdatableValue;
   opacity: UpdatableValue;
+  color: string;
 };
 
 export default class Confetti {
@@ -35,6 +36,7 @@ export default class Confetti {
   height: UpdatableValue;
   dragCoefficient: UpdatableValue;
   opacity: UpdatableValue;
+  color: string;
 
   _lastUpdatedAt: number;
 
@@ -48,6 +50,8 @@ export default class Confetti {
     this.height = args.height;
 
     this.opacity = args.opacity;
+
+    this.color = args.color;
 
     this._lastUpdatedAt = Date.now();
   }
@@ -117,6 +121,7 @@ export default class Confetti {
       this.width.value * devicePixelRatio,
       this.height.value * devicePixelRatio
     );
+    context.fillStyle = this.color;
     context.fill();
 
     context.restore();

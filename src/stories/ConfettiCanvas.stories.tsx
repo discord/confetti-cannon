@@ -31,6 +31,7 @@ interface ConfettiCanvasStoryWrapperProps {
   opacityAddValue: number;
   minSize: number;
   maxSize: number;
+  colors: string[];
 }
 
 function ConfettiCanvasStoryWrapper({
@@ -59,6 +60,7 @@ function ConfettiCanvasStoryWrapper({
   opacityAddValue,
   minSize,
   maxSize,
+  colors,
 }: ConfettiCanvasStoryWrapperProps) {
   const ref = React.useRef<React.ElementRef<typeof ConfettiCanvas>>(null);
   const environment = React.useMemo(
@@ -108,10 +110,12 @@ function ConfettiCanvasStoryWrapper({
           minValue: minSize,
           maxValue: maxSize,
         },
+        colors,
       };
       ref.current?.addConfetti(createConfettiArgs);
     },
     [
+      colors,
       dragCoefficient,
       maxRotationAddValueX,
       maxRotationAddValueY,
@@ -207,5 +211,6 @@ export const Example: Story = {
     opacityAddValue: -0.01,
     minSize: 5,
     maxSize: 25,
+    colors: ["red", "blue", "green"],
   },
 };

@@ -64,6 +64,7 @@ export interface CreateConfettiArgs {
   height?: UpdatableValueConfigNumber;
   size?: UpdatableValueConfigNumber;
   opacity: UpdatableValueConfigNumber;
+  colors: string[];
 }
 
 type UpdatableValueConfigNumberAnnotated = UpdatableValueConfigNumber & {
@@ -76,7 +77,7 @@ type UpdatableValueConfigVector3Annotated = UpdatableValueConfigVector3 & {
   valueType: "Vector3";
 };
 
-interface CreateConfettiArgsAnnotated {
+interface CreateConfettiArgsAnnotated extends CreateConfettiArgs {
   position: UpdatableValueConfigVector2Annotated;
   velocity: UpdatableValueConfigVector2Annotated;
   rotation: UpdatableValueConfigVector3Annotated;
@@ -89,6 +90,10 @@ interface CreateConfettiArgsAnnotated {
 
 function getRandomValue(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+function getRandomFromList<T>(list: T[]): T {
+  return list[getRandomValue(0, list.length - 1)];
 }
 
 function getValueNumber(config: UpdatableValueConfigNumberAnnotated) {
@@ -188,27 +193,27 @@ function getValueVector3(config: UpdatableValueConfigVector3Annotated) {
   }
 }
 
-function annotateArgs(
-  rawArgs: CreateConfettiArgs
-): CreateConfettiArgsAnnotated {
+function annotateArgs({
+  position,
+  velocity,
+  rotation,
+  dragCoefficient,
+  width,
+  height,
+  size,
+  opacity,
+  ...args
+}: CreateConfettiArgs): CreateConfettiArgsAnnotated {
   return {
-    position: { ...rawArgs.position, valueType: "Vector2" },
-    velocity: { ...rawArgs.velocity, valueType: "Vector2" },
-    rotation: { ...rawArgs.rotation, valueType: "Vector3" },
-    dragCoefficient: { ...rawArgs.dragCoefficient, valueType: "number" },
-    width:
-      rawArgs.width != null
-        ? { ...rawArgs.width, valueType: "number" }
-        : undefined,
-    height:
-      rawArgs.height != null
-        ? { ...rawArgs.height, valueType: "number" }
-        : undefined,
-    size:
-      rawArgs.size != null
-        ? { ...rawArgs.size, valueType: "number" }
-        : undefined,
-    opacity: { ...rawArgs.opacity, valueType: "number" },
+    ...args,
+    position: { ...position, valueType: "Vector2" },
+    velocity: { ...velocity, valueType: "Vector2" },
+    rotation: { ...rotation, valueType: "Vector3" },
+    dragCoefficient: { ...dragCoefficient, valueType: "number" },
+    width: width != null ? { ...width, valueType: "number" } : undefined,
+    height: height != null ? { ...height, valueType: "number" } : undefined,
+    size: size != null ? { ...size, valueType: "number" } : undefined,
+    opacity: { ...opacity, valueType: "number" },
   };
 }
 
@@ -223,6 +228,7 @@ export default function createConfetti(rawArgs: CreateConfettiArgs) {
   invariant(height != null, "height or size is required");
 
   return new Confetti({
+    ...args,
     position: getValueVector2(args.position),
     velocity: getValueVector2(args.velocity),
     rotation: getValueVector3(args.rotation),
@@ -230,5 +236,6 @@ export default function createConfetti(rawArgs: CreateConfettiArgs) {
     width: width,
     height: height,
     opacity: getValueNumber(args.opacity),
+    color: getRandomFromList(args.colors),
   });
 }
