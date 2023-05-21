@@ -38,7 +38,6 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
   }, []);
 
   const handleTick = React.useCallback(() => {
-    console.log("environment", environment);
     const canvasRef = canvas.current;
     if (canvasRef == null) {
       return;
@@ -70,6 +69,14 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
       animationFrameRequestId.current = null;
     }
   }, [environment]);
+
+  React.useEffect(() => {
+    if (animationFrameRequestId.current != null) {
+      window.cancelAnimationFrame(animationFrameRequestId.current);
+      animationFrameRequestId.current =
+        window.requestAnimationFrame(handleTick);
+    }
+  }, [handleTick]);
 
   const addConfetti = React.useCallback(
     (args: CreateConfettiArgs) => {
