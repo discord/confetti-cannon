@@ -62,6 +62,7 @@ type UpdatableValueConfigVector2 = StaticConfigVector2 | LinearConfigVector2;
 type UpdatableValueConfigVector3 = StaticConfigVector3 | LinearConfigVector3;
 
 export interface CreateConfettiArgs {
+  id?: string;
   position: UpdatableValueConfigVector2;
   velocity: UpdatableValueConfigVector2;
   rotation: UpdatableValueConfigVector3;

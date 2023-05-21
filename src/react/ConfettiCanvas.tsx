@@ -84,7 +84,7 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
       sprite?: SpriteProp,
       color?: string | null
     ) => {
-      const id = uuid();
+      const id = args.id ?? uuid();
       allConfetti.current.set(id, {
         confetti: createConfetti(id, args, SpriteCanvasData, sprite, color),
         spriteCanvas,
