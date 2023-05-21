@@ -1,4 +1,5 @@
 import * as React from "react";
+import { v4 as uuid } from "uuid";
 import Confetti from "../Confetti";
 import createConfetti, { CreateConfettiArgs } from "../createConfetti";
 import Environment from "../Environment";
@@ -83,8 +84,9 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
       sprite?: SpriteProp,
       color?: string | null
     ) => {
-      allConfetti.current.set(`${Math.random()}`, {
-        confetti: createConfetti(args, SpriteCanvasData, sprite, color),
+      const id = uuid();
+      allConfetti.current.set(id, {
+        confetti: createConfetti(id, args, SpriteCanvasData, sprite, color),
         spriteCanvas,
       });
 

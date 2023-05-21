@@ -272,6 +272,7 @@ function getColorIndex(
 }
 
 export default function createConfetti(
+  id: string,
   rawArgs: CreateConfettiArgs,
   spriteCanvasData: SpriteCanvasData,
   requestedSprite?: SpriteProp,
@@ -297,7 +298,7 @@ export default function createConfetti(
   );
 
   return new Confetti({
-    ...args,
+    id,
     position: getValueVector2(args.position),
     velocity: getValueVector2(args.velocity),
     rotation: getValueVector3(args.rotation),

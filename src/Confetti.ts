@@ -18,6 +18,8 @@ function calculateAirResistance(
 }
 
 type ConfettiArgs = {
+  id: string;
+
   position: UpdatableVector2Value;
   velocity: UpdatableVector2Value;
   rotation: UpdatableVector3Value;
@@ -33,6 +35,8 @@ type ConfettiArgs = {
 };
 
 export default class Confetti {
+  id: string;
+
   position: UpdatableVector2Value;
   velocity: UpdatableVector2Value;
   rotation: UpdatableVector3Value;
@@ -49,6 +53,8 @@ export default class Confetti {
   _lastUpdatedAt: number;
 
   constructor(args: ConfettiArgs) {
+    this.id = args.id;
+
     this.position = args.position;
     this.velocity = args.velocity;
     this.rotation = args.rotation;
