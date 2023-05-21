@@ -8,7 +8,7 @@ export default function useConfettiCannon(
   spriteCanvas: React.RefObject<SpriteCanvasHandle>
 ) {
   const addConfetti = React.useCallback(
-    (createConfettiArgs: CreateConfettiArgs) => {
+    (createConfettiArgs: CreateConfettiArgs, numConfetti = 1) => {
       const spriteData = spriteCanvas.current?.getCreateData();
       const spriteCanvasRef = spriteCanvas.current?.getCanvas();
 
@@ -16,11 +16,13 @@ export default function useConfettiCannon(
         return;
       }
 
-      confettiCanvas.current?.addConfetti(
-        createConfettiArgs,
-        spriteCanvasRef,
-        spriteData
-      );
+      for (let i = 0; i < numConfetti; i++) {
+        confettiCanvas.current?.addConfetti(
+          createConfettiArgs,
+          spriteCanvasRef,
+          spriteData
+        );
+      }
     },
     [confettiCanvas, spriteCanvas]
   );
