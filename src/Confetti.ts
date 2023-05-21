@@ -125,15 +125,14 @@ export default class Confetti {
         .rotateSelf(this.rotation.x, this.rotation.y, this.rotation.z)
     );
 
-    context.beginPath();
     context.drawImage(
       spriteCanvas,
       this.spriteX * devicePixelRatio,
       this.spriteY * devicePixelRatio,
       this.spriteWidth * devicePixelRatio,
       this.spriteHeight * devicePixelRatio,
-      0,
-      0,
+      -this.width.value,
+      -this.height.value,
       this.width.value * devicePixelRatio,
       this.height.value * devicePixelRatio
     );

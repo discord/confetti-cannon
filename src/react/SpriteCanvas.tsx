@@ -63,24 +63,31 @@ const SpriteCanvas: React.ForwardRefRenderFunction<
       return;
     }
     context.clearRect(0, 0, canvasRef.width, canvasRef.height);
+    const devicePixelRatio = getDevicePixelRatio();
 
     sprites.current.forEach((sprite, spriteIndex) => {
       const drawSprite = (color: string | null, colorIndex: number) => {
         const x =
           (spriteWidth * colorIndex + SPRITE_SPACING * colorIndex) *
-          getDevicePixelRatio();
+          devicePixelRatio;
         const y =
           (spriteHeight * spriteIndex + SPRITE_SPACING * spriteIndex) *
-          getDevicePixelRatio();
+          devicePixelRatio;
 
-        context.drawImage(sprite.image, x, y, spriteWidth, spriteHeight);
+        context.drawImage(
+          sprite.image,
+          x,
+          y,
+          spriteWidth * devicePixelRatio,
+          spriteHeight * devicePixelRatio
+        );
 
         if (color != null) {
           const imageData = context.getImageData(
             x,
             y,
-            spriteWidth,
-            spriteHeight
+            spriteWidth * devicePixelRatio,
+            spriteHeight * devicePixelRatio
           );
           const rgb = hexToRgb(color);
 
