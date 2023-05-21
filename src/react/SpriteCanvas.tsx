@@ -25,18 +25,38 @@ interface SpriteCanvasProps {
   spriteHeight: number;
 }
 
-export default function SpriteCanvas({
-  sprites: spriteProps,
-  colors,
-  spriteWidth: spriteWidth,
-  spriteHeight: spriteHeight,
-}: SpriteCanvasProps) {
+interface SpriteCanvasHandle {
+  getCanvas: () => HTMLCanvasElement | null;
+}
+
+const SpriteCanvas: React.ForwardRefRenderFunction<
+  SpriteCanvasHandle,
+  SpriteCanvasProps
+> = (
+  {
+    sprites: spriteProps,
+    colors,
+    spriteWidth: spriteWidth,
+    spriteHeight: spriteHeight,
+  },
+  forwardedRef
+) => {
   const canvas = React.useRef<HTMLCanvasElement | null>(null);
   const sprites = React.useRef<Sprites[]>([]);
 
+  React.useImperativeHandle(
+    forwardedRef,
+    () => {
+      return {
+        getCanvas: () => canvas.current,
+      };
+    },
+    []
+  );
+
   const drawSprites = React.useCallback(() => {
     const canvasRef = canvas.current;
-    const context = canvas.current?.getContext("2d", {
+    const context = canvasRef?.getContext("2d", {
       willReadFrequently: true,
     });
     if (context == null || canvasRef == null) {
@@ -123,4 +143,6 @@ export default function SpriteCanvas({
   }, [colors.length, spriteHeight, spriteWidth, spriteProps.length]);
 
   return <canvas ref={canvas} className={styles.spriteCanvas} />;
-}
+};
+
+export default React.forwardRef(SpriteCanvas);

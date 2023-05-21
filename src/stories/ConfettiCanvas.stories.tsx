@@ -70,7 +70,10 @@ function ConfettiCanvasStoryWrapper({
   maxSize,
   colors,
 }: ConfettiCanvasStoryWrapperProps) {
-  const ref = React.useRef<React.ElementRef<typeof ConfettiCanvas>>(null);
+  const confettiCanvas =
+    React.useRef<React.ElementRef<typeof ConfettiCanvas>>(null);
+  const spriteCanvas =
+    React.useRef<React.ElementRef<typeof SpriteCanvas>>(null);
   const environment = React.useMemo(
     () => new Environment({ gravity, wind }),
     [gravity, wind]
@@ -78,6 +81,11 @@ function ConfettiCanvasStoryWrapper({
 
   const addConfetti = React.useCallback(
     (x: number, y: number) => {
+      const spriteCanvasRef = spriteCanvas.current?.getCanvas();
+      if (confettiCanvas.current == null || spriteCanvasRef == null) {
+        return;
+      }
+
       const createConfettiArgs: CreateConfettiArgs = {
         position: {
           type: "static-random",
@@ -120,7 +128,8 @@ function ConfettiCanvasStoryWrapper({
         },
         colors,
       };
-      ref.current?.addConfetti(createConfettiArgs);
+
+      confettiCanvas.current.addConfetti(createConfettiArgs, spriteCanvasRef);
     },
     [
       colors,
@@ -151,7 +160,7 @@ function ConfettiCanvasStoryWrapper({
   );
 
   const handleClick = (e: React.MouseEvent) => {
-    const { x, y } = getClickPosition(e, ref.current?.getCanvas());
+    const { x, y } = getClickPosition(e, confettiCanvas.current?.getCanvas());
     addConfetti(x, y);
   };
 
@@ -166,13 +175,14 @@ function ConfettiCanvasStoryWrapper({
   return (
     <>
       <SpriteCanvas
+        ref={spriteCanvas}
         sprites={SPRITES}
         colors={colors}
         spriteWidth={maxSize}
         spriteHeight={maxSize}
       />
       <ConfettiCanvas
-        ref={ref}
+        ref={confettiCanvas}
         onClick={handleClick}
         environment={environment}
       />

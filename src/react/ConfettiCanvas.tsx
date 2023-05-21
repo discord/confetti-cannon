@@ -10,7 +10,10 @@ type ConfettiCanvasProps = {
 };
 
 interface ConfettiCanvasHandle {
-  addConfetti: (args: CreateConfettiArgs) => void;
+  addConfetti: (
+    args: CreateConfettiArgs,
+    spriteCanvas: HTMLCanvasElement
+  ) => void;
   getCanvas: () => HTMLCanvasElement | null;
 }
 
@@ -68,11 +71,10 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
   }, [handleTick]);
 
   const addConfetti = React.useCallback(
-    (args: CreateConfettiArgs) => {
+    (args: CreateConfettiArgs, spriteCanvas: HTMLCanvasElement) => {
       allConfetti.current.set(`${Math.random()}`, {
         confetti: createConfetti(args),
-        // TODO: sprite canvas is incorrect
-        spriteCanvas: canvas.current!,
+        spriteCanvas,
       });
 
       if (animationFrameRequestId.current == null) {
