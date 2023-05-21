@@ -136,7 +136,7 @@ function ConfettiCanvasStoryWrapper({
         colors,
       };
 
-      cannon.addConfetti(createConfettiArgs, numberToFire);
+      cannon.addMultipleConfetti(createConfettiArgs, numberToFire);
     },
     [
       cannon,
