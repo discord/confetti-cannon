@@ -11,6 +11,7 @@ import {
   SpriteCanvasData,
   SpriteProp,
 } from "./react/SpriteCanvas";
+import { Vector2, Vector3 } from "./Types";
 
 interface StaticConfigConstant<T> {
   type: "static";
@@ -40,14 +41,6 @@ interface LinearConfigRandom<T> {
 }
 
 type LinearConfig<T> = LinearConfigConstant<T> | LinearConfigRandom<T>;
-
-interface Vector2 {
-  x: number;
-  y: number;
-}
-interface Vector3 extends Vector2 {
-  z: number;
-}
 
 type StaticConfigNumber = StaticConfig<number>;
 type StaticConfigVector2 = StaticConfig<Vector2>;

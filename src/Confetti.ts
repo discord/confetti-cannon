@@ -4,6 +4,7 @@ import {
   UpdatableVector2Value,
   UpdatableVector3Value,
 } from "./UpdatableValue";
+import { Vector2 } from "./Types";
 
 function calculateAirResistance(
   externalForce: number,
@@ -172,5 +173,10 @@ export default class Confetti {
         this.velocity.x < 0 &&
         this.position.x + this.width.value * devicePixelRatio < 0)
     );
+  }
+
+  addForce(force: Vector2) {
+    this.velocity.x += force.x;
+    this.velocity.y += force.y;
   }
 }
