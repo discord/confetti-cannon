@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import * as React from "react";
-
-import ConfettiCanvas from "../../components/ConfettiCanvas";
 import Environment from "../../Environment";
+import ConfettiCanvas from "../../components/ConfettiCanvas";
 
 function ConfettiCanvasStory(args: { gravity: number; wind: number }) {
   return <ConfettiCanvas environment={new Environment(args)} />;

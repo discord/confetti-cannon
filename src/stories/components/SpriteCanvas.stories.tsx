@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-
 import SpriteCanvas from "../../components/SpriteCanvas";
 
 const SPRITES = [
