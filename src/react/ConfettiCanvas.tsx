@@ -20,6 +20,7 @@ export interface ConfettiCanvasHandle {
     sprite?: SpriteProp,
     color?: string | null
   ) => Confetti;
+  clearConfetti: () => void;
   getCanvas: () => HTMLCanvasElement | null;
 }
 
@@ -106,6 +107,11 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
     [handleTick]
   );
 
+  const clearConfetti = React.useCallback(
+    () => allConfetti.current.clear(),
+    []
+  );
+
   const getCanvas = React.useCallback(() => canvas.current, []);
 
   React.useImperativeHandle(
@@ -113,10 +119,11 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
     () => {
       return {
         addConfetti,
+        clearConfetti,
         getCanvas,
       };
     },
-    [addConfetti, getCanvas]
+    [addConfetti, clearConfetti, getCanvas]
   );
 
   React.useEffect(() => {

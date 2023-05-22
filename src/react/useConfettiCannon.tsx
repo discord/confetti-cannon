@@ -41,5 +41,10 @@ export default function useConfettiCannon(
     [addConfetti]
   );
 
-  return { addConfetti, addMultipleConfetti };
+  const clearConfetti = React.useCallback(
+    () => confettiCanvas.current?.clearConfetti(),
+    [confettiCanvas]
+  );
+
+  return { addConfetti, addMultipleConfetti, clearConfetti };
 }

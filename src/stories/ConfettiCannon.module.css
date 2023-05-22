@@ -1,0 +1,8 @@
+.bordered {
+  border: 1px solid black;
+}
+
+.sized {
+  width: 600px;
+  height: 300px;
+}
