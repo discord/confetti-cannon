@@ -49,13 +49,11 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
 
     context.clearRect(0, 0, canvasRef.width, canvasRef.height);
 
-    const devicePixelRatio = getDevicePixelRatio();
-
     allConfetti.current.forEach(({ confetti, spriteCanvas }, id) => {
-      confetti.update(environment, devicePixelRatio);
-      confetti.draw(spriteCanvas, context, devicePixelRatio);
+      confetti.update(environment);
+      confetti.draw(spriteCanvas, context);
 
-      if (confetti.shouldDestroy(canvasRef, environment, devicePixelRatio)) {
+      if (confetti.shouldDestroy(canvasRef, environment)) {
         allConfetti.current.delete(id);
       }
     });

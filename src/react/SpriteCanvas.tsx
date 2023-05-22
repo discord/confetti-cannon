@@ -1,6 +1,6 @@
 import * as React from "react";
 import classNames from "classnames";
-import { getDevicePixelRatio, hexToRgb } from "../Utils";
+import { hexToRgb } from "../Utils";
 
 import styles from "./SpriteCanvas.module.css";
 
@@ -82,31 +82,20 @@ const SpriteCanvas: React.ForwardRefRenderFunction<
       return;
     }
     context.clearRect(0, 0, canvasRef.width, canvasRef.height);
-    const devicePixelRatio = getDevicePixelRatio();
 
     sprites.current.forEach((sprite, spriteIndex) => {
       const drawSprite = (color: string | null, colorIndex: number) => {
-        const x =
-          (spriteWidth * colorIndex + SPRITE_SPACING * colorIndex) *
-          devicePixelRatio;
-        const y =
-          (spriteHeight * spriteIndex + SPRITE_SPACING * spriteIndex) *
-          devicePixelRatio;
+        const x = spriteWidth * colorIndex + SPRITE_SPACING * colorIndex;
+        const y = spriteHeight * spriteIndex + SPRITE_SPACING * spriteIndex;
 
-        context.drawImage(
-          sprite.image,
-          x,
-          y,
-          spriteWidth * devicePixelRatio,
-          spriteHeight * devicePixelRatio
-        );
+        context.drawImage(sprite.image, x, y, spriteWidth, spriteHeight);
 
         if (color != null) {
           const imageData = context.getImageData(
             x,
             y,
-            spriteWidth * devicePixelRatio,
-            spriteHeight * devicePixelRatio
+            spriteWidth,
+            spriteHeight
           );
           const rgb = hexToRgb(color);
 
@@ -158,13 +147,9 @@ const SpriteCanvas: React.ForwardRefRenderFunction<
   React.useEffect(() => {
     if (canvas.current != null) {
       canvas.current.width =
-        (spriteWidth + SPRITE_SPACING) *
-        Math.max(colors.length, 1) *
-        getDevicePixelRatio();
+        (spriteWidth + SPRITE_SPACING) * Math.max(colors.length, 1);
       canvas.current.height =
-        (spriteHeight + SPRITE_SPACING) *
-        spriteProps.length *
-        getDevicePixelRatio();
+        (spriteHeight + SPRITE_SPACING) * spriteProps.length;
     }
   }, [colors.length, spriteHeight, spriteWidth, spriteProps.length]);
 

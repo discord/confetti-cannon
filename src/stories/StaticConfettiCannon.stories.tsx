@@ -130,14 +130,7 @@ function StaticCanvasStoryWrapper({
         environment={environment}
       />
       <div>
-        <button
-          onClick={() =>
-            addConfetti(
-              (size / 2) * window.devicePixelRatio,
-              (size / 2) * window.devicePixelRatio
-            )
-          }
-        >
+        <button onClick={() => addConfetti(size / 2, size / 2)}>
           Create at top left
         </button>
         <button onClick={() => cannon.clearConfetti()}>Clear Canvas</button>
@@ -153,7 +146,7 @@ const meta = {
   tags: ["autodocs"],
   args: {
     showSpriteCanvas: false,
-    size: 20,
+    size: 40,
     positionAddX: 0,
     positionAddY: 0,
     velocityAddX: 0,

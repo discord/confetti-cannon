@@ -74,7 +74,7 @@ export default class Confetti {
     this._lastUpdatedAt = Date.now();
   }
 
-  update(environment: Environment, devicePixelRatio: number) {
+  update(environment: Environment) {
     const newUpdateTime = Date.now();
     const deltaTime = (newUpdateTime - this._lastUpdatedAt) / 100;
 
@@ -106,8 +106,8 @@ export default class Confetti {
     this.velocity.x += windForce + airResistanceForceX;
 
     this.position.update(deltaTime);
-    this.position.y += (this.velocity.y / devicePixelRatio) * deltaTime;
-    this.position.x += (this.velocity.x / devicePixelRatio) * deltaTime;
+    this.position.y += this.velocity.y * deltaTime;
+    this.position.x += this.velocity.x * deltaTime;
 
     this.width.update(deltaTime);
     this.height.update(deltaTime);
@@ -117,11 +117,7 @@ export default class Confetti {
     this._lastUpdatedAt = newUpdateTime;
   }
 
-  draw(
-    spriteCanvas: HTMLCanvasElement,
-    context: CanvasRenderingContext2D,
-    devicePixelRatio: number
-  ) {
+  draw(spriteCanvas: HTMLCanvasElement, context: CanvasRenderingContext2D) {
     context.save();
 
     context.globalAlpha = this.opacity.value;
@@ -134,44 +130,39 @@ export default class Confetti {
 
     context.drawImage(
       spriteCanvas,
-      this.spriteX * devicePixelRatio,
-      this.spriteY * devicePixelRatio,
-      this.spriteWidth * devicePixelRatio,
-      this.spriteHeight * devicePixelRatio,
-      -this.width.value,
-      -this.height.value,
-      this.width.value * devicePixelRatio,
-      this.height.value * devicePixelRatio
+      this.spriteX,
+      this.spriteY,
+      this.spriteWidth,
+      this.spriteHeight,
+      -this.width.value / 2,
+      -this.height.value / 2,
+      this.width.value,
+      this.height.value
     );
 
     context.restore();
   }
 
-  shouldDestroy(
-    canvas: HTMLCanvasElement,
-    environment: Environment,
-    devicePixelRatio: number
-  ) {
+  shouldDestroy(canvas: HTMLCanvasElement, environment: Environment) {
     return (
       // opacity
       this.opacity.value < 0 ||
       // top
       (environment.gravity >= 0 &&
         this.velocity.y < 0 &&
-        this.position.y + this.height.value * devicePixelRatio < 0) ||
+        this.position.y + this.height.value < 0) ||
       // bottom
       (environment.gravity <= 0 &&
         this.velocity.y > 0 &&
-        this.position.y - this.height.value * devicePixelRatio >
-          canvas.height) ||
+        this.position.y - this.height.value > canvas.height) ||
       // left
       (environment.wind >= 0 &&
         this.velocity.x > 0 &&
-        this.position.x - this.width.value * devicePixelRatio > canvas.width) ||
+        this.position.x - this.width.value > canvas.width) ||
       // right
       (environment.wind <= 0 &&
         this.velocity.x < 0 &&
-        this.position.x + this.width.value * devicePixelRatio < 0)
+        this.position.x + this.width.value < 0)
     );
   }
 

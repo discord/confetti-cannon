@@ -6,10 +6,6 @@ export function setCanvasSize(canvas: HTMLCanvasElement) {
   }
 }
 
-export function getDevicePixelRatio() {
-  return window.devicePixelRatio;
-}
-
 export function hexToRgb(hex: string) {
   if (hex[0] === "#") {
     hex = hex.slice(1);
