@@ -135,14 +135,12 @@ function ConfettiCannonStoryWrapper({
           minValue: minSize,
           maxValue: maxSize,
         },
-        colors,
       };
 
       cannon.addMultipleConfetti(createConfettiArgs, numberToFire);
     },
     [
       cannon,
-      colors,
       dragCoefficient,
       maxRotationAddValueX,
       maxRotationAddValueY,

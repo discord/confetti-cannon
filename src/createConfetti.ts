@@ -54,7 +54,7 @@ type UpdatableValueConfigNumber = StaticConfigNumber | LinearConfigNumber;
 type UpdatableValueConfigVector2 = StaticConfigVector2 | LinearConfigVector2;
 type UpdatableValueConfigVector3 = StaticConfigVector3 | LinearConfigVector3;
 
-export interface CreateConfettiArgs {
+export interface CreateConfettiArgsFull {
   id?: string;
   position: UpdatableValueConfigVector2;
   velocity: UpdatableValueConfigVector2;
@@ -64,8 +64,15 @@ export interface CreateConfettiArgs {
   height?: UpdatableValueConfigNumber;
   size?: UpdatableValueConfigNumber;
   opacity: UpdatableValueConfigNumber;
-  colors: string[];
 }
+
+type CreateConfettiArgsDefaults = Pick<
+  CreateConfettiArgsFull,
+  "velocity" | "rotation" | "dragCoefficient" | "opacity"
+>;
+
+export type CreateConfettiArgs = Partial<CreateConfettiArgsFull> &
+  Pick<CreateConfettiArgsFull, "position">;
 
 type UpdatableValueConfigNumberAnnotated = UpdatableValueConfigNumber & {
   valueType: "number";
@@ -77,7 +84,7 @@ type UpdatableValueConfigVector3Annotated = UpdatableValueConfigVector3 & {
   valueType: "Vector3";
 };
 
-interface CreateConfettiArgsAnnotated extends CreateConfettiArgs {
+interface CreateConfettiArgsAnnotated extends CreateConfettiArgsFull {
   position: UpdatableValueConfigVector2Annotated;
   velocity: UpdatableValueConfigVector2Annotated;
   rotation: UpdatableValueConfigVector3Annotated;
@@ -205,7 +212,7 @@ function annotateArgs({
   size,
   opacity,
   ...args
-}: CreateConfettiArgs): CreateConfettiArgsAnnotated {
+}: CreateConfettiArgsFull): CreateConfettiArgsAnnotated {
   return {
     ...args,
     position: { ...position, valueType: "Vector2" },
@@ -216,6 +223,32 @@ function annotateArgs({
     height: height != null ? { ...height, valueType: "number" } : undefined,
     size: size != null ? { ...size, valueType: "number" } : undefined,
     opacity: { ...opacity, valueType: "number" },
+  };
+}
+
+const DEFAULTS: CreateConfettiArgsDefaults = {
+  velocity: {
+    type: "static",
+    value: { x: 0, y: 0 },
+  },
+  rotation: {
+    type: "static",
+    value: { x: 0, y: 0, z: 0 },
+  },
+  dragCoefficient: {
+    type: "static",
+    value: 0.001,
+  },
+  opacity: {
+    type: "static",
+    value: 1,
+  },
+};
+
+function provideDefaults(args: CreateConfettiArgs): CreateConfettiArgsFull {
+  return {
+    ...DEFAULTS,
+    ...args,
   };
 }
 
@@ -272,7 +305,8 @@ export default function createConfetti(
   requestedSprite?: SpriteProp,
   requestedColor?: string | null
 ) {
-  const args = annotateArgs(rawArgs);
+  const fullRawArgs = provideDefaults(rawArgs);
+  const args = annotateArgs(fullRawArgs);
 
   const size = args.size != null ? getValueNumber(args.size) : null;
   const width = args.width != null ? getValueNumber(args.width) : size;

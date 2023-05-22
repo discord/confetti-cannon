@@ -74,10 +74,6 @@ function StaticStoryWrapper({
           value: { x: 0, y: 0, z: 0 },
           addValue: { x: rotateAddX, y: rotateAddY, z: rotateAddZ },
         },
-        dragCoefficient: {
-          type: "static",
-          value: 0.001,
-        },
         opacity: {
           type: "linear",
           value: 1,
@@ -88,7 +84,6 @@ function StaticStoryWrapper({
           value: size,
           addValue: sizeAdd,
         },
-        colors: SpriteCanvasStory.args.colors,
       };
 
       cannon.addConfetti(createConfettiArgs);

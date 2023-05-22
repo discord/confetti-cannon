@@ -71,20 +71,11 @@ function BasicStoryWrapper() {
             z: 25,
           },
         },
-        dragCoefficient: {
-          type: "static",
-          value: 0.001,
-        },
-        opacity: {
-          type: "static",
-          value: 1,
-        },
         size: {
           type: "static-random",
           minValue: 20,
           maxValue: MAX_SIZE,
         },
-        colors: COLORS,
       };
 
       cannon.addConfetti(createConfettiArgs);

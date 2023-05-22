@@ -41,27 +41,10 @@ function DraggingStoryWrapper() {
           type: "static",
           value: { x: x, y: y },
         },
-        velocity: {
-          type: "static",
-          value: { x: 0, y: 0 },
-        },
-        rotation: {
-          type: "static",
-          value: { x: 0, y: 0, z: 0 },
-        },
-        dragCoefficient: {
-          type: "static",
-          value: 0.001,
-        },
-        opacity: {
-          type: "static",
-          value: 1,
-        },
         size: {
           type: "static",
           value: SIZE,
         },
-        colors: SpriteCanvasStory.args.colors,
       };
 
       cannon.addConfetti(createConfettiArgs);
@@ -71,6 +54,8 @@ function DraggingStoryWrapper() {
 
   const handleMouseDown = (e: React.MouseEvent, confetti: Confetti | null) => {
     if (confetti != null) {
+      confetti.velocity.x = 0;
+      confetti.velocity.y = 0;
       draggingConfetti.current = confetti;
       return;
     }
