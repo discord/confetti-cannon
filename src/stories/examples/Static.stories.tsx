@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import classNames from "classnames";
 import * as React from "react";
+import Confetti from "../../Confetti";
 import Environment from "../../Environment";
 import { getClickPosition } from "../../Utils";
 import ConfettiCanvas from "../../components/ConfettiCanvas";
@@ -101,7 +102,11 @@ function StaticStory({
     ]
   );
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = (e: React.MouseEvent, confetti: Confetti | null) => {
+    if (confetti != null) {
+      cannon.deleteConfetti(confetti.id);
+      return;
+    }
     const { x, y } = getClickPosition(e, confettiCanvas.current?.getCanvas());
     addConfetti(x, y);
   };
