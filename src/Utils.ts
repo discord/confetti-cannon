@@ -1,8 +1,8 @@
 export function setCanvasSize(canvas: HTMLCanvasElement) {
   if (canvas != null) {
     const { width, height } = canvas.getBoundingClientRect();
-    canvas.width = width * getDevicePixelRatio();
-    canvas.height = height * getDevicePixelRatio();
+    canvas.width = width;
+    canvas.height = height;
   }
 }
 
