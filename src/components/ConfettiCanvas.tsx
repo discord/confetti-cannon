@@ -1,9 +1,9 @@
 import * as React from "react";
 import { v4 as uuid } from "uuid";
 import Confetti from "../Confetti";
-import createConfetti, { CreateConfettiArgs } from "../createConfetti";
 import Environment from "../Environment";
 import { getClickPosition, isInRect, mapFind, setCanvasSize } from "../Utils";
+import createConfetti, { CreateConfettiArgs } from "../createConfetti";
 import { SpriteCanvasData, SpriteProp } from "./SpriteCanvas";
 
 interface ConfettiCanvasProps

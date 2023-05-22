@@ -1,5 +1,8 @@
 import invariant from "invariant";
 import Confetti from "./Confetti";
+import { CREATE_CONFETTI_DEFAULTS } from "./Constants";
+import { SPRITE_SPACING } from "./ConstantsInternal";
+import { Vector2, Vector3 } from "./Types";
 import { UpdatableVector2Value, UpdatableVector3Value } from "./UpdatableValue";
 import {
   LinearUpdatableValue,
@@ -10,9 +13,6 @@ import {
   SpriteCanvasData,
   SpriteProp,
 } from "./components/SpriteCanvas";
-import { SPRITE_SPACING } from "./ConstantsInternal";
-import { CREATE_CONFETTI_DEFAULTS } from "./Constants";
-import { Vector2, Vector3 } from "./Types";
 
 interface StaticConfigConstant<T> {
   type: "static";

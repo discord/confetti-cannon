@@ -1,5 +1,7 @@
-import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
+
+import classNames from "classnames";
+import * as React from "react";
 
 import ConfettiCanvas from "../components/ConfettiCanvas";
 import SpriteCanvas from "../components/SpriteCanvas";
@@ -9,7 +11,6 @@ import Environment from "../Environment";
 import { getClickPosition } from "./Utils";
 
 import styles from "./Stories.module.css";
-import classNames from "classnames";
 
 const SPRITES = [
   require("./images/square.svg"),

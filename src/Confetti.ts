@@ -1,11 +1,11 @@
 import Environment from "./Environment";
+import { Vector2 } from "./Types";
 import {
   UpdatableValue,
   UpdatableVector2Value,
   UpdatableVector3Value,
 } from "./UpdatableValue";
 import { calculateAirResistance } from "./Utils";
-import { Vector2 } from "./Types";
 
 type ConfettiArgs = {
   id: string;

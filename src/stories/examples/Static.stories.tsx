@@ -1,16 +1,16 @@
-import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
+import * as React from "react";
 
+import Environment from "../../Environment";
 import ConfettiCanvas from "../../components/ConfettiCanvas";
 import SpriteCanvas from "../../components/SpriteCanvas";
 import useConfettiCannon from "../../components/useConfettiCannon";
 import { CreateConfettiArgs } from "../../createConfetti";
-import Environment from "../../Environment";
 import { getClickPosition } from "../Utils";
 import SpriteCanvasStory from "../components/SpriteCanvas.stories";
 
-import styles from "../Stories.module.css";
 import classNames from "classnames";
+import styles from "../Stories.module.css";
 
 interface StaticStoryProps {
   showSpriteCanvas: boolean;

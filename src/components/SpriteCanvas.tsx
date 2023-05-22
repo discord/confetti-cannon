@@ -1,7 +1,7 @@
-import * as React from "react";
 import classNames from "classnames";
-import { hexToRgb } from "../Utils";
+import * as React from "react";
 import { SPRITE_SPACING } from "../ConstantsInternal";
+import { hexToRgb } from "../Utils";
 
 import styles from "./SpriteCanvas.module.css";
 

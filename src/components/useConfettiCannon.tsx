@@ -1,8 +1,8 @@
 import * as React from "react";
+import Confetti from "../Confetti";
+import { CreateConfettiArgs } from "../createConfetti";
 import { ConfettiCanvasHandle } from "./ConfettiCanvas";
 import { SpriteCanvasHandle } from "./SpriteCanvas";
-import { CreateConfettiArgs } from "../createConfetti";
-import Confetti from "../Confetti";
 
 export default function useConfettiCannon(
   confettiCanvas: React.RefObject<ConfettiCanvasHandle>,
