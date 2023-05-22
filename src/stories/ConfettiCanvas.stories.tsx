@@ -14,7 +14,7 @@ const meta = {
   excludeStories: ["Example"],
   args: {
     gravity: -9.8,
-    wind: 5,
+    wind: 2,
   },
 } satisfies Meta<typeof ConfettiCanvasStory>;
 
