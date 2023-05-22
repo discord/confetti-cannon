@@ -101,7 +101,7 @@ const CONFETTI_CONFETTI_CONFIG: Partial<CreateConfettiArgs> = {
   },
 };
 
-function ComplexStory() {
+function MultipleCannonsStory() {
   const confettiCanvas =
     React.useRef<React.ElementRef<typeof ConfettiCanvas>>(null);
 
@@ -217,10 +217,10 @@ function ComplexStory() {
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 const meta = {
-  title: "Examples/Complex",
-  component: ComplexStory,
+  title: "Examples/MultipleCannons",
+  component: MultipleCannonsStory,
   tags: ["autodocs"],
-} satisfies Meta<typeof ComplexStory>;
+} satisfies Meta<typeof MultipleCannonsStory>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
