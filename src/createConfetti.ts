@@ -414,7 +414,7 @@ function getColorIndex(
       : -1;
   return index !== -1
     ? index
-    : getRandomValue(0, spriteCanvasData.colors.length - 1);
+    : Math.floor(getRandomValue(0, spriteCanvasData.colors.length - 1));
 }
 
 export function getValueNumber(config: UpdatableValueConfigNumber) {
