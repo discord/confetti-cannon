@@ -233,7 +233,7 @@ const meta = {
     maxRotationAddValueY: 25,
     minRotationAddValueZ: -25,
     maxRotationAddValueZ: 25,
-    dragCoefficient: 0.0001,
+    dragCoefficient: 0.001,
     opacity: 1,
     opacityAddValue: -0.01,
     minSize: 20,

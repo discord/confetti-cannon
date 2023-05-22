@@ -11,34 +11,11 @@ import SpriteCanvasStory from "./SpriteCanvas.stories";
 
 import styles from "./ConfettiCannon.module.css";
 import classNames from "classnames";
+import Confetti from "../Confetti";
 
-interface ConfettiCannonStoryWrapperProps {
-  showSpriteCanvas: boolean;
-  size: number;
-  positionAddX: number;
-  positionAddY: number;
-  velocityAddX: number;
-  velocityAddY: number;
-  rotateAddX: number;
-  rotateAddY: number;
-  rotateAddZ: number;
-  opacityAdd: number;
-  sizeAdd: number;
-}
+const SIZE = 40;
 
-function StaticCanvasStoryWrapper({
-  showSpriteCanvas,
-  size,
-  positionAddX,
-  positionAddY,
-  velocityAddX,
-  velocityAddY,
-  rotateAddX,
-  rotateAddY,
-  rotateAddZ,
-  opacityAdd,
-  sizeAdd,
-}: ConfettiCannonStoryWrapperProps) {
+function ClickingCanvasStoryWrapper() {
   const confettiCanvas = React.useRef<React.ElementRef<
     typeof ConfettiCanvas
   > | null>(null);
@@ -48,8 +25,9 @@ function StaticCanvasStoryWrapper({
     () => new Environment({ gravity: 0, wind: 0 }),
     []
   );
-  const [isSmall, setIsSmall] = React.useState(false);
   const cannon = useConfettiCannon(confettiCanvas, spriteCanvas);
+  const lastMousePosition = React.useRef({ x: 0, y: 0 });
+  const draggingConfetti = React.useRef<Confetti | null>(null);
 
   const addConfetti = React.useCallback(
     (x: number, y: number) => {
@@ -60,57 +38,66 @@ function StaticCanvasStoryWrapper({
 
       const createConfettiArgs: CreateConfettiArgs = {
         position: {
-          type: "linear",
+          type: "static",
           value: { x: x, y: y },
-          addValue: { x: positionAddX, y: positionAddY },
         },
         velocity: {
-          type: "linear",
+          type: "static",
           value: { x: 0, y: 0 },
-          addValue: { x: velocityAddX, y: velocityAddY },
         },
         rotation: {
-          type: "linear",
+          type: "static",
           value: { x: 0, y: 0, z: 0 },
-          addValue: { x: rotateAddX, y: rotateAddY, z: rotateAddZ },
         },
         dragCoefficient: {
           type: "static",
           value: 0.001,
         },
         opacity: {
-          type: "linear",
+          type: "static",
           value: 1,
-          addValue: opacityAdd,
         },
         size: {
-          type: "linear",
-          value: size,
-          addValue: sizeAdd,
+          type: "static",
+          value: SIZE,
         },
         colors: SpriteCanvasStory.args.colors,
       };
 
       cannon.addConfetti(createConfettiArgs);
     },
-    [
-      cannon,
-      opacityAdd,
-      positionAddX,
-      positionAddY,
-      rotateAddX,
-      rotateAddY,
-      rotateAddZ,
-      size,
-      sizeAdd,
-      velocityAddX,
-      velocityAddY,
-    ]
+    [cannon]
   );
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleMouseDown = (e: React.MouseEvent, confetti: Confetti | null) => {
+    if (confetti != null) {
+      draggingConfetti.current = confetti;
+      return;
+    }
     const { x, y } = getClickPosition(e, confettiCanvas.current?.getCanvas());
+    lastMousePosition.current = { x, y };
     addConfetti(x, y);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (draggingConfetti.current != null) {
+      const { x, y } = getClickPosition(e, confettiCanvas.current?.getCanvas());
+      draggingConfetti.current.position.x = x;
+      draggingConfetti.current.position.y = y;
+    }
+  };
+
+  const handleMouseUp = (e: React.MouseEvent) => {
+    if (draggingConfetti.current == null) {
+      return;
+    }
+
+    const { x, y } = getClickPosition(e, confettiCanvas.current?.getCanvas());
+    const velocityX = x - lastMousePosition.current.x;
+    const velocityY = y - lastMousePosition.current.y;
+    draggingConfetti.current.velocity.x = velocityX;
+    draggingConfetti.current.velocity.y = velocityY;
+    draggingConfetti.current = null;
   };
 
   return (
@@ -118,27 +105,21 @@ function StaticCanvasStoryWrapper({
       <SpriteCanvas
         ref={spriteCanvas}
         className={styles.bordered}
-        visible={showSpriteCanvas}
         sprites={SpriteCanvasStory.args.sprites}
         colors={SpriteCanvasStory.args.colors}
-        spriteWidth={size}
-        spriteHeight={size}
+        spriteWidth={SIZE}
+        spriteHeight={SIZE}
       />
       <ConfettiCanvas
         ref={confettiCanvas}
-        className={classNames(
-          styles.bordered,
-          isSmall ? styles.sizedSmall : styles.sized
-        )}
-        onClick={handleClick}
+        className={classNames(styles.bordered, styles.sized)}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
         environment={environment}
       />
       <div>
-        <button onClick={() => addConfetti(size / 2, size / 2)}>
-          Create at top left
-        </button>
         <button onClick={() => cannon.clearConfetti()}>Clear Canvas</button>
-        <button onClick={() => setIsSmall(!isSmall)}>Toggle Size</button>
       </div>
     </>
   );
@@ -146,23 +127,10 @@ function StaticCanvasStoryWrapper({
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 const meta = {
-  title: "StaticCanvas",
-  component: StaticCanvasStoryWrapper,
+  title: "ClickingCanvas",
+  component: ClickingCanvasStoryWrapper,
   tags: ["autodocs"],
-  args: {
-    showSpriteCanvas: false,
-    size: 40,
-    positionAddX: 0,
-    positionAddY: 0,
-    velocityAddX: 0,
-    velocityAddY: 0,
-    rotateAddX: 0,
-    rotateAddY: 0,
-    rotateAddZ: 0,
-    opacityAdd: 0,
-    sizeAdd: 0,
-  },
-} satisfies Meta<typeof StaticCanvasStoryWrapper>;
+} satisfies Meta<typeof ClickingCanvasStoryWrapper>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
