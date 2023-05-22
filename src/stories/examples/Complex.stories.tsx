@@ -40,7 +40,7 @@ const COLORS = [
 ];
 
 const FALLING_CHARACTER_SIZE = 80;
-const MAX_SIZE = FALLING_CHARACTER_SIZE;
+const MAX_CONFETTI_SIZE = 40;
 
 const FALLING_CHARACTER_ID_PREFIX = "FALLING_CHARACTER";
 const FALLING_CHARACTER_CONFETTI_CONFIG: Partial<CreateConfettiArgs> = {
@@ -77,7 +77,7 @@ const CONFETTI_CONFETTI_CONFIG: Partial<CreateConfettiArgs> = {
   size: {
     type: "static-random",
     minValue: 20,
-    maxValue: 40,
+    maxValue: MAX_CONFETTI_SIZE,
   },
   velocity: {
     type: "static-random",
@@ -147,7 +147,7 @@ function ComplexStory() {
         },
       };
 
-      fallingCharacterCannon.addConfetti(createConfettiArgs);
+      return fallingCharacterCannon.addConfetti(createConfettiArgs);
     },
     [fallingCharacterCannon]
   );
@@ -195,15 +195,15 @@ function ComplexStory() {
         ref={fallingCharacterSpriteCanvas}
         sprites={FALLING_CHARACTER_SPRITES}
         colors={FALLING_CHARACTER_COLORS}
-        spriteWidth={MAX_SIZE}
-        spriteHeight={MAX_SIZE}
+        spriteWidth={FALLING_CHARACTER_SIZE}
+        spriteHeight={FALLING_CHARACTER_SIZE}
       />
       <SpriteCanvas
         ref={confettiSpriteCanvas}
         sprites={SPRITES}
         colors={COLORS}
-        spriteWidth={MAX_SIZE}
-        spriteHeight={MAX_SIZE}
+        spriteWidth={MAX_CONFETTI_SIZE}
+        spriteHeight={MAX_CONFETTI_SIZE}
       />
       <ConfettiCanvas
         ref={confettiCanvas}
