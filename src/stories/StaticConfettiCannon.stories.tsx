@@ -50,6 +50,7 @@ function StaticCanvasStoryWrapper({
     []
   );
   const cannon = useConfettiCannon(confettiCanvas, spriteCanvas);
+  const draggingConfetti = React.useRef<Confetti | null>(null);
 
   const addConfetti = React.useCallback(
     (x: number, y: number) => {
@@ -108,13 +109,25 @@ function StaticCanvasStoryWrapper({
     ]
   );
 
-  const handleClick = (e: React.MouseEvent, confetti: Confetti | null) => {
+  const handleMouseDown = (e: React.MouseEvent, confetti: Confetti | null) => {
     if (confetti != null) {
-      console.log(confetti);
+      draggingConfetti.current = confetti;
       return;
     }
     const { x, y } = getClickPosition(e, confettiCanvas.current?.getCanvas());
     addConfetti(x, y);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (draggingConfetti.current != null) {
+      const { x, y } = getClickPosition(e, confettiCanvas.current?.getCanvas());
+      draggingConfetti.current.position.x = x;
+      draggingConfetti.current.position.y = y;
+    }
+  };
+
+  const handleMouseUp = () => {
+    draggingConfetti.current = null;
   };
 
   return (
@@ -131,7 +144,9 @@ function StaticCanvasStoryWrapper({
       <ConfettiCanvas
         ref={confettiCanvas}
         className={classNames(styles.bordered, styles.sized)}
-        onClick={handleClick}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
         environment={environment}
       />
       <div>

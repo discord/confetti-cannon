@@ -6,11 +6,16 @@ import Environment from "../Environment";
 import { getClickPosition, isInRect, mapFind, setCanvasSize } from "../Utils";
 import { SpriteCanvasData, SpriteProp } from "./SpriteCanvas";
 
-type ConfettiCanvasProps = {
+interface ConfettiCanvasProps
+  extends Omit<
+    React.HTMLAttributes<HTMLCanvasElement>,
+    "onClick" | "onMouseDown"
+  > {
   className?: string;
   environment: Environment;
   onClick?: (e: React.MouseEvent, confetti: Confetti | null) => void;
-};
+  onMouseDown?: (e: React.MouseEvent, confetti: Confetti | null) => void;
+}
 
 export interface ConfettiCanvasHandle {
   addConfetti: (
@@ -27,7 +32,10 @@ export interface ConfettiCanvasHandle {
 const ConfettiCanvas: React.ForwardRefRenderFunction<
   ConfettiCanvasHandle,
   ConfettiCanvasProps
-> = ({ className, environment, onClick }, forwardedRef) => {
+> = (
+  { className, environment, onClick, onMouseDown, ...props },
+  forwardedRef
+) => {
   const canvas = React.useRef<HTMLCanvasElement | null>(null);
 
   const allConfetti = React.useRef<
@@ -124,9 +132,14 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
     [addConfetti, clearConfetti, getCanvas]
   );
 
-  const handleClick = React.useCallback(
-    (e: React.MouseEvent) => {
-      if (onClick == null) {
+  const handleMouseEvent = React.useCallback(
+    (
+      e: React.MouseEvent,
+      handler?:
+        | ((e: React.MouseEvent, confetti: Confetti | null) => void)
+        | null
+    ) => {
+      if (handler == null) {
         return;
       }
 
@@ -139,9 +152,21 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
           height: confetti.height.value,
         })
       );
-      onClick(e, confetti?.confetti ?? null);
+      handler(e, confetti?.confetti ?? null);
     },
-    [onClick]
+    []
+  );
+
+  const handleClick = React.useCallback(
+    (e: React.MouseEvent) => handleMouseEvent(e, onClick),
+    [handleMouseEvent, onClick]
+  );
+
+  const handleMouseDown = React.useCallback(
+    (e: React.MouseEvent) => {
+      handleMouseEvent(e, onMouseDown);
+    },
+    [handleMouseEvent, onMouseDown]
   );
 
   React.useEffect(() => {
@@ -150,7 +175,15 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
     }
   }, []);
 
-  return <canvas className={className} ref={canvas} onClick={handleClick} />;
+  return (
+    <canvas
+      {...props}
+      className={className}
+      ref={canvas}
+      onMouseDown={handleMouseDown}
+      onClick={handleClick}
+    />
+  );
 };
 
 export default React.forwardRef(ConfettiCanvas);
