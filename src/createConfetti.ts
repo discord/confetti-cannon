@@ -10,7 +10,7 @@ import {
   Sprite,
   SpriteCanvasData,
   SpriteProp,
-} from "./react/SpriteCanvas";
+} from "./components/SpriteCanvas";
 import { Vector2, Vector3 } from "./Types";
 
 interface StaticConfigConstant<T> {

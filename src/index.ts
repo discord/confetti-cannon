@@ -1,2 +1,2 @@
-export { default as ConfettiCanvas } from "./react/ConfettiCanvas";
-export { default as SpriteCanvas } from "./react/SpriteCanvas";
+export { default as ConfettiCanvas } from "./components/ConfettiCanvas";
+export { default as SpriteCanvas } from "./components/SpriteCanvas";

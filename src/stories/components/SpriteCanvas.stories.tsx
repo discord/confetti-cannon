@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import SpriteCanvas from "../../react/SpriteCanvas";
+import SpriteCanvas from "../../components/SpriteCanvas";
 
 const SPRITES = [
   require("../images/square.svg"),

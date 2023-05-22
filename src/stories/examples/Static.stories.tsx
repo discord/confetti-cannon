@@ -1,9 +1,9 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
-import ConfettiCanvas from "../../react/ConfettiCanvas";
-import SpriteCanvas from "../../react/SpriteCanvas";
-import useConfettiCannon from "../../react/useConfettiCannon";
+import ConfettiCanvas from "../../components/ConfettiCanvas";
+import SpriteCanvas from "../../components/SpriteCanvas";
+import useConfettiCannon from "../../components/useConfettiCannon";
 import { CreateConfettiArgs } from "../../createConfetti";
 import Environment from "../../Environment";
 import { getClickPosition } from "../Utils";
