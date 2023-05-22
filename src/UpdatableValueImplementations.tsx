@@ -20,12 +20,14 @@ export class LinearUpdatableValue extends UpdatableValue {
   }
 }
 
+export type Direction = 1 | -1;
+
 export class OscillatingUpdatableValue extends UpdatableValue {
   min: number;
   max: number;
   duration: number;
   timePassed: number;
-  directionMultiplier: 1 | -1;
+  directionMultiplier: Direction;
   easingFunction: EasingFunction;
 
   constructor(
@@ -33,6 +35,7 @@ export class OscillatingUpdatableValue extends UpdatableValue {
     min: number,
     max: number,
     duration: number,
+    directionMultiplier: Direction,
     easingFunction: EasingFunction
   ) {
     super(value);
@@ -40,7 +43,7 @@ export class OscillatingUpdatableValue extends UpdatableValue {
     this.max = max;
     this.duration = duration;
     this.timePassed = 0;
-    this.directionMultiplier = 1;
+    this.directionMultiplier = directionMultiplier;
     this.easingFunction = easingFunction;
   }
 
@@ -53,11 +56,12 @@ export class OscillatingUpdatableValue extends UpdatableValue {
       this.directionMultiplier *= -1;
     }
 
-    this.value = this.easingFunction(
+    const newValue = this.easingFunction(
       this.timePassed,
       this.min,
       distance,
       this.duration
     );
+    this.value = isNaN(newValue) ? 0 : newValue;
   }
 }

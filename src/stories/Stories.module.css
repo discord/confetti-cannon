@@ -11,3 +11,8 @@
   width: 300px;
   height: 150px;
 }
+
+.sizedLarge {
+  width: 800px;
+  height: 800px;
+}

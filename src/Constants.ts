@@ -11,7 +11,7 @@ export const CREATE_CONFETTI_DEFAULTS: CreateConfettiArgsDefaults = {
   },
   dragCoefficient: {
     type: "static",
-    value: 0.001,
+    value: { x: 0.001, y: 0.001 },
   },
   opacity: {
     type: "static",

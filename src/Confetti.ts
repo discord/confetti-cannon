@@ -15,7 +15,7 @@ type ConfettiArgs = {
   rotation: UpdatableVector3Value;
   width: UpdatableValue;
   height: UpdatableValue;
-  dragCoefficient: UpdatableValue;
+  dragCoefficient: UpdatableVector2Value;
   opacity: UpdatableValue;
 
   spriteX: number;
@@ -32,7 +32,7 @@ export default class Confetti {
   rotation: UpdatableVector3Value;
   width: UpdatableValue;
   height: UpdatableValue;
-  dragCoefficient: UpdatableValue;
+  dragCoefficient: UpdatableVector2Value;
   opacity: UpdatableValue;
 
   spriteX: number;
@@ -77,7 +77,7 @@ export default class Confetti {
     const airResistanceMultiplierY = this.velocity.y > 0 ? -1 : 1;
     const airResistanceForceY = calculateAirResistance(
       gravityForce,
-      this.dragCoefficient.value,
+      this.dragCoefficient.y,
       this.velocity.y,
       airResistanceMultiplierY
     );
@@ -85,7 +85,7 @@ export default class Confetti {
     const airResistanceMultiplierX = this.velocity.x > 0 ? -1 : 1;
     const airResistanceForceX = calculateAirResistance(
       windForce,
-      this.dragCoefficient.value,
+      this.dragCoefficient.x,
       this.velocity.x,
       airResistanceMultiplierX
     );

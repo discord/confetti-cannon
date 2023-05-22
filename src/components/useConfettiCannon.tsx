@@ -2,14 +2,34 @@ import * as React from "react";
 import Confetti from "../Confetti";
 import { CreateConfettiArgs } from "../createConfetti";
 import { ConfettiCanvasHandle } from "./ConfettiCanvas";
-import { SpriteCanvasHandle } from "./SpriteCanvas";
+import { SpriteCanvasHandle, SpriteProp } from "./SpriteCanvas";
+
+interface CreateConfettiRequestedOptions {
+  sprite?: SpriteProp;
+  color?: string;
+}
+
+export interface ConfettiCannon {
+  addConfetti: (
+    createConfettiArgs: CreateConfettiArgs,
+    createConfettiRequestedOptions?: CreateConfettiRequestedOptions
+  ) => Confetti | undefined;
+  addMultipleConfetti: (
+    createConfettiArgs: CreateConfettiArgs,
+    numberToFire: number
+  ) => Confetti[];
+  clearConfetti: () => void;
+}
 
 export default function useConfettiCannon(
   confettiCanvas: React.RefObject<ConfettiCanvasHandle>,
   spriteCanvas: React.RefObject<SpriteCanvasHandle>
-) {
+): ConfettiCannon {
   const addConfetti = React.useCallback(
-    (createConfettiArgs: CreateConfettiArgs) => {
+    (
+      createConfettiArgs: CreateConfettiArgs,
+      { sprite, color }: CreateConfettiRequestedOptions = {}
+    ) => {
       const spriteData = spriteCanvas.current?.getCreateData();
       const spriteCanvasRef = spriteCanvas.current?.getCanvas();
 
@@ -20,7 +40,9 @@ export default function useConfettiCannon(
       return confettiCanvas.current?.addConfetti(
         createConfettiArgs,
         spriteCanvasRef,
-        spriteData
+        spriteData,
+        sprite,
+        color
       );
     },
     [confettiCanvas, spriteCanvas]

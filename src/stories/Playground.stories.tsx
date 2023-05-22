@@ -35,7 +35,8 @@ interface PlaygroundStoryProps {
   maxRotationAddValueY: number;
   minRotationAddValueZ: number;
   maxRotationAddValueZ: number;
-  dragCoefficient: number;
+  dragCoefficientX: number;
+  dragCoefficientY: number;
   opacity: number;
   opacityAddValue: number;
   minSize: number;
@@ -68,7 +69,8 @@ function PlaygroundStory({
   maxRotationAddValueY,
   minRotationAddValueZ,
   maxRotationAddValueZ,
-  dragCoefficient,
+  dragCoefficientX,
+  dragCoefficientY,
   opacity,
   opacityAddValue,
   minSize,
@@ -121,7 +123,7 @@ function PlaygroundStory({
         },
         dragCoefficient: {
           type: "static",
-          value: dragCoefficient,
+          value: { x: dragCoefficientX, y: dragCoefficientY },
         },
         opacity: {
           type: "linear",
@@ -139,7 +141,8 @@ function PlaygroundStory({
     },
     [
       cannon,
-      dragCoefficient,
+      dragCoefficientX,
+      dragCoefficientY,
       maxRotationAddValueX,
       maxRotationAddValueY,
       maxRotationAddValueZ,
@@ -229,7 +232,8 @@ const meta = {
     maxRotationAddValueY: 25,
     minRotationAddValueZ: -25,
     maxRotationAddValueZ: 25,
-    dragCoefficient: 0.001,
+    dragCoefficientX: 0.001,
+    dragCoefficientY: 0.001,
     opacity: 1,
     opacityAddValue: -0.01,
     minSize: 20,
