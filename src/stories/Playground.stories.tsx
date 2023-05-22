@@ -204,7 +204,7 @@ function PlaygroundStory({
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 const meta = {
-  title: "PlaygroundStory",
+  title: "Playground",
   component: PlaygroundStory,
   tags: ["autodocs"],
   args: {
