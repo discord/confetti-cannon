@@ -11,7 +11,7 @@ function ConfettiCanvasStory(args: { gravity: number; wind: number }) {
 const meta = {
   title: "ConfettiCanvas",
   component: ConfettiCanvasStory,
-  tags: ["autodocs"],
+  excludeStories: ["Example"],
 } satisfies Meta<typeof ConfettiCanvasStory>;
 
 export default meta;
