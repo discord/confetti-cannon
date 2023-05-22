@@ -170,9 +170,20 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
   );
 
   React.useEffect(() => {
-    if (canvas.current != null) {
-      setCanvasSize(canvas.current);
+    setCanvasSize(canvas.current);
+  }, []);
+
+  React.useEffect(() => {
+    const canvasRef = canvas.current;
+    const observer = new ResizeObserver(() => setCanvasSize(canvas.current));
+    if (canvasRef != null) {
+      observer.observe(canvasRef);
     }
+    return () => {
+      if (canvasRef != null) {
+        observer.unobserve(canvasRef);
+      }
+    };
   }, []);
 
   return (

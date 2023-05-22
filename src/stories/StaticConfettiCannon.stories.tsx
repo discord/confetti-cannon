@@ -49,6 +49,7 @@ function StaticCanvasStoryWrapper({
     () => new Environment({ gravity: 0, wind: 0 }),
     []
   );
+  const [isSmall, setIsSmall] = React.useState(false);
   const cannon = useConfettiCannon(confettiCanvas, spriteCanvas);
   const draggingConfetti = React.useRef<Confetti | null>(null);
 
@@ -143,7 +144,10 @@ function StaticCanvasStoryWrapper({
       />
       <ConfettiCanvas
         ref={confettiCanvas}
-        className={classNames(styles.bordered, styles.sized)}
+        className={classNames(
+          styles.bordered,
+          isSmall ? styles.sizedSmall : styles.sized
+        )}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
@@ -154,6 +158,7 @@ function StaticCanvasStoryWrapper({
           Create at top left
         </button>
         <button onClick={() => cannon.clearConfetti()}>Clear Canvas</button>
+        <button onClick={() => setIsSmall(!isSmall)}>Toggle Size</button>
       </div>
     </>
   );

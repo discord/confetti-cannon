@@ -1,6 +1,6 @@
 import { Vector2 } from "./Types";
 
-export function setCanvasSize(canvas: HTMLCanvasElement) {
+export function setCanvasSize(canvas: HTMLCanvasElement | null) {
   if (canvas != null) {
     const { width, height } = canvas.getBoundingClientRect();
     canvas.width = width;
