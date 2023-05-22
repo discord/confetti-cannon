@@ -163,19 +163,16 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
   );
 
   const handleMouseDown = React.useCallback(
-    (e: React.MouseEvent) => {
-      handleMouseEvent(e, onMouseDown);
-    },
+    (e: React.MouseEvent) => handleMouseEvent(e, onMouseDown),
     [handleMouseEvent, onMouseDown]
   );
 
   React.useEffect(() => {
-    setCanvasSize(canvas.current);
-  }, []);
-
-  React.useEffect(() => {
     const canvasRef = canvas.current;
-    const observer = new ResizeObserver(() => setCanvasSize(canvas.current));
+    const observer = new ResizeObserver(() => {
+      console.log("fired");
+      setCanvasSize(canvas.current);
+    });
     if (canvasRef != null) {
       observer.observe(canvasRef);
     }
