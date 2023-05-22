@@ -32,6 +32,8 @@ export interface ConfettiCanvasHandle {
   getCanvas: () => HTMLCanvasElement | null;
 }
 
+const CLICK_BUFFER_FRAME_COUNT = 2;
+
 const ConfettiCanvas: React.ForwardRefRenderFunction<
   ConfettiCanvasHandle,
   ConfettiCanvasProps
@@ -54,6 +56,8 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
   >(new Map());
 
   const animationFrameRequestId = React.useRef<number | null>(null);
+  const lastFrameUpdatedAt = React.useRef(0);
+  const frameRate = React.useRef<number>(0);
 
   const handleTick = React.useCallback(() => {
     const canvasRef = canvas.current;
@@ -88,6 +92,12 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
       context.clearRect(0, 0, canvasRef.width, canvasRef.height);
       animationFrameRequestId.current = null;
     }
+
+    const now = Date.now();
+    if (lastFrameUpdatedAt.current !== 0) {
+      frameRate.current = 1000 / (now - lastFrameUpdatedAt.current);
+    }
+    lastFrameUpdatedAt.current = now;
   }, [environment, onAfterRender, onBeforeRender]);
 
   React.useEffect(() => {
@@ -164,17 +174,23 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
       }
 
       const clickPosition = getClickPosition(e, canvas.current);
-      const confetti = mapFind(allConfetti.current, ({ confetti }) =>
-        isInRect(clickPosition, {
-          x: confetti.position.x,
-          y: confetti.position.y,
+      const deltaTime = -(1000 / frameRate.current) * CLICK_BUFFER_FRAME_COUNT;
+      const confetti = mapFind(allConfetti.current, ({ confetti }) => {
+        const confettiPosition = confetti.previewPositionUpdate(
+          environment,
+          deltaTime
+        );
+
+        return isInRect(clickPosition, {
+          x: confettiPosition.x - confetti.width.value / 2,
+          y: confettiPosition.y - confetti.height.value / 2,
           width: confetti.width.value,
           height: confetti.height.value,
-        })
-      );
+        });
+      });
       handler(e, confetti?.confetti ?? null);
     },
-    []
+    [environment]
   );
 
   const handleClick = React.useCallback(

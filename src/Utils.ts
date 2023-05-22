@@ -37,9 +37,9 @@ export function isInRect(
   rect: { x: number; y: number; width: number; height: number }
 ) {
   return (
-    x > rect.x - rect.width / 2 &&
+    x > rect.x &&
     x < rect.x + rect.width &&
-    y > rect.y - rect.height / 2 &&
+    y > rect.y &&
     y < rect.y + rect.height
   );
 }

@@ -63,24 +63,9 @@ export default class Confetti {
     this._lastUpdatedAt = Date.now();
   }
 
-  update(environment: Environment) {
-    const newUpdateTime = Date.now();
-    const deltaTime = (newUpdateTime - this._lastUpdatedAt) / 100;
-
-    this.rotation.update(deltaTime);
-
-    this.dragCoefficient.update(deltaTime);
-
-    const gravityForce = -environment.gravity * deltaTime;
+  getNewForces(environment: Environment, deltaTime: number) {
     const windForce = environment.wind * deltaTime;
-
-    const airResistanceMultiplierY = this.velocity.y > 0 ? -1 : 1;
-    const airResistanceForceY = calculateAirResistance(
-      gravityForce,
-      this.dragCoefficient.y,
-      this.velocity.y,
-      airResistanceMultiplierY
-    );
+    const gravityForce = -environment.gravity * deltaTime;
 
     const airResistanceMultiplierX = this.velocity.x > 0 ? -1 : 1;
     const airResistanceForceX = calculateAirResistance(
@@ -90,13 +75,37 @@ export default class Confetti {
       airResistanceMultiplierX
     );
 
+    const airResistanceMultiplierY = this.velocity.y > 0 ? -1 : 1;
+    const airResistanceForceY = calculateAirResistance(
+      gravityForce,
+      this.dragCoefficient.y,
+      this.velocity.y,
+      airResistanceMultiplierY
+    );
+
+    return {
+      x: windForce + airResistanceForceX,
+      y: gravityForce + airResistanceForceY,
+    };
+  }
+
+  update(environment: Environment) {
+    const newUpdateTime = Date.now();
+    const deltaTime = (newUpdateTime - this._lastUpdatedAt) / 100;
+
+    this.rotation.update(deltaTime);
+
+    this.dragCoefficient.update(deltaTime);
+
+    const { x: forceX, y: forceY } = this.getNewForces(environment, deltaTime);
+
     this.velocity.update(deltaTime);
-    this.velocity.y += gravityForce + airResistanceForceY;
-    this.velocity.x += windForce + airResistanceForceX;
+    this.velocity.x += forceX;
+    this.velocity.y += forceY;
 
     this.position.update(deltaTime);
-    this.position.y += this.velocity.y * deltaTime;
     this.position.x += this.velocity.x * deltaTime;
+    this.position.y += this.velocity.y * deltaTime;
 
     this.width.update(deltaTime);
     this.height.update(deltaTime);
@@ -104,6 +113,20 @@ export default class Confetti {
     this.opacity.update(deltaTime);
 
     this._lastUpdatedAt = newUpdateTime;
+  }
+
+  previewPositionUpdate(environment: Environment, deltaTimeMS: number) {
+    const deltaTime = deltaTimeMS / 100;
+    const velocity = this.velocity.previewUpdate(deltaTime);
+    const { x: forceX, y: forceY } = this.getNewForces(environment, deltaTime);
+    velocity.x += forceX;
+    velocity.y += forceY;
+
+    const position = this.position.previewUpdate(deltaTime);
+    position.x += velocity.x * deltaTime;
+    position.y += velocity.y * deltaTime;
+
+    return position;
   }
 
   draw(spriteCanvas: HTMLCanvasElement, context: CanvasRenderingContext2D) {
