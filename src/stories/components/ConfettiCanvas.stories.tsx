@@ -1,17 +1,17 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
-import ConfettiCanvas from "../react/ConfettiCanvas";
-import Environment from "../Environment";
+import ConfettiCanvas from "../../react/ConfettiCanvas";
+import Environment from "../../Environment";
 
 function ConfettiCanvasStory(args: { gravity: number; wind: number }) {
   return <ConfettiCanvas environment={new Environment(args)} />;
 }
 
 const meta = {
-  title: "ConfettiCanvas",
+  title: "Components/ConfettiCanvas",
   component: ConfettiCanvasStory,
-  excludeStories: ["Example"],
+  tags: ["autodocs"],
   args: {
     gravity: -9.8,
     wind: 2,

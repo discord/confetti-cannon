@@ -1,21 +1,21 @@
 import * as React from "react";
+import classNames from "classnames";
 import type { Meta, StoryObj } from "@storybook/react";
 
-import ConfettiCanvas from "../react/ConfettiCanvas";
-import SpriteCanvas from "../react/SpriteCanvas";
-import useConfettiCannon from "../react/useConfettiCannon";
-import { CreateConfettiArgs } from "../createConfetti";
-import Environment from "../Environment";
-import { getClickPosition } from "./Utils";
-import SpriteCanvasStory from "./SpriteCanvas.stories";
+import ConfettiCanvas from "../../react/ConfettiCanvas";
+import SpriteCanvas from "../../react/SpriteCanvas";
+import useConfettiCannon from "../../react/useConfettiCannon";
+import { CreateConfettiArgs } from "../../createConfetti";
+import Environment from "../../Environment";
+import { getClickPosition } from "../Utils";
+import SpriteCanvasStory from "../components/SpriteCanvas.stories";
+import Confetti from "../../Confetti";
 
-import styles from "./ConfettiCannon.module.css";
-import classNames from "classnames";
-import Confetti from "../Confetti";
+import styles from "../Stories.module.css";
 
 const SIZE = 40;
 
-function ClickingCanvasStoryWrapper() {
+function DraggingStoryWrapper() {
   const confettiCanvas = React.useRef<React.ElementRef<
     typeof ConfettiCanvas
   > | null>(null);
@@ -127,10 +127,10 @@ function ClickingCanvasStoryWrapper() {
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 const meta = {
-  title: "ClickingCanvas",
-  component: ClickingCanvasStoryWrapper,
+  title: "Examples/Dragging",
+  component: DraggingStoryWrapper,
   tags: ["autodocs"],
-} satisfies Meta<typeof ClickingCanvasStoryWrapper>;
+} satisfies Meta<typeof DraggingStoryWrapper>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

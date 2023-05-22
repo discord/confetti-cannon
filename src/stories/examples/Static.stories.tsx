@@ -1,18 +1,18 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
-import ConfettiCanvas from "../react/ConfettiCanvas";
-import SpriteCanvas from "../react/SpriteCanvas";
-import useConfettiCannon from "../react/useConfettiCannon";
-import { CreateConfettiArgs } from "../createConfetti";
-import Environment from "../Environment";
-import { getClickPosition } from "./Utils";
-import SpriteCanvasStory from "./SpriteCanvas.stories";
+import ConfettiCanvas from "../../react/ConfettiCanvas";
+import SpriteCanvas from "../../react/SpriteCanvas";
+import useConfettiCannon from "../../react/useConfettiCannon";
+import { CreateConfettiArgs } from "../../createConfetti";
+import Environment from "../../Environment";
+import { getClickPosition } from "../Utils";
+import SpriteCanvasStory from "../components/SpriteCanvas.stories";
 
-import styles from "./ConfettiCannon.module.css";
+import styles from "../Stories.module.css";
 import classNames from "classnames";
 
-interface ConfettiCannonStoryWrapperProps {
+interface StaticStoryWrapperProps {
   showSpriteCanvas: boolean;
   size: number;
   positionAddX: number;
@@ -26,7 +26,7 @@ interface ConfettiCannonStoryWrapperProps {
   sizeAdd: number;
 }
 
-function StaticCanvasStoryWrapper({
+function StaticStoryWrapper({
   showSpriteCanvas,
   size,
   positionAddX,
@@ -38,7 +38,7 @@ function StaticCanvasStoryWrapper({
   rotateAddZ,
   opacityAdd,
   sizeAdd,
-}: ConfettiCannonStoryWrapperProps) {
+}: StaticStoryWrapperProps) {
   const confettiCanvas = React.useRef<React.ElementRef<
     typeof ConfettiCanvas
   > | null>(null);
@@ -146,8 +146,8 @@ function StaticCanvasStoryWrapper({
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 const meta = {
-  title: "StaticCanvas",
-  component: StaticCanvasStoryWrapper,
+  title: "Examples/Static Story",
+  component: StaticStoryWrapper,
   tags: ["autodocs"],
   args: {
     showSpriteCanvas: false,
@@ -162,7 +162,7 @@ const meta = {
     opacityAdd: 0,
     sizeAdd: 0,
   },
-} satisfies Meta<typeof StaticCanvasStoryWrapper>;
+} satisfies Meta<typeof StaticStoryWrapper>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

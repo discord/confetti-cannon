@@ -7,10 +7,10 @@ import useConfettiCannon from "../react/useConfettiCannon";
 import { CreateConfettiArgs } from "../createConfetti";
 import Environment from "../Environment";
 import { getClickPosition } from "./Utils";
-import SpriteCanvasStory from "./SpriteCanvas.stories";
-import ConfettiCanvasStory from "./ConfettiCanvas.stories";
+import SpriteCanvasStory from "./components/SpriteCanvas.stories";
+import ConfettiCanvasStory from "./components/ConfettiCanvas.stories";
 
-import styles from "./ConfettiCannon.module.css";
+import styles from "./Stories.module.css";
 import classNames from "classnames";
 
 interface ConfettiCannonStoryWrapperProps {

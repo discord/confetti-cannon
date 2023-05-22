@@ -1,15 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import SpriteCanvas from "../react/SpriteCanvas";
+import SpriteCanvas from "../../react/SpriteCanvas";
 
 const SPRITES = [
-  require("./images/square.svg"),
-  require("./images/circle.svg"),
-  { src: require("./images/duck.svg"), colorize: false },
+  require("../images/square.svg"),
+  require("../images/circle.svg"),
+  { src: require("../images/duck.svg"), colorize: false },
 ];
 
 const meta = {
-  title: "SpriteCanvas",
+  title: "Components/SpriteCanvas",
   component: SpriteCanvas,
   tags: ["autodocs"],
   args: {
