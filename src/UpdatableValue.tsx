@@ -6,6 +6,7 @@ export abstract class UpdatableValue {
   }
 
   abstract update(deltaTime: number): void;
+  abstract previewUpdate(deltaTime: number): number;
 }
 
 export class UpdatableVector2Value {
@@ -20,6 +21,13 @@ export class UpdatableVector2Value {
   update(deltaTime: number) {
     this._x.update(deltaTime);
     this._y.update(deltaTime);
+  }
+
+  previewUpdate(deltaTime: number) {
+    return {
+      x: this._x.previewUpdate(deltaTime),
+      y: this._y.previewUpdate(deltaTime),
+    };
   }
 
   get x() {
@@ -50,6 +58,14 @@ export class UpdatableVector3Value extends UpdatableVector2Value {
   update(deltaTime: number) {
     super.update(deltaTime);
     this._z.update(deltaTime);
+  }
+
+  previewUpdate(deltaTime: number) {
+    const superUpdate = super.previewUpdate(deltaTime);
+    return {
+      ...superUpdate,
+      z: this._z.previewUpdate(deltaTime),
+    };
   }
 
   get z() {

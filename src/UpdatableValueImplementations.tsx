@@ -5,6 +5,10 @@ export class StaticUpdatableValue extends UpdatableValue {
   update() {
     /* Static */
   }
+
+  previewUpdate(): number {
+    return this.value;
+  }
 }
 
 export class LinearUpdatableValue extends UpdatableValue {
@@ -16,7 +20,11 @@ export class LinearUpdatableValue extends UpdatableValue {
   }
 
   update(deltaTime: number) {
-    this.value += this.addValue * deltaTime;
+    this.value = this.previewUpdate(deltaTime);
+  }
+
+  previewUpdate(deltaTime: number) {
+    return this.value + this.addValue * deltaTime;
   }
 }
 
@@ -42,26 +50,42 @@ export class OscillatingUpdatableValue extends UpdatableValue {
     this.min = min;
     this.max = max;
     this.duration = duration;
-    this.timePassed = 0;
+    const timePassedCalculated =
+      (this.value / (this.max - this.min)) * this.duration;
+    const timePassed = isNaN(timePassedCalculated) ? 0 : timePassedCalculated;
+    this.timePassed = timePassed < 0 ? this.duration - timePassed : timePassed;
     this.directionMultiplier = directionMultiplier;
     this.easingFunction = easingFunction;
   }
 
   update(deltaTime: number) {
+    const [value, timePassed, directionMultiplier] = this.doUpdate(deltaTime);
+    this.value = value;
+    this.directionMultiplier = directionMultiplier;
+    this.timePassed = timePassed;
+  }
+
+  previewUpdate(deltaTime: number): number {
+    return this.doUpdate(deltaTime)[0];
+  }
+
+  doUpdate(deltaTime: number): [number, number, Direction] {
     const distance = this.max - this.min;
     const timeDiff = this.timePassed + deltaTime * this.directionMultiplier;
-    this.timePassed = Math.min(Math.max(timeDiff, 0), this.duration);
+    const timePassed = Math.min(Math.max(timeDiff, 0), this.duration);
 
-    if (this.timePassed >= this.duration || this.timePassed <= 0) {
-      this.directionMultiplier *= -1;
-    }
+    const directionMultiplier = (
+      timeDiff < 0 || timeDiff > this.duration
+        ? this.directionMultiplier * -1
+        : this.directionMultiplier
+    ) as Direction;
 
     const newValue = this.easingFunction(
-      this.timePassed,
+      timePassed,
       this.min,
       distance,
       this.duration
     );
-    this.value = isNaN(newValue) ? 0 : newValue;
+    return [isNaN(newValue) ? 0 : newValue, timePassed, directionMultiplier];
   }
 }

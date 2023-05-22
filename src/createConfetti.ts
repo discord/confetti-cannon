@@ -136,23 +136,15 @@ type UpdatableValueConfigVector3Annotated = UpdatableValueConfigVector3 & {
   valueType: "Vector3";
 };
 
-interface CreateConfettiArgsAnnotated extends CreateConfettiArgsFull {
-  position: UpdatableValueConfigVector2Annotated;
-  velocity: UpdatableValueConfigVector2Annotated;
-  rotation: UpdatableValueConfigVector3Annotated;
-  dragCoefficient: UpdatableValueConfigVector2Annotated;
-  width?: UpdatableValueConfigNumberAnnotated;
-  height?: UpdatableValueConfigNumberAnnotated;
-  size?: UpdatableValueConfigNumberAnnotated;
-  opacity: UpdatableValueConfigNumberAnnotated;
-}
-
 function getRandomValue(min: number, max: number) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
+  if (min === max) {
+    return min;
+  }
+  return Math.random() * (max - min + 1) + min;
 }
 
 function getRandomFromList<T>(list: T[]): [T, number] {
-  const index = getRandomValue(0, list.length - 1);
+  const index = Math.floor(getRandomValue(0, list.length - 1));
   const value = list[index];
   return [value, index];
 }
@@ -161,7 +153,7 @@ function getRandomDirection(min: Direction, max: Direction): Direction {
   return getRandomFromList([min, max])[0];
 }
 
-function getValueNumber(config: UpdatableValueConfigNumberAnnotated) {
+function getValueNumberAnnotated(config: UpdatableValueConfigNumberAnnotated) {
   switch (config.type) {
     case "static":
       return new StaticUpdatableValue(config.value);
@@ -197,7 +189,9 @@ function getValueNumber(config: UpdatableValueConfigNumberAnnotated) {
   }
 }
 
-function getValueVector2(config: UpdatableValueConfigVector2Annotated) {
+function getValueVector2Annotated(
+  config: UpdatableValueConfigVector2Annotated
+) {
   switch (config.type) {
     case "static":
       return new UpdatableVector2Value(
@@ -270,7 +264,9 @@ function getValueVector2(config: UpdatableValueConfigVector2Annotated) {
   }
 }
 
-function getValueVector3(config: UpdatableValueConfigVector3Annotated) {
+function getValueVector3Annotated(
+  config: UpdatableValueConfigVector3Annotated
+) {
   switch (config.type) {
     case "static":
       return new UpdatableVector3Value(
@@ -368,30 +364,6 @@ function getValueVector3(config: UpdatableValueConfigVector3Annotated) {
   }
 }
 
-function annotateArgs({
-  position,
-  velocity,
-  rotation,
-  dragCoefficient,
-  width,
-  height,
-  size,
-  opacity,
-  ...args
-}: CreateConfettiArgsFull): CreateConfettiArgsAnnotated {
-  return {
-    ...args,
-    position: { ...position, valueType: "Vector2" },
-    velocity: { ...velocity, valueType: "Vector2" },
-    rotation: { ...rotation, valueType: "Vector3" },
-    dragCoefficient: { ...dragCoefficient, valueType: "Vector2" },
-    width: width != null ? { ...width, valueType: "number" } : undefined,
-    height: height != null ? { ...height, valueType: "number" } : undefined,
-    size: size != null ? { ...size, valueType: "number" } : undefined,
-    opacity: { ...opacity, valueType: "number" },
-  };
-}
-
 function provideDefaults(args: CreateConfettiArgs): CreateConfettiArgsFull {
   return {
     ...CREATE_CONFETTI_DEFAULTS,
@@ -445,6 +417,18 @@ function getColorIndex(
     : getRandomValue(0, spriteCanvasData.colors.length - 1);
 }
 
+export function getValueNumber(config: UpdatableValueConfigNumber) {
+  return getValueNumberAnnotated({ ...config, valueType: "number" });
+}
+
+export function getValueVector2(config: UpdatableValueConfigVector2) {
+  return getValueVector2Annotated({ ...config, valueType: "Vector2" });
+}
+
+export function getValueVector3(config: UpdatableValueConfigVector3) {
+  return getValueVector3Annotated({ ...config, valueType: "Vector3" });
+}
+
 export default function createConfetti(
   id: string,
   rawArgs: CreateConfettiArgs,
@@ -452,8 +436,7 @@ export default function createConfetti(
   requestedSprite?: SpriteProp,
   requestedColor?: string | null
 ) {
-  const fullRawArgs = provideDefaults(rawArgs);
-  const args = annotateArgs(fullRawArgs);
+  const args = provideDefaults(rawArgs);
 
   const size = args.size != null ? getValueNumber(args.size) : null;
   const width = args.width != null ? getValueNumber(args.width) : size;

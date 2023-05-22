@@ -4,19 +4,15 @@ import * as React from "react";
 import { v4 as uuid } from "uuid";
 import Confetti from "../../Confetti";
 import Environment from "../../Environment";
-import {
-  UpdatableVector2Value,
-  UpdatableVector3Value,
-} from "../../UpdatableValue";
-import {
-  LinearUpdatableValue,
-  StaticUpdatableValue,
-} from "../../UpdatableValueImplementations";
 import { getClickPosition } from "../../Utils";
 import ConfettiCanvas from "../../components/ConfettiCanvas";
 import SpriteCanvas from "../../components/SpriteCanvas";
 import useConfettiCannon from "../../components/useConfettiCannon";
-import { CreateConfettiArgs } from "../../createConfetti";
+import {
+  CreateConfettiArgs,
+  getValueVector2,
+  getValueVector3,
+} from "../../createConfetti";
 import { easeInOutQuad } from "../../easing";
 import styles from "../Stories.module.css";
 
@@ -73,7 +69,7 @@ const FALLING_CHARACTER_CONFETTI_CONFIG: Partial<CreateConfettiArgs> = {
   },
   dragCoefficient: {
     type: "static",
-    value: { x: 0.001, y: 0.01 },
+    value: { x: 0.001, y: 0.05 },
   },
 };
 
@@ -158,15 +154,21 @@ function ComplexStory() {
 
   const handleClickFallingCharacter = React.useCallback(
     (confetti: Confetti) => {
-      confetti.rotation = new UpdatableVector3Value(
-        new StaticUpdatableValue(confetti.rotation.x),
-        new StaticUpdatableValue(confetti.rotation.y),
-        new LinearUpdatableValue(confetti.rotation.z, 5)
-      );
-      confetti.dragCoefficient = new UpdatableVector2Value(
-        new StaticUpdatableValue(0.001),
-        new StaticUpdatableValue(0.001)
-      );
+      const prevRotation = confetti.rotation.z;
+      const futureRotation = confetti.rotation.previewUpdate(0.1).z;
+      const direction = prevRotation - futureRotation > 0 ? -1 : 1;
+      confetti.rotation = getValueVector3({
+        type: "linear-random",
+        minValue: confetti.rotation,
+        maxValue: confetti.rotation,
+        minAddValue: { x: 0, y: 0, z: 5 * direction },
+        maxAddValue: { x: 0, y: 0, z: 10 * direction },
+      });
+      confetti.dragCoefficient = getValueVector2({
+        type: "static",
+        value: { x: 0.001, y: 0.001 },
+      });
+
       confetti.addForce({ x: 0, y: -100 });
       addConfetti(
         confetti.position.x + confetti.width.value / 2,
