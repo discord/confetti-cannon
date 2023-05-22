@@ -7,8 +7,8 @@ import useConfettiCannon from "../react/useConfettiCannon";
 import { CreateConfettiArgs } from "../createConfetti";
 import Environment from "../Environment";
 import { getClickPosition } from "./Utils";
-import { Example as SpriteCanvasStory } from "./SpriteCanvas.stories";
-import { Example as ConfettiCanvasStory } from "./ConfettiCanvas.stories";
+import SpriteCanvasStory from "./SpriteCanvas.stories";
+import ConfettiCanvasStory from "./ConfettiCanvas.stories";
 
 import styles from "./ConfettiCannon.module.css";
 import classNames from "classnames";
@@ -209,12 +209,6 @@ const meta = {
   title: "ConfettiCannon",
   component: ConfettiCannonStoryWrapper,
   tags: ["autodocs"],
-} satisfies Meta<typeof ConfettiCannonStoryWrapper>;
-
-export default meta;
-type Story = StoryObj<typeof meta>;
-
-export const Example: Story = {
   args: {
     autoFire: false,
     numberToFire: 5,
@@ -247,4 +241,9 @@ export const Example: Story = {
     sprites: SpriteCanvasStory.args.sprites,
     colors: SpriteCanvasStory.args.colors,
   },
-};
+} satisfies Meta<typeof ConfettiCannonStoryWrapper>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Example: Story = {};

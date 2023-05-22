@@ -12,12 +12,6 @@ const meta = {
   title: "SpriteCanvas",
   component: SpriteCanvas,
   tags: ["autodocs"],
-} satisfies Meta<typeof SpriteCanvas>;
-
-export default meta;
-type Story = StoryObj<typeof meta>;
-
-export const Example: Story = {
   args: {
     visible: true,
     spriteWidth: 20,
@@ -34,4 +28,9 @@ export const Example: Story = {
     ],
     sprites: SPRITES,
   },
-};
+} satisfies Meta<typeof SpriteCanvas>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Example: Story = {};

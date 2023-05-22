@@ -7,7 +7,7 @@ import useConfettiCannon from "../react/useConfettiCannon";
 import { CreateConfettiArgs } from "../createConfetti";
 import Environment from "../Environment";
 import { getClickPosition } from "./Utils";
-import { Example as SpriteCanvasStory } from "./SpriteCanvas.stories";
+import SpriteCanvasStory from "./SpriteCanvas.stories";
 
 import styles from "./ConfettiCannon.module.css";
 import classNames from "classnames";
@@ -151,12 +151,6 @@ const meta = {
   title: "StaticCanvas",
   component: StaticCanvasStoryWrapper,
   tags: ["autodocs"],
-} satisfies Meta<typeof StaticCanvasStoryWrapper>;
-
-export default meta;
-type Story = StoryObj<typeof meta>;
-
-export const Example: Story = {
   args: {
     showSpriteCanvas: false,
     size: 20,
@@ -170,4 +164,9 @@ export const Example: Story = {
     opacityAdd: 0,
     sizeAdd: 0,
   },
-};
+} satisfies Meta<typeof StaticCanvasStoryWrapper>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Example: Story = {};
