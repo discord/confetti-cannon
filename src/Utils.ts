@@ -59,3 +59,15 @@ export function getClickPosition(
     y: e.clientY - rect.top,
   };
 }
+
+export function calculateAirResistance(
+  externalForce: number,
+  dragCoefficient: number,
+  velocity: number,
+  directionMultiplier: 1 | -1
+) {
+  return (
+    Math.min(externalForce, dragCoefficient * velocity * velocity) *
+    directionMultiplier
+  );
+}

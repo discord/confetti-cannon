@@ -1,10 +1,9 @@
 import * as React from "react";
 import classNames from "classnames";
 import { hexToRgb } from "../Utils";
+import { SPRITE_SPACING } from "../ConstantsInternal";
 
 import styles from "./SpriteCanvas.module.css";
-
-export const SPRITE_SPACING = 2;
 
 export type SpriteProp =
   | {

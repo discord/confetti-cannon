@@ -4,19 +4,8 @@ import {
   UpdatableVector2Value,
   UpdatableVector3Value,
 } from "./UpdatableValue";
+import { calculateAirResistance } from "./Utils";
 import { Vector2 } from "./Types";
-
-function calculateAirResistance(
-  externalForce: number,
-  dragCoefficient: number,
-  velocity: number,
-  directionMultiplier: 1 | -1
-) {
-  return (
-    Math.min(externalForce, dragCoefficient * velocity * velocity) *
-    directionMultiplier
-  );
-}
 
 type ConfettiArgs = {
   id: string;

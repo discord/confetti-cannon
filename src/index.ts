@@ -7,4 +7,5 @@ export {
   CreateConfettiArgs,
 } from "./createConfetti";
 export * from "./easing";
+export * from "./Constants";
 export * from "./Types";

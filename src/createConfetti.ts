@@ -6,11 +6,12 @@ import {
   StaticUpdatableValue,
 } from "./UpdatableValueImplementations";
 import {
-  SPRITE_SPACING,
   Sprite,
   SpriteCanvasData,
   SpriteProp,
 } from "./components/SpriteCanvas";
+import { SPRITE_SPACING } from "./ConstantsInternal";
+import { CREATE_CONFETTI_DEFAULTS } from "./Constants";
 import { Vector2, Vector3 } from "./Types";
 
 interface StaticConfigConstant<T> {
@@ -66,7 +67,7 @@ export interface CreateConfettiArgsFull {
   opacity: UpdatableValueConfigNumber;
 }
 
-type CreateConfettiArgsDefaults = Pick<
+export type CreateConfettiArgsDefaults = Pick<
   CreateConfettiArgsFull,
   "velocity" | "rotation" | "dragCoefficient" | "opacity"
 >;
@@ -226,28 +227,9 @@ function annotateArgs({
   };
 }
 
-const DEFAULTS: CreateConfettiArgsDefaults = {
-  velocity: {
-    type: "static",
-    value: { x: 0, y: 0 },
-  },
-  rotation: {
-    type: "static",
-    value: { x: 0, y: 0, z: 0 },
-  },
-  dragCoefficient: {
-    type: "static",
-    value: 0.001,
-  },
-  opacity: {
-    type: "static",
-    value: 1,
-  },
-};
-
 function provideDefaults(args: CreateConfettiArgs): CreateConfettiArgsFull {
   return {
-    ...DEFAULTS,
+    ...CREATE_CONFETTI_DEFAULTS,
     ...args,
   };
 }
