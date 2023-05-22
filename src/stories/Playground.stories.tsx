@@ -13,7 +13,7 @@ import ConfettiCanvasStory from "./components/ConfettiCanvas.stories";
 import styles from "./Stories.module.css";
 import classNames from "classnames";
 
-interface ConfettiCannonStoryWrapperProps {
+interface PlaygroundStoryProps {
   autoFire: boolean;
   numberToFire: number;
   showSpriteCanvas: boolean;
@@ -46,7 +46,7 @@ interface ConfettiCannonStoryWrapperProps {
   colors: string[];
 }
 
-function ConfettiCannonStoryWrapper({
+function PlaygroundStory({
   autoFire,
   numberToFire,
   showSpriteCanvas,
@@ -77,7 +77,7 @@ function ConfettiCannonStoryWrapper({
   maxSize,
   sprites,
   colors,
-}: ConfettiCannonStoryWrapperProps) {
+}: PlaygroundStoryProps) {
   const confettiCanvas =
     React.useRef<React.ElementRef<typeof ConfettiCanvas>>(null);
   const spriteCanvas =
@@ -204,8 +204,8 @@ function ConfettiCannonStoryWrapper({
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 const meta = {
-  title: "ConfettiCannon",
-  component: ConfettiCannonStoryWrapper,
+  title: "PlaygroundStory",
+  component: PlaygroundStory,
   tags: ["autodocs"],
   args: {
     autoFire: false,
@@ -239,7 +239,7 @@ const meta = {
     sprites: SpriteCanvasStory.args.sprites,
     colors: SpriteCanvasStory.args.colors,
   },
-} satisfies Meta<typeof ConfettiCannonStoryWrapper>;
+} satisfies Meta<typeof PlaygroundStory>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

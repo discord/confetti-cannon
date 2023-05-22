@@ -12,7 +12,7 @@ import SpriteCanvasStory from "../components/SpriteCanvas.stories";
 import styles from "../Stories.module.css";
 import classNames from "classnames";
 
-interface StaticStoryWrapperProps {
+interface StaticStoryProps {
   showSpriteCanvas: boolean;
   size: number;
   positionAddX: number;
@@ -26,7 +26,7 @@ interface StaticStoryWrapperProps {
   sizeAdd: number;
 }
 
-function StaticStoryWrapper({
+function StaticStory({
   showSpriteCanvas,
   size,
   positionAddX,
@@ -38,7 +38,7 @@ function StaticStoryWrapper({
   rotateAddZ,
   opacityAdd,
   sizeAdd,
-}: StaticStoryWrapperProps) {
+}: StaticStoryProps) {
   const confettiCanvas = React.useRef<React.ElementRef<
     typeof ConfettiCanvas
   > | null>(null);
@@ -142,7 +142,7 @@ function StaticStoryWrapper({
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 const meta = {
   title: "Examples/Static Story",
-  component: StaticStoryWrapper,
+  component: StaticStory,
   tags: ["autodocs"],
   args: {
     showSpriteCanvas: false,
@@ -157,7 +157,7 @@ const meta = {
     opacityAdd: 0,
     sizeAdd: 0,
   },
-} satisfies Meta<typeof StaticStoryWrapper>;
+} satisfies Meta<typeof StaticStory>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

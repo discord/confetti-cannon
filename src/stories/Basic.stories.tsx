@@ -30,7 +30,7 @@ const COLORS = [
 
 const MAX_SIZE = 40;
 
-function BasicStoryWrapper() {
+function BasicStory() {
   const confettiCanvas =
     React.useRef<React.ElementRef<typeof ConfettiCanvas>>(null);
   const spriteCanvas =
@@ -111,9 +111,9 @@ function BasicStoryWrapper() {
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 const meta = {
   title: "Basic",
-  component: BasicStoryWrapper,
+  component: BasicStory,
   tags: ["autodocs"],
-} satisfies Meta<typeof BasicStoryWrapper>;
+} satisfies Meta<typeof BasicStory>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
