@@ -17,7 +17,7 @@ export interface Sprite {
   src: string;
 }
 
-interface SpriteCanvasProps {
+export interface SpriteCanvasProps {
   className?: string;
   visible?: boolean;
   sprites: SpriteProp[];
