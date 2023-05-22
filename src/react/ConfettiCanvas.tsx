@@ -3,13 +3,13 @@ import { v4 as uuid } from "uuid";
 import Confetti from "../Confetti";
 import createConfetti, { CreateConfettiArgs } from "../createConfetti";
 import Environment from "../Environment";
-import { getDevicePixelRatio, setCanvasSize } from "../Utils";
+import { getClickPosition, isInRect, mapFind, setCanvasSize } from "../Utils";
 import { SpriteCanvasData, SpriteProp } from "./SpriteCanvas";
 
 type ConfettiCanvasProps = {
   className?: string;
   environment: Environment;
-  onClick?: (e: React.MouseEvent) => void;
+  onClick?: (e: React.MouseEvent, confetti: Confetti | null) => void;
 };
 
 export interface ConfettiCanvasHandle {
@@ -124,13 +124,33 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
     [addConfetti, clearConfetti, getCanvas]
   );
 
+  const handleClick = React.useCallback(
+    (e: React.MouseEvent) => {
+      if (onClick == null) {
+        return;
+      }
+
+      const clickPosition = getClickPosition(e, canvas.current);
+      const confetti = mapFind(allConfetti.current, ({ confetti }) =>
+        isInRect(clickPosition, {
+          x: confetti.position.x,
+          y: confetti.position.y,
+          width: confetti.width.value,
+          height: confetti.height.value,
+        })
+      );
+      onClick(e, confetti?.confetti ?? null);
+    },
+    [onClick]
+  );
+
   React.useEffect(() => {
     if (canvas.current != null) {
       setCanvasSize(canvas.current);
     }
   }, []);
 
-  return <canvas className={className} ref={canvas} onClick={onClick} />;
+  return <canvas className={className} ref={canvas} onClick={handleClick} />;
 };
 
 export default React.forwardRef(ConfettiCanvas);

@@ -11,6 +11,7 @@ import SpriteCanvasStory from "./SpriteCanvas.stories";
 
 import styles from "./ConfettiCannon.module.css";
 import classNames from "classnames";
+import Confetti from "../Confetti";
 
 interface ConfettiCannonStoryWrapperProps {
   showSpriteCanvas: boolean;
@@ -107,7 +108,11 @@ function StaticCanvasStoryWrapper({
     ]
   );
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = (e: React.MouseEvent, confetti: Confetti | null) => {
+    if (confetti != null) {
+      console.log(confetti);
+      return;
+    }
     const { x, y } = getClickPosition(e, confettiCanvas.current?.getCanvas());
     addConfetti(x, y);
   };
