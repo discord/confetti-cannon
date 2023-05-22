@@ -15,6 +15,8 @@ interface ConfettiCanvasProps
   environment: Environment;
   onClick?: (e: React.MouseEvent, confetti: Confetti | null) => void;
   onMouseDown?: (e: React.MouseEvent, confetti: Confetti | null) => void;
+  onBeforeRender?: (context: CanvasRenderingContext2D) => void;
+  onAfterRender?: (context: CanvasRenderingContext2D) => void;
 }
 
 export interface ConfettiCanvasHandle {
@@ -34,7 +36,15 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
   ConfettiCanvasHandle,
   ConfettiCanvasProps
 > = (
-  { className, environment, onClick, onMouseDown, ...props },
+  {
+    className,
+    environment,
+    onClick,
+    onMouseDown,
+    onBeforeRender,
+    onAfterRender,
+    ...props
+  },
   forwardedRef
 ) => {
   const canvas = React.useRef<HTMLCanvasElement | null>(null);
@@ -58,6 +68,8 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
 
     context.clearRect(0, 0, canvasRef.width, canvasRef.height);
 
+    onBeforeRender?.(context);
+
     allConfetti.current.forEach(({ confetti, spriteCanvas }, id) => {
       confetti.update(environment);
       confetti.draw(spriteCanvas, context);
@@ -67,6 +79,8 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
       }
     });
 
+    onAfterRender?.(context);
+
     if (allConfetti.current.size > 0) {
       animationFrameRequestId.current =
         window.requestAnimationFrame(handleTick);
@@ -74,7 +88,7 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
       context.clearRect(0, 0, canvasRef.width, canvasRef.height);
       animationFrameRequestId.current = null;
     }
-  }, [environment]);
+  }, [environment, onAfterRender, onBeforeRender]);
 
   React.useEffect(() => {
     if (animationFrameRequestId.current != null) {
