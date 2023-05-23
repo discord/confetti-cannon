@@ -7,7 +7,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "format": "prettier --write .",
-    "build": "rollup -c --bundleConfigAsCjs",
+    "build": "rm -rf ./dist && rollup -c --bundleConfigAsCjs",
     "test": "echo \"Error: no test specified\" && exit 1",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
