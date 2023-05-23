@@ -27,6 +27,7 @@ function DraggingStory() {
   );
   const cannon = useConfettiCannon(confettiCanvas, spriteCanvas);
   const lastMousePosition = React.useRef({ x: 0, y: 0 });
+  const lastMouseEventTime = React.useRef(0);
   const draggingConfetti = React.useRef<Confetti | null>(null);
 
   const addConfetti = React.useCallback(
@@ -57,6 +58,7 @@ function DraggingStory() {
       confetti.velocity.x = 0;
       confetti.velocity.y = 0;
       draggingConfetti.current = confetti;
+      lastMouseEventTime.current = Date.now();
       return;
     }
     const { x, y } = getClickPosition(e, confettiCanvas.current?.getCanvas());
@@ -69,6 +71,7 @@ function DraggingStory() {
       const { x, y } = getClickPosition(e, confettiCanvas.current?.getCanvas());
       draggingConfetti.current.position.x = x;
       draggingConfetti.current.position.y = y;
+      lastMouseEventTime.current = Date.now();
     }
   };
 
@@ -78,10 +81,13 @@ function DraggingStory() {
     }
 
     const { x, y } = getClickPosition(e, confettiCanvas.current?.getCanvas());
-    const velocityX = x - lastMousePosition.current.x;
-    const velocityY = y - lastMousePosition.current.y;
+
+    const deltaTime = Math.max(Date.now() - lastMouseEventTime.current ?? 1, 1);
+    const velocityX = (x - lastMousePosition.current.x) / deltaTime;
+    const velocityY = (y - lastMousePosition.current.y) / deltaTime;
     draggingConfetti.current.velocity.x = velocityX;
     draggingConfetti.current.velocity.y = velocityY;
+
     draggingConfetti.current = null;
   };
 
