@@ -140,7 +140,7 @@ function PlaygroundStory({
         },
       };
 
-      cannon.addMultipleConfetti(createConfettiArgs, numberToFire);
+      cannon.createMultipleConfetti(createConfettiArgs, numberToFire);
     },
     [
       cannon,

@@ -4,7 +4,7 @@ import Confetti from "../Confetti";
 import Environment from "../Environment";
 import { SpriteProp } from "../Types";
 import { getClickPosition, isInRect, mapFind, setCanvasSize } from "../Utils";
-import createConfetti, { CreateConfettiArgs } from "../createConfetti";
+import createConfettiHelper, { CreateConfettiArgs } from "../createConfetti";
 import { SpriteCanvasData } from "./SpriteCanvas";
 
 interface ConfettiCanvasProps
@@ -21,7 +21,7 @@ interface ConfettiCanvasProps
 }
 
 export interface ConfettiCanvasHandle {
-  addConfetti: (
+  createConfetti: (
     args: CreateConfettiArgs,
     spriteCanvas: HTMLCanvasElement,
     SpriteCanvasData: SpriteCanvasData,
@@ -109,7 +109,7 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
     }
   }, [handleTick]);
 
-  const addConfetti = React.useCallback(
+  const createConfetti = React.useCallback(
     (
       args: CreateConfettiArgs,
       spriteCanvas: HTMLCanvasElement,
@@ -117,7 +117,7 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
       sprite?: SpriteProp,
       color?: string | null
     ) => {
-      const confetti = createConfetti(
+      const confetti = createConfettiHelper(
         args.id ?? uuid(),
         args,
         SpriteCanvasData,
@@ -154,13 +154,13 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
     forwardedRef,
     () => {
       return {
-        addConfetti,
+        createConfetti,
         deleteConfetti,
         clearConfetti,
         getCanvas,
       };
     },
-    [addConfetti, clearConfetti, getCanvas, deleteConfetti]
+    [createConfetti, clearConfetti, getCanvas, deleteConfetti]
   );
 
   const handleMouseEvent = React.useCallback(

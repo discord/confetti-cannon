@@ -11,11 +11,11 @@ interface CreateConfettiRequestedOptions {
 }
 
 export interface ConfettiCannon {
-  addConfetti: (
+  createConfetti: (
     createConfettiArgs: CreateConfettiArgs,
     createConfettiRequestedOptions?: CreateConfettiRequestedOptions
   ) => Confetti | undefined;
-  addMultipleConfetti: (
+  createMultipleConfetti: (
     createConfettiArgs: CreateConfettiArgs,
     numberToFire: number
   ) => Confetti[];
@@ -27,7 +27,7 @@ export default function useConfettiCannon(
   confettiCanvas: React.RefObject<ConfettiCanvasHandle>,
   spriteCanvas: React.RefObject<SpriteCanvasHandle>
 ): ConfettiCannon {
-  const addConfetti = React.useCallback(
+  const createConfetti = React.useCallback(
     (
       createConfettiArgs: CreateConfettiArgs,
       { sprite, color }: CreateConfettiRequestedOptions = {}
@@ -39,7 +39,7 @@ export default function useConfettiCannon(
         return;
       }
 
-      return confettiCanvas.current?.addConfetti(
+      return confettiCanvas.current?.createConfetti(
         createConfettiArgs,
         spriteCanvasRef,
         spriteData,
@@ -49,12 +49,12 @@ export default function useConfettiCannon(
     },
     [confettiCanvas, spriteCanvas]
   );
-  const addMultipleConfetti = React.useCallback(
+  const createMultipleConfetti = React.useCallback(
     (createConfettiArgs: CreateConfettiArgs, numConfetti: number) => {
       const createdConfetti: Confetti[] = [];
 
       for (let i = 0; i < numConfetti; i++) {
-        const confetti = addConfetti(createConfettiArgs);
+        const confetti = createConfetti(createConfettiArgs);
         if (confetti) {
           createdConfetti.push(confetti);
         }
@@ -62,7 +62,7 @@ export default function useConfettiCannon(
 
       return createdConfetti;
     },
-    [addConfetti]
+    [createConfetti]
   );
 
   const deleteConfetti = React.useCallback(
@@ -77,5 +77,10 @@ export default function useConfettiCannon(
     [confettiCanvas]
   );
 
-  return { addConfetti, addMultipleConfetti, clearConfetti, deleteConfetti };
+  return {
+    createConfetti,
+    createMultipleConfetti,
+    clearConfetti,
+    deleteConfetti,
+  };
 }

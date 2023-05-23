@@ -78,7 +78,7 @@ function BasicStory() {
         },
       };
 
-      cannon.addConfetti(createConfettiArgs);
+      cannon.createConfetti(createConfettiArgs);
     },
     [cannon]
   );

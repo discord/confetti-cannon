@@ -131,7 +131,7 @@ function MultipleCannonsStory() {
           maxValue: { x: x + 5, y: y + 5 },
         },
       };
-      confettiCannon.addMultipleConfetti(createConfettiArgs, 5);
+      confettiCannon.createMultipleConfetti(createConfettiArgs, 5);
     },
     [confettiCannon]
   );
@@ -147,7 +147,7 @@ function MultipleCannonsStory() {
         },
       };
 
-      return fallingCharacterCannon.addConfetti(createConfettiArgs);
+      return fallingCharacterCannon.createConfetti(createConfettiArgs);
     },
     [fallingCharacterCannon]
   );
