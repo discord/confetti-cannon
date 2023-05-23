@@ -1,8 +1,9 @@
 import * as React from "react";
 import Confetti from "../Confetti";
+import { SpriteProp } from "../Types";
 import { CreateConfettiArgs } from "../createConfetti";
 import { ConfettiCanvasHandle } from "./ConfettiCanvas";
-import { SpriteCanvasHandle, SpriteProp } from "./SpriteCanvas";
+import { SpriteCanvasHandle } from "./SpriteCanvas";
 
 interface CreateConfettiRequestedOptions {
   sprite?: SpriteProp;

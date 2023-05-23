@@ -2,9 +2,10 @@ import * as React from "react";
 import { v4 as uuid } from "uuid";
 import Confetti from "../Confetti";
 import Environment from "../Environment";
+import { SpriteProp } from "../Types";
 import { getClickPosition, isInRect, mapFind, setCanvasSize } from "../Utils";
 import createConfetti, { CreateConfettiArgs } from "../createConfetti";
-import { SpriteCanvasData, SpriteProp } from "./SpriteCanvas";
+import { SpriteCanvasData } from "./SpriteCanvas";
 
 interface ConfettiCanvasProps
   extends Omit<
