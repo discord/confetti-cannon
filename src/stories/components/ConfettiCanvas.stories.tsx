@@ -1,10 +1,21 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import classNames from "classnames";
 import * as React from "react";
 import Environment from "../../Environment";
 import ConfettiCanvas from "../../components/ConfettiCanvas";
+import styles from "../Stories.module.css";
 
-function ConfettiCanvasStory(args: { gravity: number; wind: number }) {
-  return <ConfettiCanvas environment={new Environment(args)} />;
+function ConfettiCanvasStory({
+  className,
+  ...args
+}: {
+  className: string;
+  gravity: number;
+  wind: number;
+}) {
+  return (
+    <ConfettiCanvas className={className} environment={new Environment(args)} />
+  );
 }
 
 const meta = {
@@ -24,6 +35,7 @@ const meta = {
   args: {
     gravity: -9.8,
     wind: 2,
+    className: classNames(styles.sized, styles.bordered),
   },
 } satisfies Meta<typeof ConfettiCanvasStory>;
 
