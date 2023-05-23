@@ -106,11 +106,17 @@ function BasicStory() {
   );
 }
 
-// More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 const meta = {
   title: "Basic",
   component: BasicStory,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: `This is a basic example. Click to spawn a confetti.`,
+      },
+    },
+  },
 } satisfies Meta<typeof BasicStory>;
 
 export default meta;

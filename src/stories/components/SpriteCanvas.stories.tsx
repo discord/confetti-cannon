@@ -11,6 +11,14 @@ const meta = {
   title: "Components/SpriteCanvas",
   component: SpriteCanvas,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          "This component is used to efficiently render your confetti by rendering a sprite sheet.",
+      },
+    },
+  },
   args: {
     visible: true,
     spriteWidth: 20,

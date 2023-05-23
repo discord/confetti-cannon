@@ -215,11 +215,19 @@ function MultipleCannonsStory() {
   );
 }
 
-// More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 const meta = {
   title: "Examples/MultipleCannons",
   component: MultipleCannonsStory,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: `This example uses multiple cannons and sprite sheets to
+          fire different types of confetti but a single canvas to render it
+          all one.`,
+      },
+    },
+  },
 } satisfies Meta<typeof MultipleCannonsStory>;
 
 export default meta;

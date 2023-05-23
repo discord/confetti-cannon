@@ -11,6 +11,16 @@ const meta = {
   title: "Components/ConfettiCanvas",
   component: ConfettiCanvasStory,
   tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: `This component will render a canvas that will render your confetti.
+          This story won't display anything since we need a \`SpriteCanvas\`
+          to render confetti. To this this in action see
+          [Playground](/docs/playground--docs)`,
+      },
+    },
+  },
   args: {
     gravity: -9.8,
     wind: 2,
