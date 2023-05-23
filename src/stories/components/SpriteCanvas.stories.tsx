@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import SpriteCanvas from "../../components/SpriteCanvas";
+import styles from "../Stories.module.css";
 
 const SPRITES = [
   require("../images/square.svg"),
@@ -34,6 +35,7 @@ const meta = {
       "#3E70DD",
     ],
     sprites: SPRITES,
+    className: styles.bordered,
   },
 } satisfies Meta<typeof SpriteCanvas>;
 
