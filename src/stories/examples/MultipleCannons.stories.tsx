@@ -9,8 +9,8 @@ import {
   Environment,
   SpriteCanvas,
   easeInOutQuad,
-  getValueVector2,
-  getValueVector3,
+  getUpdatableValueVector2,
+  getUpdatableValueVector3,
   useConfettiCannon,
 } from "../../";
 import { getClickPosition } from "../../Utils";
@@ -157,14 +157,14 @@ function MultipleCannonsStory() {
       const prevRotation = confetti.rotation.z;
       const futureRotation = confetti.rotation.previewUpdate(0.1).z;
       const direction = prevRotation - futureRotation > 0 ? -1 : 1;
-      confetti.rotation = getValueVector3({
+      confetti.rotation = getUpdatableValueVector3({
         type: "linear-random",
         minValue: confetti.rotation,
         maxValue: confetti.rotation,
         minAddValue: { x: 0, y: 0, z: 5 * direction },
         maxAddValue: { x: 0, y: 0, z: 10 * direction },
       });
-      confetti.dragCoefficient = getValueVector2({
+      confetti.dragCoefficient = getUpdatableValueVector2({
         type: "static",
         value: { x: 0.001, y: 0.001 },
       });

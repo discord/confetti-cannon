@@ -8,9 +8,9 @@ export { default as SpriteCanvas } from "./components/SpriteCanvas";
 export { default as useConfettiCannon } from "./components/useConfettiCannon";
 export {
   default as createConfetti,
-  getValueNumber,
-  getValueVector2,
-  getValueVector3,
+  getUpdatableValueNumber,
+  getUpdatableValueVector2,
+  getUpdatableValueVector3,
   type CreateConfettiArgs,
 } from "./createConfetti";
 export * from "./easing";

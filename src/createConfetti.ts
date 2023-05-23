@@ -413,15 +413,15 @@ function getColorIndex(
     : Math.floor(getRandomValue(0, spriteCanvasData.colors.length - 1));
 }
 
-export function getValueNumber(config: UpdatableValueConfigNumber) {
+export function getUpdatableValueNumber(config: UpdatableValueConfigNumber) {
   return getValueNumberAnnotated({ ...config, valueType: "number" });
 }
 
-export function getValueVector2(config: UpdatableValueConfigVector2) {
+export function getUpdatableValueVector2(config: UpdatableValueConfigVector2) {
   return getValueVector2Annotated({ ...config, valueType: "Vector2" });
 }
 
-export function getValueVector3(config: UpdatableValueConfigVector3) {
+export function getUpdatableValueVector3(config: UpdatableValueConfigVector3) {
   return getValueVector3Annotated({ ...config, valueType: "Vector3" });
 }
 
@@ -434,9 +434,10 @@ export default function createConfetti(
 ) {
   const args = provideDefaults(rawArgs);
 
-  const size = args.size != null ? getValueNumber(args.size) : null;
-  const width = args.width != null ? getValueNumber(args.width) : size;
-  const height = args.height != null ? getValueNumber(args.height) : size;
+  const size = args.size != null ? getUpdatableValueNumber(args.size) : null;
+  const width = args.width != null ? getUpdatableValueNumber(args.width) : size;
+  const height =
+    args.height != null ? getUpdatableValueNumber(args.height) : size;
 
   invariant(width != null, "width or size is required");
   invariant(height != null, "height or size is required");
@@ -453,13 +454,13 @@ export default function createConfetti(
 
   return new Confetti({
     id,
-    position: getValueVector2(args.position),
-    velocity: getValueVector2(args.velocity),
-    rotation: getValueVector3(args.rotation),
-    dragCoefficient: getValueVector2(args.dragCoefficient),
+    position: getUpdatableValueVector2(args.position),
+    velocity: getUpdatableValueVector2(args.velocity),
+    rotation: getUpdatableValueVector3(args.rotation),
+    dragCoefficient: getUpdatableValueVector2(args.dragCoefficient),
     width,
     height,
-    opacity: getValueNumber(args.opacity),
+    opacity: getUpdatableValueNumber(args.opacity),
     spriteX:
       colorIndex * spriteCanvasData.spriteWidth + colorIndex * SPRITE_SPACING,
     spriteY:
