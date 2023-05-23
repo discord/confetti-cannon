@@ -46,8 +46,8 @@ const FALLING_CHARACTER_ID_PREFIX = "FALLING_CHARACTER";
 const FALLING_CHARACTER_CONFETTI_CONFIG: Partial<CreateConfettiArgs> = {
   velocity: {
     type: "static-random",
-    minValue: { x: 2, y: 0 },
-    maxValue: { x: 5, y: 0 },
+    minValue: { x: -5, y: 0 },
+    maxValue: { x: -2, y: 0 },
   },
   rotation: {
     type: "oscillating-random",
@@ -110,7 +110,7 @@ function MultipleCannonsStory() {
   const fallingCharacterSpriteCanvas =
     React.useRef<React.ElementRef<typeof SpriteCanvas>>(null);
 
-  const environment = React.useMemo(() => new Environment({ wind: 5 }), []);
+  const environment = React.useMemo(() => new Environment({ wind: -5 }), []);
 
   const fallingCharacterCannon = useConfettiCannon(
     confettiCanvas,

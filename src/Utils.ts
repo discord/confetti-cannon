@@ -61,13 +61,9 @@ export function getClickPosition(
 }
 
 export function calculateAirResistance(
-  externalForce: number,
   dragCoefficient: number,
-  velocity: number,
-  directionMultiplier: 1 | -1
+  velocity: number
 ) {
-  return (
-    Math.min(externalForce, dragCoefficient * velocity * velocity) *
-    directionMultiplier
-  );
+  const directionMultiplier = velocity > 0 ? -1 : 1;
+  return dragCoefficient * velocity * velocity * directionMultiplier;
 }

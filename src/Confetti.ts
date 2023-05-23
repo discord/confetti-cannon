@@ -67,20 +67,14 @@ export default class Confetti {
     const windForce = environment.wind * deltaTime;
     const gravityForce = -environment.gravity * deltaTime;
 
-    const airResistanceMultiplierX = this.velocity.x > 0 ? -1 : 1;
     const airResistanceForceX = calculateAirResistance(
-      windForce,
       this.dragCoefficient.x,
-      this.velocity.x,
-      airResistanceMultiplierX
+      this.velocity.x
     );
 
-    const airResistanceMultiplierY = this.velocity.y > 0 ? -1 : 1;
     const airResistanceForceY = calculateAirResistance(
-      gravityForce,
       this.dragCoefficient.y,
-      this.velocity.y,
-      airResistanceMultiplierY
+      this.velocity.y
     );
 
     return {
