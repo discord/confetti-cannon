@@ -1,18 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import classNames from "classnames";
 import * as React from "react";
-import Environment from "../Environment";
-import { getClickPosition } from "../Utils";
-import ConfettiCanvas from "../components/ConfettiCanvas";
-import SpriteCanvas from "../components/SpriteCanvas";
-import useConfettiCannon from "../components/useConfettiCannon";
-import { CreateConfettiArgs } from "../createConfetti";
-import styles from "./Stories.module.css";
+import Environment from "../../Environment";
+import { getClickPosition } from "../../Utils";
+import ConfettiCanvas from "../../components/ConfettiCanvas";
+import SpriteCanvas from "../../components/SpriteCanvas";
+import useConfettiCannon from "../../components/useConfettiCannon";
+import { CreateConfettiArgs } from "../../createConfetti";
+import styles from "../Stories.module.css";
 
 const SPRITES = [
-  require("./images/square.svg"),
-  require("./images/circle.svg"),
-  { src: require("./images/duck.svg"), colorize: false },
+  require("../images/square.svg"),
+  require("../images/circle.svg"),
+  { src: require("../images/duck.svg"), colorize: false },
 ];
 
 const COLORS = [
@@ -107,7 +107,7 @@ function BasicStory() {
 }
 
 const meta = {
-  title: "Basic",
+  title: "Examples/Basic",
   component: BasicStory,
   tags: ["autodocs"],
   parameters: {
