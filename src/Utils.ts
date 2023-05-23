@@ -3,8 +3,8 @@ import { Vector2 } from "./Types";
 export function setCanvasSize(canvas: HTMLCanvasElement | null) {
   if (canvas != null) {
     const { width, height } = canvas.getBoundingClientRect();
-    canvas.width = width;
-    canvas.height = height;
+    canvas.width = width * global.devicePixelRatio;
+    canvas.height = height * global.devicePixelRatio;
   }
 }
 

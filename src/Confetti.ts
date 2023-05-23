@@ -136,7 +136,10 @@ export default class Confetti {
 
     context.setTransform(
       new DOMMatrix()
-        .translateSelf(this.position.x, this.position.y)
+        .translateSelf(
+          this.position.x * global.devicePixelRatio,
+          this.position.y * global.devicePixelRatio
+        )
         .rotateSelf(this.rotation.x, this.rotation.y, this.rotation.z)
     );
 
@@ -146,10 +149,10 @@ export default class Confetti {
       this.spriteY,
       this.spriteWidth,
       this.spriteHeight,
-      -this.width.value / 2,
-      -this.height.value / 2,
-      this.width.value,
-      this.height.value
+      (-this.width.value / 2) * global.devicePixelRatio,
+      (-this.height.value / 2) * global.devicePixelRatio,
+      this.width.value * global.devicePixelRatio,
+      this.height.value * global.devicePixelRatio
     );
 
     context.restore();
