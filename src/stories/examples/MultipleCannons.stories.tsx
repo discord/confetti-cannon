@@ -2,18 +2,18 @@ import type { Meta, StoryObj } from "@storybook/react";
 import classNames from "classnames";
 import * as React from "react";
 import { v4 as uuid } from "uuid";
-import Confetti from "../../Confetti";
-import Environment from "../../Environment";
-import { getClickPosition } from "../../Utils";
-import ConfettiCanvas from "../../components/ConfettiCanvas";
-import SpriteCanvas from "../../components/SpriteCanvas";
-import useConfettiCannon from "../../components/useConfettiCannon";
 import {
+  Confetti,
+  ConfettiCanvas,
   CreateConfettiArgs,
+  Environment,
+  SpriteCanvas,
+  easeInOutQuad,
   getValueVector2,
   getValueVector3,
-} from "../../createConfetti";
-import { easeInOutQuad } from "../../easing";
+  useConfettiCannon,
+} from "../../";
+import { getClickPosition } from "../../Utils";
 import styles from "../Stories.module.css";
 
 const FALLING_CHARACTER_SPRITE = {

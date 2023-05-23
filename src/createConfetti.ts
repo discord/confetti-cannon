@@ -2,18 +2,14 @@ import invariant from "invariant";
 import Confetti from "./Confetti";
 import { CREATE_CONFETTI_DEFAULTS } from "./Constants";
 import { SPRITE_SPACING } from "./ConstantsInternal";
-import { Vector2, Vector3 } from "./Types";
+import { SpriteProp, Vector2, Vector3 } from "./Types";
 import { UpdatableVector2Value, UpdatableVector3Value } from "./UpdatableValue";
 import {
   LinearUpdatableValue,
   OscillatingUpdatableValue,
   StaticUpdatableValue,
 } from "./UpdatableValueImplementations";
-import {
-  Sprite,
-  SpriteCanvasData,
-  SpriteProp,
-} from "./components/SpriteCanvas";
+import { Sprite, SpriteCanvasData } from "./components/SpriteCanvas";
 import { EasingFunction } from "./easing";
 
 interface StaticConfigConstant<T> {

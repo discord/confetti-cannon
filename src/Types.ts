@@ -6,3 +6,10 @@ export interface Vector2 {
 export interface Vector3 extends Vector2 {
   z: number;
 }
+
+export type SpriteProp =
+  | {
+      src: string;
+      colorize: boolean;
+    }
+  | string;
