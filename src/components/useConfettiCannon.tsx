@@ -19,6 +19,7 @@ export interface ConfettiCannon {
     createConfettiArgs: CreateConfettiArgs,
     numberToFire: number
   ) => Confetti[];
+  addConfetti: (confetti: Confetti) => void;
   deleteConfetti: (id: string) => void;
   clearConfetti: () => void;
 }
@@ -65,6 +66,16 @@ export default function useConfettiCannon(
     [createConfetti]
   );
 
+  const addConfetti = React.useCallback(
+    (confetti: Confetti) => {
+      const spriteCanvasRef = spriteCanvas.current?.getCanvas();
+      if (spriteCanvasRef != null) {
+        confettiCanvas.current?.addConfetti(confetti, spriteCanvasRef);
+      }
+    },
+    [confettiCanvas, spriteCanvas]
+  );
+
   const deleteConfetti = React.useCallback(
     (id: string) => {
       confettiCanvas.current?.deleteConfetti(id);
@@ -80,6 +91,7 @@ export default function useConfettiCannon(
   return {
     createConfetti,
     createMultipleConfetti,
+    addConfetti,
     clearConfetti,
     deleteConfetti,
   };
