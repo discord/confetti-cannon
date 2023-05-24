@@ -37,7 +37,11 @@ export default function useConfettiCannon(
       const spriteData = spriteCanvas.current?.getCreateData();
       const spriteCanvasRef = spriteCanvas.current?.getCanvas();
 
-      if (spriteCanvasRef == null || spriteData == null) {
+      if (
+        spriteCanvasRef == null ||
+        spriteData == null ||
+        spriteData.sprites.length === 0
+      ) {
         return;
       }
 
