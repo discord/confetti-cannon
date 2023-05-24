@@ -5,7 +5,7 @@ import { CreateConfettiArgs } from "../createConfetti";
 import { ConfettiCanvasHandle } from "./ConfettiCanvas";
 import { SpriteCanvasHandle } from "./SpriteCanvas";
 
-interface CreateConfettiRequestedOptions {
+export interface CreateConfettiRequestedOptions {
   sprite?: SpriteProp;
   color?: string;
 }
@@ -17,7 +17,8 @@ export interface ConfettiCannon {
   ) => Confetti | undefined;
   createMultipleConfetti: (
     createConfettiArgs: CreateConfettiArgs,
-    numberToFire: number
+    numberToFire: number,
+    createConfettiRequestedOptions?: CreateConfettiRequestedOptions
   ) => Confetti[];
   addConfetti: (confetti: Confetti) => void;
   deleteConfetti: (id: string) => void;
@@ -51,11 +52,18 @@ export default function useConfettiCannon(
     [confettiCanvas, spriteCanvas]
   );
   const createMultipleConfetti = React.useCallback(
-    (createConfettiArgs: CreateConfettiArgs, numConfetti: number) => {
+    (
+      createConfettiArgs: CreateConfettiArgs,
+      numConfetti: number,
+      createConfettiRequestedOptions?: CreateConfettiRequestedOptions
+    ) => {
       const createdConfetti: Confetti[] = [];
 
       for (let i = 0; i < numConfetti; i++) {
-        const confetti = createConfetti(createConfettiArgs);
+        const confetti = createConfetti(
+          createConfettiArgs,
+          createConfettiRequestedOptions
+        );
         if (confetti) {
           createdConfetti.push(confetti);
         }

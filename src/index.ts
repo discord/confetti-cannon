@@ -8,6 +8,7 @@ export { default as SpriteCanvas } from "./components/SpriteCanvas";
 export {
   default as useConfettiCannon,
   type ConfettiCannon,
+  type CreateConfettiRequestedOptions,
 } from "./components/useConfettiCannon";
 export {
   default as createConfetti,
