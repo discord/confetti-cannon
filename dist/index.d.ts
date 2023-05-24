@@ -266,4 +266,4 @@ interface ConfettiCannon {
 }
 declare function useConfettiCannon(confettiCanvas: React.RefObject<ConfettiCanvasHandle>, spriteCanvas: React.RefObject<SpriteCanvasHandle>): ConfettiCannon;
 
-export { CREATE_CONFETTI_DEFAULTS, Confetti, _default as ConfettiCanvas, CreateConfettiArgs, Direction$1 as Direction, EasingFunction, Environment, LinearUpdatableValue, OscillatingUpdatableValue, _default$1 as SpriteCanvas, SpriteProp, StaticUpdatableValue, Vector2, Vector3, createConfetti, easeInOutQuad, getUpdatableValueNumber, getUpdatableValueVector2, getUpdatableValueVector3, useConfettiCannon };
+export { CREATE_CONFETTI_DEFAULTS, Confetti, ConfettiCannon, _default as ConfettiCanvas, CreateConfettiArgs, Direction$1 as Direction, EasingFunction, Environment, LinearUpdatableValue, OscillatingUpdatableValue, _default$1 as SpriteCanvas, SpriteProp, StaticUpdatableValue, Vector2, Vector3, createConfetti, easeInOutQuad, getUpdatableValueNumber, getUpdatableValueVector2, getUpdatableValueVector3, useConfettiCannon };
