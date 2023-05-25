@@ -7,15 +7,20 @@ import { getClickPosition, isInRect, mapFind, setCanvasSize } from "../Utils";
 import createConfettiHelper, { CreateConfettiArgs } from "../createConfetti";
 import { SpriteCanvasData } from "./SpriteCanvas";
 
+type ClickListener = (e: MouseEvent, confetti: Confetti | null) => void;
+type MouseListener = (e: MouseEvent) => void;
+
 interface ConfettiCanvasProps
   extends Omit<
     React.HTMLAttributes<HTMLCanvasElement>,
-    "onClick" | "onMouseDown"
+    "onClick" | "onMouseDown" | "onMouseMove" | "onMouseUp"
   > {
   className?: string;
   environment: Environment;
-  onClick?: (e: React.MouseEvent, confetti: Confetti | null) => void;
-  onMouseDown?: (e: React.MouseEvent, confetti: Confetti | null) => void;
+  onClick?: ClickListener;
+  onMouseDown?: ClickListener;
+  onMouseMove?: MouseListener;
+  onMouseUp?: MouseListener;
   onBeforeRender?: (context: CanvasRenderingContext2D) => void;
   onAfterRender?: (context: CanvasRenderingContext2D) => void;
 }
@@ -45,6 +50,8 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
     environment,
     onClick,
     onMouseDown,
+    onMouseMove,
+    onMouseUp,
     onBeforeRender,
     onAfterRender,
     ...props
@@ -174,16 +181,40 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
 
   const handleMouseEvent = React.useCallback(
     (
-      e: React.MouseEvent,
-      handler?:
-        | ((e: React.MouseEvent, confetti: Confetti | null) => void)
-        | null
+      e: MouseEvent,
+      {
+        clickHandler,
+        mouseHandler,
+      }: {
+        clickHandler?: ClickListener;
+        mouseHandler?: MouseListener;
+      }
     ) => {
-      if (handler == null) {
+      if (clickHandler == null || mouseHandler == null) {
+        return;
+      }
+
+      const canvasRect = canvas.current?.getBoundingClientRect();
+      if (canvasRect == null) {
         return;
       }
 
       const clickPosition = getClickPosition(e, canvas.current);
+      if (
+        !isInRect(clickPosition, {
+          x: canvasRect.left,
+          y: canvasRect.top,
+          width: canvasRect.width,
+          height: canvasRect.height,
+        })
+      ) {
+        return;
+      }
+
+      if (mouseHandler != null) {
+        return mouseHandler(e);
+      }
+
       const deltaTime = -(1000 / frameRate.current) * CLICK_BUFFER_FRAME_COUNT;
       const confetti = mapFind(allConfetti.current, ({ confetti }) => {
         const confettiPosition = confetti.previewPositionUpdate(
@@ -198,20 +229,54 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
           height: confetti.height.value,
         });
       });
-      handler(e, confetti?.confetti ?? null);
+      clickHandler(e, confetti?.confetti ?? null);
     },
     [environment]
   );
 
-  const handleClick = React.useCallback(
-    (e: React.MouseEvent) => handleMouseEvent(e, onClick),
+  const handleClick: MouseListener = React.useCallback(
+    (e) => handleMouseEvent(e, { clickHandler: onClick }),
     [handleMouseEvent, onClick]
   );
 
-  const handleMouseDown = React.useCallback(
-    (e: React.MouseEvent) => handleMouseEvent(e, onMouseDown),
+  const handleMouseDown: MouseListener = React.useCallback(
+    (e) => handleMouseEvent(e, { clickHandler: onMouseDown }),
     [handleMouseEvent, onMouseDown]
   );
+
+  const handleMouseMove: MouseListener = React.useCallback(
+    (e) => handleMouseEvent(e, { mouseHandler: onMouseMove }),
+    [handleMouseEvent, onMouseMove]
+  );
+
+  const handleMouseUp: MouseListener = React.useCallback(
+    (e) => handleMouseEvent(e, { mouseHandler: onMouseUp }),
+    [handleMouseEvent, onMouseUp]
+  );
+
+  React.useEffect(() => {
+    const possiblyAddEventListener = (
+      event: "click" | "mousedown" | "mousemove" | "mouseup",
+      globalListener: (e: MouseEvent) => void,
+      propListener: ClickListener | MouseListener | undefined
+    ) => {
+      if (propListener != null) {
+        window.addEventListener(event, globalListener);
+      }
+    };
+
+    possiblyAddEventListener("click", handleClick, onClick);
+    possiblyAddEventListener("mousedown", handleMouseDown, onMouseDown);
+    possiblyAddEventListener("mousemove", handleMouseMove, onMouseMove);
+    possiblyAddEventListener("mouseup", handleMouseUp, onMouseUp);
+
+    return () => {
+      window.removeEventListener("click", handleClick);
+      window.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseMove);
+    };
+  });
 
   React.useEffect(() => {
     const canvasRef = canvas.current;
@@ -228,15 +293,7 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
     };
   }, []);
 
-  return (
-    <canvas
-      {...props}
-      className={className}
-      ref={canvas}
-      onMouseDown={handleMouseDown}
-      onClick={handleClick}
-    />
-  );
+  return <canvas {...props} className={className} ref={canvas} />;
 };
 
 export default React.forwardRef(ConfettiCanvas);

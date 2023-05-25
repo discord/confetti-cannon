@@ -53,7 +53,7 @@ function DraggingStory() {
     [cannon]
   );
 
-  const handleMouseDown = (e: React.MouseEvent, confetti: Confetti | null) => {
+  const handleMouseDown = (e: MouseEvent, confetti: Confetti | null) => {
     if (confetti != null) {
       confetti.velocity.x = 0;
       confetti.velocity.y = 0;
@@ -66,7 +66,7 @@ function DraggingStory() {
     addConfetti(x, y);
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const handleMouseMove = (e: MouseEvent) => {
     if (draggingConfetti.current != null) {
       const { x, y } = getClickPosition(e, confettiCanvas.current?.getCanvas());
       draggingConfetti.current.position.x = x;
@@ -75,7 +75,7 @@ function DraggingStory() {
     }
   };
 
-  const handleMouseUp = (e: React.MouseEvent) => {
+  const handleMouseUp = (e: MouseEvent) => {
     if (draggingConfetti.current == null) {
       return;
     }

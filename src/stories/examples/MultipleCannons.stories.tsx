@@ -178,7 +178,7 @@ function MultipleCannonsStory() {
     [addConfetti]
   );
 
-  const handleClick = (e: React.MouseEvent, confetti: Confetti | null) => {
+  const handleClick = (e: MouseEvent, confetti: Confetti | null) => {
     if (
       confetti != null &&
       confetti.id.startsWith(FALLING_CHARACTER_ID_PREFIX)

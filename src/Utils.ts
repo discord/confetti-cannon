@@ -45,7 +45,7 @@ export function isInRect(
 }
 
 export function getClickPosition(
-  e: React.MouseEvent,
+  e: React.MouseEvent | MouseEvent,
   element: HTMLElement | null | undefined
 ) {
   if (element == null) {

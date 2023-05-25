@@ -83,7 +83,7 @@ function BasicStory() {
     [cannon]
   );
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = (e: MouseEvent) => {
     const { x, y } = getClickPosition(e, confettiCanvas.current?.getCanvas());
     addConfetti(x, y);
   };

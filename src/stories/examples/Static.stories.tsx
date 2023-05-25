@@ -104,7 +104,7 @@ function StaticStory({
     ]
   );
 
-  const handleClick = (e: React.MouseEvent, confetti: Confetti | null) => {
+  const handleClick = (e: MouseEvent, confetti: Confetti | null) => {
     if (confetti != null) {
       cannon.deleteConfetti(confetti.id);
       return;
