@@ -13,7 +13,7 @@ export declare function isInRect({ x, y }: Vector2, rect: {
     width: number;
     height: number;
 }): boolean;
-export declare function getClickPosition(e: React.MouseEvent, element: HTMLElement | null | undefined): {
+export declare function getClickPosition(e: React.MouseEvent | MouseEvent, element: HTMLElement | null | undefined): {
     x: number;
     y: number;
 };

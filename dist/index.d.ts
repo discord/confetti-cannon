@@ -236,11 +236,15 @@ declare function createConfetti(id: string, rawArgs: CreateConfettiArgs, spriteC
 
 declare const CREATE_CONFETTI_DEFAULTS: CreateConfettiArgsDefaults;
 
-interface ConfettiCanvasProps extends Omit<React.HTMLAttributes<HTMLCanvasElement>, "onClick" | "onMouseDown"> {
+type ClickListener = (e: MouseEvent, confetti: Confetti | null) => void;
+type MouseListener = (e: MouseEvent) => void;
+interface ConfettiCanvasProps extends Omit<React.HTMLAttributes<HTMLCanvasElement>, "onClick" | "onMouseDown" | "onMouseMove" | "onMouseUp"> {
     className?: string;
     environment: Environment;
-    onClick?: (e: React.MouseEvent, confetti: Confetti | null) => void;
-    onMouseDown?: (e: React.MouseEvent, confetti: Confetti | null) => void;
+    onClick?: ClickListener;
+    onMouseDown?: ClickListener;
+    onMouseMove?: MouseListener;
+    onMouseUp?: MouseListener;
     onBeforeRender?: (context: CanvasRenderingContext2D) => void;
     onAfterRender?: (context: CanvasRenderingContext2D) => void;
 }
