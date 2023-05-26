@@ -190,7 +190,7 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
         mouseHandler?: MouseListener;
       }
     ) => {
-      if (clickHandler == null || mouseHandler == null) {
+      if (clickHandler == null && mouseHandler == null) {
         return;
       }
 
@@ -213,6 +213,10 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
 
       if (mouseHandler != null) {
         return mouseHandler(e);
+      }
+
+      if (clickHandler == null) {
+        return;
       }
 
       const deltaTime = -(1000 / frameRate.current) * CLICK_BUFFER_FRAME_COUNT;
@@ -276,7 +280,16 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseMove);
     };
-  });
+  }, [
+    handleClick,
+    handleMouseDown,
+    handleMouseMove,
+    handleMouseUp,
+    onClick,
+    onMouseDown,
+    onMouseMove,
+    onMouseUp,
+  ]);
 
   React.useEffect(() => {
     const canvasRef = canvas.current;
