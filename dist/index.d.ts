@@ -210,22 +210,21 @@ type Config<T, TDirection> = StaticConfig<T> | LinearConfig<T> | OscillatingConf
 type ConfigNumber = Config<number, Direction>;
 type ConfigVector2 = Config<Vector2, DirectionVector2>;
 type ConfigVector3 = Config<Vector3, DirectionVector3>;
-type UpdatableValueConfigNumber = ConfigNumber;
-type UpdatableValueConfigNumberInput = ConfigNumber;
-type UpdatableValueConfigVector2Input = ConfigNumber | ConfigVector2;
-type UpdatableValueConfigVector3Input = ConfigNumber | ConfigVector3;
+type ConfigNumberInput = ConfigNumber;
+type ConfigVector2Input = ConfigVector2 | ConfigNumber;
+type ConfigVector3Input = ConfigVector3 | ConfigNumber;
 type CreateConfettiArgs = {
     id?: string;
-    position: UpdatableValueConfigVector2Input;
-    velocity?: UpdatableValueConfigVector2Input;
-    rotation?: UpdatableValueConfigVector3Input;
-    dragCoefficient?: UpdatableValueConfigVector2Input;
-    size: UpdatableValueConfigVector2Input;
-    opacity?: UpdatableValueConfigNumberInput;
+    position: ConfigVector2Input;
+    velocity?: ConfigVector2Input;
+    rotation?: ConfigVector3Input;
+    dragCoefficient?: ConfigVector2Input;
+    size: ConfigVector2Input;
+    opacity?: ConfigNumberInput;
 };
-declare function getUpdatableValueNumber(config: UpdatableValueConfigNumber): StaticUpdatableValue | LinearUpdatableValue | OscillatingUpdatableValue;
-declare function getUpdatableValueVector2(config: UpdatableValueConfigVector2Input): UpdatableVector2Value;
-declare function getUpdatableValueVector3(config: UpdatableValueConfigVector3Input): UpdatableVector3Value;
+declare function getUpdatableValueNumber(config: ConfigNumber): StaticUpdatableValue | LinearUpdatableValue | OscillatingUpdatableValue;
+declare function getUpdatableValueVector2(config: ConfigVector2Input): UpdatableVector2Value;
+declare function getUpdatableValueVector3(config: ConfigVector3Input): UpdatableVector3Value;
 declare function createConfetti(id: string, rawArgs: CreateConfettiArgs, spriteCanvasData: SpriteCanvasData, requestedSprite?: SpriteProp, requestedColor?: string | null): Confetti;
 
 type CreateConfettiArgsDefaults = Pick<Required<CreateConfettiArgs>, "velocity" | "rotation" | "dragCoefficient" | "opacity">;

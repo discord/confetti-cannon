@@ -88,43 +88,39 @@ type ConfigNumber = Config<number, Direction>;
 type ConfigVector2 = Config<Vector2, DirectionVector2>;
 type ConfigVector3 = Config<Vector3, DirectionVector3>;
 
-type UpdatableValueConfigNumber = ConfigNumber;
-type UpdatableValueConfigVector2 = ConfigVector2;
-type UpdatableValueConfigVector3 = ConfigVector3;
-
-type UpdatableValueConfigNumberInput = ConfigNumber;
-type UpdatableValueConfigVector2Input = ConfigNumber | ConfigVector2;
-type UpdatableValueConfigVector3Input = ConfigNumber | ConfigVector3;
+type ConfigNumberInput = ConfigNumber;
+type ConfigVector2Input = ConfigVector2 | ConfigNumber;
+type ConfigVector3Input = ConfigVector3 | ConfigNumber;
 
 export interface CreateConfettiArgsFull {
   id?: string;
-  position: UpdatableValueConfigVector2;
-  velocity: UpdatableValueConfigVector2;
-  rotation: UpdatableValueConfigVector3;
-  dragCoefficient: UpdatableValueConfigVector2;
-  size: UpdatableValueConfigNumber;
-  opacity: UpdatableValueConfigNumber;
+  position: ConfigVector2;
+  velocity: ConfigVector2;
+  rotation: ConfigVector3;
+  dragCoefficient: ConfigVector2;
+  size: ConfigNumber;
+  opacity: ConfigNumber;
 }
 
 export type CreateConfettiArgs = {
   id?: string;
-  position: UpdatableValueConfigVector2Input;
-  velocity?: UpdatableValueConfigVector2Input;
-  rotation?: UpdatableValueConfigVector3Input;
-  dragCoefficient?: UpdatableValueConfigVector2Input;
-  size: UpdatableValueConfigVector2Input;
-  opacity?: UpdatableValueConfigNumberInput;
+  position: ConfigVector2Input;
+  velocity?: ConfigVector2Input;
+  rotation?: ConfigVector3Input;
+  dragCoefficient?: ConfigVector2Input;
+  size: ConfigVector2Input;
+  opacity?: ConfigNumberInput;
 };
 
 type CreateConfettiArgsFullInput = Required<CreateConfettiArgs>;
 
-type UpdatableValueConfigNumberAnnotated = UpdatableValueConfigNumberInput & {
+type ConfigNumberAnnotated = ConfigNumberInput & {
   valueType: "number";
 };
-type UpdatableValueConfigVector2Annotated = UpdatableValueConfigVector2Input & {
+type ConfigVector2Annotated = ConfigVector2Input & {
   valueType: "Vector2";
 };
-type UpdatableValueConfigVector3Annotated = UpdatableValueConfigVector3Input & {
+type ConfigVector3Annotated = ConfigVector3Input & {
   valueType: "Vector3";
 };
 
@@ -159,7 +155,7 @@ function getVector3<T extends number>(input: Vector3Template<T> | T) {
   return input;
 }
 
-function getValueNumberAnnotated(config: UpdatableValueConfigNumberAnnotated) {
+function getValueNumberAnnotated(config: ConfigNumberAnnotated) {
   switch (config.type) {
     case "static":
       return new StaticUpdatableValue(config.value);
@@ -195,9 +191,7 @@ function getValueNumberAnnotated(config: UpdatableValueConfigNumberAnnotated) {
   }
 }
 
-function getValueVector2Annotated(
-  config: UpdatableValueConfigVector2Annotated
-) {
+function getValueVector2Annotated(config: ConfigVector2Annotated) {
   switch (config.type) {
     case "static": {
       const value = getVector2(config.value);
@@ -296,9 +290,7 @@ function getValueVector2Annotated(
   }
 }
 
-function getValueVector3Annotated(
-  config: UpdatableValueConfigVector3Annotated
-) {
+function getValueVector3Annotated(config: ConfigVector3Annotated) {
   switch (config.type) {
     case "static": {
       const value = getVector3(config.value);
@@ -477,19 +469,15 @@ function getColorIndex(
     : Math.floor(getRandomValue(0, spriteCanvasData.colors.length - 1));
 }
 
-export function getUpdatableValueNumber(config: UpdatableValueConfigNumber) {
+export function getUpdatableValueNumber(config: ConfigNumber) {
   return getValueNumberAnnotated({ ...config, valueType: "number" });
 }
 
-export function getUpdatableValueVector2(
-  config: UpdatableValueConfigVector2Input
-) {
+export function getUpdatableValueVector2(config: ConfigVector2Input) {
   return getValueVector2Annotated({ ...config, valueType: "Vector2" });
 }
 
-export function getUpdatableValueVector3(
-  config: UpdatableValueConfigVector3Input
-) {
+export function getUpdatableValueVector3(config: ConfigVector3Input) {
   return getValueVector3Annotated({ ...config, valueType: "Vector3" });
 }
 
