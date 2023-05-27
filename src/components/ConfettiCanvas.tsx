@@ -227,10 +227,10 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
         );
 
         return isInRect(clickPosition, {
-          x: confettiPosition.x - confetti.width.value / 2,
-          y: confettiPosition.y - confetti.height.value / 2,
-          width: confetti.width.value,
-          height: confetti.height.value,
+          x: confettiPosition.x - confetti.width / 2,
+          y: confettiPosition.y - confetti.height / 2,
+          width: confetti.width,
+          height: confetti.height,
         });
       });
       clickHandler(e, confetti?.confetti ?? null);

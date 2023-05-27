@@ -13,8 +13,7 @@ type ConfettiArgs = {
   position: UpdatableVector2Value;
   velocity: UpdatableVector2Value;
   rotation: UpdatableVector3Value;
-  width: UpdatableValue;
-  height: UpdatableValue;
+  size: UpdatableVector2Value;
   dragCoefficient: UpdatableVector2Value;
   opacity: UpdatableValue;
 
@@ -30,8 +29,7 @@ export default class Confetti {
   position: UpdatableVector2Value;
   velocity: UpdatableVector2Value;
   rotation: UpdatableVector3Value;
-  width: UpdatableValue;
-  height: UpdatableValue;
+  size: UpdatableVector2Value;
   dragCoefficient: UpdatableVector2Value;
   opacity: UpdatableValue;
 
@@ -50,8 +48,7 @@ export default class Confetti {
     this.rotation = args.rotation;
     this.dragCoefficient = args.dragCoefficient;
 
-    this.width = args.width;
-    this.height = args.height;
+    this.size = args.size;
 
     this.opacity = args.opacity;
 
@@ -101,8 +98,7 @@ export default class Confetti {
     this.position.x += this.velocity.x * deltaTime;
     this.position.y += this.velocity.y * deltaTime;
 
-    this.width.update(deltaTime);
-    this.height.update(deltaTime);
+    this.size.update(deltaTime);
 
     this.opacity.update(deltaTime);
 
@@ -143,10 +139,10 @@ export default class Confetti {
       this.spriteY,
       this.spriteWidth,
       this.spriteHeight,
-      (-this.width.value / 2) * global.devicePixelRatio,
-      (-this.height.value / 2) * global.devicePixelRatio,
-      this.width.value * global.devicePixelRatio,
-      this.height.value * global.devicePixelRatio
+      (-this.width / 2) * global.devicePixelRatio,
+      (-this.height / 2) * global.devicePixelRatio,
+      this.width * global.devicePixelRatio,
+      this.height * global.devicePixelRatio
     );
 
     context.restore();
@@ -159,20 +155,28 @@ export default class Confetti {
       // top
       (environment.gravity >= 0 &&
         this.velocity.y < 0 &&
-        this.position.y + this.height.value < 0) ||
+        this.position.y + this.height < 0) ||
       // bottom
       (environment.gravity <= 0 &&
         this.velocity.y > 0 &&
-        this.position.y - this.height.value > canvas.height) ||
+        this.position.y - this.height > canvas.height) ||
       // left
       (environment.wind >= 0 &&
         this.velocity.x > 0 &&
-        this.position.x - this.width.value > canvas.width) ||
+        this.position.x - this.width > canvas.width) ||
       // right
       (environment.wind <= 0 &&
         this.velocity.x < 0 &&
-        this.position.x + this.width.value < 0)
+        this.position.x + this.width < 0)
     );
+  }
+
+  get width() {
+    return this.size.x;
+  }
+
+  get height() {
+    return this.size.y;
   }
 
   addForce(force: Vector2) {

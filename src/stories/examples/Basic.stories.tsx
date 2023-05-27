@@ -48,8 +48,8 @@ function BasicStory() {
       const createConfettiArgs: CreateConfettiArgs = {
         position: {
           type: "static-random",
-          minValue: { x: x, y: y },
-          maxValue: { x: x, y: y },
+          minValue: { x, y },
+          maxValue: { x, y },
         },
         velocity: {
           type: "static-random",
@@ -58,18 +58,10 @@ function BasicStory() {
         },
         rotation: {
           type: "linear-random",
-          minValue: { x: 0, y: 0, z: 0 },
-          maxValue: { x: 360, y: 360, z: 360 },
-          minAddValue: {
-            x: -25,
-            y: -25,
-            z: -25,
-          },
-          maxAddValue: {
-            x: 25,
-            y: 25,
-            z: 25,
-          },
+          minValue: 0,
+          maxValue: 360,
+          minAddValue: -25,
+          maxAddValue: 25,
         },
         size: {
           type: "static-random",

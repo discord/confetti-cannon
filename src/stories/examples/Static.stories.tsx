@@ -62,7 +62,7 @@ function StaticStory({
       const createConfettiArgs: CreateConfettiArgs = {
         position: {
           type: "linear",
-          value: { x: x, y: y },
+          value: { x, y },
           addValue: { x: positionAddX, y: positionAddY },
         },
         velocity: {

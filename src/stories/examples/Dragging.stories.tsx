@@ -40,7 +40,7 @@ function DraggingStory() {
       const createConfettiArgs: CreateConfettiArgs = {
         position: {
           type: "static",
-          value: { x: x, y: y },
+          value: { x, y },
         },
         size: {
           type: "static",

@@ -43,7 +43,8 @@ const FALLING_CHARACTER_SIZE = 80;
 const MAX_CONFETTI_SIZE = 40;
 
 const FALLING_CHARACTER_ID_PREFIX = "FALLING_CHARACTER";
-const FALLING_CHARACTER_CONFETTI_CONFIG: Partial<CreateConfettiArgs> = {
+const FALLING_CHARACTER_CONFETTI_CONFIG: Partial<CreateConfettiArgs> &
+  Pick<CreateConfettiArgs, "size"> = {
   velocity: {
     type: "static-random",
     minValue: { x: -5, y: 0 },
@@ -73,7 +74,8 @@ const FALLING_CHARACTER_CONFETTI_CONFIG: Partial<CreateConfettiArgs> = {
   },
 };
 
-const CONFETTI_CONFETTI_CONFIG: Partial<CreateConfettiArgs> = {
+const CONFETTI_CONFETTI_CONFIG: Partial<CreateConfettiArgs> &
+  Pick<CreateConfettiArgs, "size"> = {
   size: {
     type: "static-random",
     minValue: 20,
@@ -86,18 +88,10 @@ const CONFETTI_CONFETTI_CONFIG: Partial<CreateConfettiArgs> = {
   },
   rotation: {
     type: "linear-random",
-    minValue: { x: 0, y: 0, z: 0 },
-    maxValue: { x: 360, y: 360, z: 360 },
-    minAddValue: {
-      x: 5,
-      y: 5,
-      z: 5,
-    },
-    maxAddValue: {
-      x: 10,
-      y: 10,
-      z: 10,
-    },
+    minValue: 0,
+    maxValue: 360,
+    minAddValue: 5,
+    maxAddValue: 10,
   },
 };
 
@@ -166,13 +160,13 @@ function MultipleCannonsStory() {
       });
       confetti.dragCoefficient = getUpdatableValueVector2({
         type: "static",
-        value: { x: 0.001, y: 0.001 },
+        value: 0.001,
       });
 
       confetti.addForce({ x: 0, y: -100 });
       addConfetti(
-        confetti.position.x + confetti.width.value / 2,
-        confetti.position.y + confetti.height.value / 2
+        confetti.position.x + confetti.width / 2,
+        confetti.position.y + confetti.height / 2
       );
     },
     [addConfetti]

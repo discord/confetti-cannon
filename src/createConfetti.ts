@@ -1,8 +1,13 @@
-import invariant from "invariant";
 import Confetti from "./Confetti";
 import { CREATE_CONFETTI_DEFAULTS } from "./Constants";
 import { SPRITE_SPACING } from "./ConstantsInternal";
-import { SpriteProp, Vector2, Vector3 } from "./Types";
+import {
+  SpriteProp,
+  Vector2,
+  Vector2Template,
+  Vector3,
+  Vector3Template,
+} from "./Types";
 import { UpdatableVector2Value, UpdatableVector3Value } from "./UpdatableValue";
 import {
   LinearUpdatableValue,
@@ -41,17 +46,21 @@ interface LinearConfigRandom<T> {
 
 type LinearConfig<T> = LinearConfigConstant<T> | LinearConfigRandom<T>;
 
-interface OscillatingConfigConstant<T, Direction> {
+type Direction = 1 | -1;
+type DirectionVector2 = { x: Direction; y: Direction };
+type DirectionVector3 = DirectionVector2 & { z: Direction };
+
+interface OscillatingConfigConstant<T, TDirection> {
   type: "oscillating";
   value: T;
   start: T;
   final: T;
   duration: T;
-  direction: Direction;
+  direction: TDirection;
   easingFunction: EasingFunction;
 }
 
-interface OscillatingConfigRandom<T, Direction> {
+interface OscillatingConfigRandom<T, TDirection> {
   type: "oscillating-random";
   minValue: T;
   maxValue: T;
@@ -61,46 +70,31 @@ interface OscillatingConfigRandom<T, Direction> {
   maxFinal: T;
   minDuration: T;
   maxDuration: T;
-  minDirection: Direction;
-  maxDirection: Direction;
+  minDirection: TDirection;
+  maxDirection: TDirection;
   easingFunctions: EasingFunction[];
 }
 
-type OscillatingConfig<T, Direction> =
-  | OscillatingConfigConstant<T, Direction>
-  | OscillatingConfigRandom<T, Direction>;
+type OscillatingConfig<T, TDirection> =
+  | OscillatingConfigConstant<T, TDirection>
+  | OscillatingConfigRandom<T, TDirection>;
 
-type StaticConfigNumber = StaticConfig<number>;
-type StaticConfigVector2 = StaticConfig<Vector2>;
-type StaticConfigVector3 = StaticConfig<Vector3>;
+type Config<T, TDirection> =
+  | StaticConfig<T>
+  | LinearConfig<T>
+  | OscillatingConfig<T, TDirection>;
 
-type LinearConfigNumber = LinearConfig<number>;
-type LinearConfigVector2 = LinearConfig<Vector2>;
-type LinearConfigVector3 = LinearConfig<Vector3>;
+type ConfigNumber = Config<number, Direction>;
+type ConfigVector2 = Config<Vector2, DirectionVector2>;
+type ConfigVector3 = Config<Vector3, DirectionVector3>;
 
-type Direction = 1 | -1;
-type OscillatingNumber = OscillatingConfig<number, Direction>;
-type OscillatingVector2 = OscillatingConfig<
-  Vector2,
-  { x: Direction; y: Direction }
->;
-type OscillatingVector3 = OscillatingConfig<
-  Vector3,
-  { x: Direction; y: Direction; z: Direction }
->;
+type UpdatableValueConfigNumber = ConfigNumber;
+type UpdatableValueConfigVector2 = ConfigVector2;
+type UpdatableValueConfigVector3 = ConfigVector3;
 
-type UpdatableValueConfigNumber =
-  | StaticConfigNumber
-  | LinearConfigNumber
-  | OscillatingNumber;
-type UpdatableValueConfigVector2 =
-  | StaticConfigVector2
-  | LinearConfigVector2
-  | OscillatingVector2;
-type UpdatableValueConfigVector3 =
-  | StaticConfigVector3
-  | LinearConfigVector3
-  | OscillatingVector3;
+type UpdatableValueConfigNumberInput = ConfigNumber;
+type UpdatableValueConfigVector2Input = ConfigNumber | ConfigVector2;
+type UpdatableValueConfigVector3Input = ConfigNumber | ConfigVector3;
 
 export interface CreateConfettiArgsFull {
   id?: string;
@@ -108,27 +102,29 @@ export interface CreateConfettiArgsFull {
   velocity: UpdatableValueConfigVector2;
   rotation: UpdatableValueConfigVector3;
   dragCoefficient: UpdatableValueConfigVector2;
-  width?: UpdatableValueConfigNumber;
-  height?: UpdatableValueConfigNumber;
-  size?: UpdatableValueConfigNumber;
+  size: UpdatableValueConfigNumber;
   opacity: UpdatableValueConfigNumber;
 }
 
-export type CreateConfettiArgsDefaults = Pick<
-  CreateConfettiArgsFull,
-  "velocity" | "rotation" | "dragCoefficient" | "opacity"
->;
+export type CreateConfettiArgs = {
+  id?: string;
+  position: UpdatableValueConfigVector2Input;
+  velocity?: UpdatableValueConfigVector2Input;
+  rotation?: UpdatableValueConfigVector3Input;
+  dragCoefficient?: UpdatableValueConfigVector2Input;
+  size: UpdatableValueConfigVector2Input;
+  opacity?: UpdatableValueConfigNumberInput;
+};
 
-export type CreateConfettiArgs = Partial<CreateConfettiArgsFull> &
-  Pick<CreateConfettiArgsFull, "position">;
+type CreateConfettiArgsFullInput = Required<CreateConfettiArgs>;
 
-type UpdatableValueConfigNumberAnnotated = UpdatableValueConfigNumber & {
+type UpdatableValueConfigNumberAnnotated = UpdatableValueConfigNumberInput & {
   valueType: "number";
 };
-type UpdatableValueConfigVector2Annotated = UpdatableValueConfigVector2 & {
+type UpdatableValueConfigVector2Annotated = UpdatableValueConfigVector2Input & {
   valueType: "Vector2";
 };
-type UpdatableValueConfigVector3Annotated = UpdatableValueConfigVector3 & {
+type UpdatableValueConfigVector3Annotated = UpdatableValueConfigVector3Input & {
   valueType: "Vector3";
 };
 
@@ -147,6 +143,20 @@ function getRandomFromList<T>(list: T[]): [T, number] {
 
 function getRandomDirection(min: Direction, max: Direction): Direction {
   return getRandomFromList([min, max])[0];
+}
+
+function getVector2<T extends number>(input: Vector2Template<T> | T) {
+  if (typeof input === "number") {
+    return { x: input, y: input };
+  }
+  return input;
+}
+
+function getVector3<T extends number>(input: Vector3Template<T> | T) {
+  if (typeof input === "number") {
+    return { x: input, y: input, z: input };
+  }
+  return input;
 }
 
 function getValueNumberAnnotated(config: UpdatableValueConfigNumberAnnotated) {
@@ -189,74 +199,100 @@ function getValueVector2Annotated(
   config: UpdatableValueConfigVector2Annotated
 ) {
   switch (config.type) {
-    case "static":
+    case "static": {
+      const value = getVector2(config.value);
       return new UpdatableVector2Value(
-        new StaticUpdatableValue(config.value.x),
-        new StaticUpdatableValue(config.value.y)
+        new StaticUpdatableValue(value.x),
+        new StaticUpdatableValue(value.y)
       );
-    case "static-random":
+    }
+    case "static-random": {
+      const minValue = getVector2(config.minValue);
+      const maxValue = getVector2(config.maxValue);
       return new UpdatableVector2Value(
-        new StaticUpdatableValue(
-          getRandomValue(config.minValue.x, config.maxValue.x)
-        ),
-        new StaticUpdatableValue(
-          getRandomValue(config.minValue.y, config.maxValue.y)
-        )
+        new StaticUpdatableValue(getRandomValue(minValue.x, maxValue.x)),
+        new StaticUpdatableValue(getRandomValue(minValue.y, maxValue.y))
       );
-    case "linear":
+    }
+    case "linear": {
+      const value = getVector2(config.value);
+      const addValue = getVector2(config.addValue);
       return new UpdatableVector2Value(
-        new LinearUpdatableValue(config.value.x, config.addValue.x),
-        new LinearUpdatableValue(config.value.y, config.addValue.y)
+        new LinearUpdatableValue(value.x, addValue.x),
+        new LinearUpdatableValue(value.y, addValue.y)
       );
-    case "linear-random":
+    }
+    case "linear-random": {
+      const minValue = getVector2(config.minValue);
+      const maxValue = getVector2(config.maxValue);
+      const minAddValue = getVector2(config.minAddValue);
+      const maxAddValue = getVector2(config.maxAddValue);
       return new UpdatableVector2Value(
         new LinearUpdatableValue(
-          getRandomValue(config.minValue.x, config.maxValue.x),
-          getRandomValue(config.minAddValue.x, config.maxAddValue.x)
+          getRandomValue(minValue.x, maxValue.x),
+          getRandomValue(minAddValue.x, maxAddValue.x)
         ),
         new LinearUpdatableValue(
-          getRandomValue(config.minValue.y, config.maxValue.y),
-          getRandomValue(config.minAddValue.x, config.maxAddValue.x)
+          getRandomValue(minValue.y, maxValue.y),
+          getRandomValue(minAddValue.x, maxAddValue.x)
         )
       );
-    case "oscillating":
+    }
+    case "oscillating": {
+      const value = getVector2(config.value);
+      const start = getVector2(config.start);
+      const final = getVector2(config.final);
+      const duration = getVector2(config.duration);
+      const direction = getVector2(config.direction);
       return new UpdatableVector2Value(
         new OscillatingUpdatableValue(
-          config.value.x,
-          config.start.x,
-          config.final.x,
-          config.duration.x,
-          config.direction.x,
+          value.x,
+          start.x,
+          final.x,
+          duration.x,
+          direction.x,
           config.easingFunction
         ),
         new OscillatingUpdatableValue(
-          config.value.y,
-          config.start.y,
-          config.final.y,
-          config.duration.x,
-          config.direction.y,
+          value.y,
+          start.y,
+          final.y,
+          duration.x,
+          direction.y,
           config.easingFunction
         )
       );
-    case "oscillating-random":
+    }
+    case "oscillating-random": {
+      const minValue = getVector2(config.minValue);
+      const maxValue = getVector2(config.maxValue);
+      const minStart = getVector2(config.minStart);
+      const maxStart = getVector2(config.maxStart);
+      const minFinal = getVector2(config.minFinal);
+      const maxFinal = getVector2(config.maxFinal);
+      const minDuration = getVector2(config.minDuration);
+      const maxDuration = getVector2(config.maxDuration);
+      const minDirection = getVector2(config.minDirection);
+      const maxDirection = getVector2(config.maxDirection);
       return new UpdatableVector2Value(
         new OscillatingUpdatableValue(
-          getRandomValue(config.minValue.x, config.maxValue.x),
-          getRandomValue(config.minStart.x, config.maxStart.x),
-          getRandomValue(config.minFinal.x, config.maxFinal.x),
-          getRandomValue(config.minDuration.x, config.maxDuration.x),
-          getRandomDirection(config.minDirection.x, config.maxDirection.x),
+          getRandomValue(minValue.x, maxValue.x),
+          getRandomValue(minStart.x, maxStart.x),
+          getRandomValue(minFinal.x, maxFinal.x),
+          getRandomValue(minDuration.x, maxDuration.x),
+          getRandomDirection(minDirection.x, maxDirection.x),
           getRandomFromList(config.easingFunctions)[0]
         ),
         new OscillatingUpdatableValue(
-          getRandomValue(config.minValue.y, config.maxValue.y),
-          getRandomValue(config.minStart.y, config.maxStart.y),
-          getRandomValue(config.minFinal.y, config.maxFinal.y),
-          getRandomValue(config.minDuration.y, config.maxDuration.y),
-          getRandomDirection(config.minDirection.y, config.maxDirection.y),
+          getRandomValue(minValue.y, maxValue.y),
+          getRandomValue(minStart.y, maxStart.y),
+          getRandomValue(minFinal.y, maxFinal.y),
+          getRandomValue(minDuration.y, maxDuration.y),
+          getRandomDirection(minDirection.y, maxDirection.y),
           getRandomFromList(config.easingFunctions)[0]
         )
       );
+    }
   }
 }
 
@@ -264,104 +300,132 @@ function getValueVector3Annotated(
   config: UpdatableValueConfigVector3Annotated
 ) {
   switch (config.type) {
-    case "static":
+    case "static": {
+      const value = getVector3(config.value);
       return new UpdatableVector3Value(
-        new StaticUpdatableValue(config.value.x),
-        new StaticUpdatableValue(config.value.y),
-        new StaticUpdatableValue(config.value.z)
+        new StaticUpdatableValue(value.x),
+        new StaticUpdatableValue(value.y),
+        new StaticUpdatableValue(value.z)
       );
-    case "static-random":
+    }
+    case "static-random": {
+      const minValue = getVector3(config.minValue);
+      const maxValue = getVector3(config.maxValue);
       return new UpdatableVector3Value(
-        new StaticUpdatableValue(
-          getRandomValue(config.minValue.x, config.maxValue.x)
+        new StaticUpdatableValue(getRandomValue(minValue.x, maxValue.x)),
+        new StaticUpdatableValue(getRandomValue(minValue.y, maxValue.y)),
+        new StaticUpdatableValue(getRandomValue(minValue.z, maxValue.z))
+      );
+    }
+    case "linear": {
+      const value = getVector3(config.value);
+      const addValue = getVector3(config.addValue);
+      return new UpdatableVector3Value(
+        new LinearUpdatableValue(value.x, addValue.x),
+        new LinearUpdatableValue(value.y, addValue.y),
+        new LinearUpdatableValue(value.z, addValue.z)
+      );
+    }
+    case "linear-random": {
+      const minValue = getVector3(config.minValue);
+      const maxValue = getVector3(config.maxValue);
+      const minAddValue = getVector3(config.minAddValue);
+      const maxAddValue = getVector3(config.maxAddValue);
+      return new UpdatableVector3Value(
+        new LinearUpdatableValue(
+          getRandomValue(minValue.x, maxValue.x),
+          getRandomValue(minAddValue.x, maxAddValue.x)
         ),
-        new StaticUpdatableValue(
-          getRandomValue(config.minValue.y, config.maxValue.y)
+        new LinearUpdatableValue(
+          getRandomValue(minValue.y, maxValue.y),
+          getRandomValue(minAddValue.y, maxAddValue.y)
         ),
-        new StaticUpdatableValue(
-          getRandomValue(config.minValue.z, config.maxValue.z)
+        new LinearUpdatableValue(
+          getRandomValue(minValue.z, maxValue.z),
+          getRandomValue(minAddValue.z, maxAddValue.z)
         )
       );
-    case "linear":
-      return new UpdatableVector3Value(
-        new LinearUpdatableValue(config.value.x, config.addValue.x),
-        new LinearUpdatableValue(config.value.y, config.addValue.y),
-        new LinearUpdatableValue(config.value.z, config.addValue.z)
-      );
-    case "linear-random":
-      return new UpdatableVector3Value(
-        new LinearUpdatableValue(
-          getRandomValue(config.minValue.x, config.maxValue.x),
-          getRandomValue(config.minAddValue.x, config.maxAddValue.x)
-        ),
-        new LinearUpdatableValue(
-          getRandomValue(config.minValue.y, config.maxValue.y),
-          getRandomValue(config.minAddValue.y, config.maxAddValue.y)
-        ),
-        new LinearUpdatableValue(
-          getRandomValue(config.minValue.z, config.maxValue.z),
-          getRandomValue(config.minAddValue.z, config.maxAddValue.z)
-        )
-      );
-    case "oscillating":
+    }
+    case "oscillating": {
+      const value = getVector3(config.value);
+      const start = getVector3(config.start);
+      const final = getVector3(config.final);
+      const duration = getVector3(config.duration);
+      const direction = getVector3(config.direction);
       return new UpdatableVector3Value(
         new OscillatingUpdatableValue(
-          config.value.x,
-          config.start.x,
-          config.final.x,
-          config.duration.x,
-          config.direction.x,
+          value.x,
+          start.x,
+          final.x,
+          duration.x,
+          direction.x,
           config.easingFunction
         ),
         new OscillatingUpdatableValue(
-          config.value.y,
-          config.start.y,
-          config.final.y,
-          config.duration.z,
-          config.direction.y,
+          value.y,
+          start.y,
+          final.y,
+          duration.z,
+          direction.y,
           config.easingFunction
         ),
         new OscillatingUpdatableValue(
-          config.value.z,
-          config.start.z,
-          config.final.z,
-          config.duration.z,
-          config.direction.z,
+          value.z,
+          start.z,
+          final.z,
+          duration.z,
+          direction.z,
           config.easingFunction
         )
       );
-    case "oscillating-random":
+    }
+    case "oscillating-random": {
+      const minValue = getVector3(config.minValue);
+      const maxValue = getVector3(config.maxValue);
+      const minStart = getVector3(config.minStart);
+      const maxStart = getVector3(config.maxStart);
+      const minFinal = getVector3(config.minFinal);
+      const maxFinal = getVector3(config.maxFinal);
+      const minDuration = getVector3(config.minDuration);
+      const maxDuration = getVector3(config.maxDuration);
+      const minDirection = getVector3(config.minDirection);
+      const maxDirection = getVector3(config.maxDirection);
       return new UpdatableVector3Value(
         new OscillatingUpdatableValue(
-          getRandomValue(config.minValue.x, config.maxValue.x),
-          getRandomValue(config.minStart.x, config.maxStart.x),
-          getRandomValue(config.minFinal.x, config.maxFinal.x),
-          getRandomValue(config.minDuration.x, config.maxDuration.x),
-          getRandomDirection(config.minDirection.x, config.maxDirection.x),
+          getRandomValue(minValue.x, maxValue.x),
+          getRandomValue(minStart.x, maxStart.x),
+          getRandomValue(minFinal.x, maxFinal.x),
+          getRandomValue(minDuration.x, maxDuration.x),
+          getRandomDirection(minDirection.x, maxDirection.x),
           getRandomFromList(config.easingFunctions)[0]
         ),
         new OscillatingUpdatableValue(
-          getRandomValue(config.minValue.y, config.maxValue.y),
-          getRandomValue(config.minStart.y, config.maxStart.y),
-          getRandomValue(config.minFinal.y, config.maxFinal.y),
-          getRandomValue(config.minDuration.y, config.maxDuration.y),
-          getRandomDirection(config.minDirection.y, config.maxDirection.y),
+          getRandomValue(minValue.y, maxValue.y),
+          getRandomValue(minStart.y, maxStart.y),
+          getRandomValue(minFinal.y, maxFinal.y),
+          getRandomValue(minDuration.y, maxDuration.y),
+          getRandomDirection(minDirection.y, maxDirection.y),
           getRandomFromList(config.easingFunctions)[0]
         ),
         new OscillatingUpdatableValue(
-          getRandomValue(config.minValue.z, config.maxValue.z),
-          getRandomValue(config.minStart.z, config.maxStart.z),
-          getRandomValue(config.minFinal.z, config.maxFinal.z),
-          getRandomValue(config.minDuration.z, config.maxDuration.z),
-          getRandomDirection(config.minDirection.z, config.maxDirection.z),
+          getRandomValue(minValue.z, maxValue.z),
+          getRandomValue(minStart.z, maxStart.z),
+          getRandomValue(minFinal.z, maxFinal.z),
+          getRandomValue(minDuration.z, maxDuration.z),
+          getRandomDirection(minDirection.z, maxDirection.z),
           getRandomFromList(config.easingFunctions)[0]
         )
       );
+    }
   }
 }
 
-function provideDefaults(args: CreateConfettiArgs): CreateConfettiArgsFull {
+function provideDefaults(
+  args: CreateConfettiArgs,
+  id: string
+): CreateConfettiArgsFullInput {
   return {
+    id,
     ...CREATE_CONFETTI_DEFAULTS,
     ...args,
   };
@@ -417,11 +481,15 @@ export function getUpdatableValueNumber(config: UpdatableValueConfigNumber) {
   return getValueNumberAnnotated({ ...config, valueType: "number" });
 }
 
-export function getUpdatableValueVector2(config: UpdatableValueConfigVector2) {
+export function getUpdatableValueVector2(
+  config: UpdatableValueConfigVector2Input
+) {
   return getValueVector2Annotated({ ...config, valueType: "Vector2" });
 }
 
-export function getUpdatableValueVector3(config: UpdatableValueConfigVector3) {
+export function getUpdatableValueVector3(
+  config: UpdatableValueConfigVector3Input
+) {
   return getValueVector3Annotated({ ...config, valueType: "Vector3" });
 }
 
@@ -432,15 +500,9 @@ export default function createConfetti(
   requestedSprite?: SpriteProp,
   requestedColor?: string | null
 ) {
-  const args = provideDefaults(rawArgs);
+  const args = provideDefaults(rawArgs, id);
 
-  const size = args.size != null ? getUpdatableValueNumber(args.size) : null;
-  const width = args.width != null ? getUpdatableValueNumber(args.width) : size;
-  const height =
-    args.height != null ? getUpdatableValueNumber(args.height) : size;
-
-  invariant(width != null, "width or size is required");
-  invariant(height != null, "height or size is required");
+  const size = getUpdatableValueVector2(args.size);
 
   const [sprite, spriteIndex] = getSpriteWithIndex(
     requestedSprite,
@@ -458,8 +520,7 @@ export default function createConfetti(
     velocity: getUpdatableValueVector2(args.velocity),
     rotation: getUpdatableValueVector3(args.rotation),
     dragCoefficient: getUpdatableValueVector2(args.dragCoefficient),
-    width,
-    height,
+    size,
     opacity: getUpdatableValueNumber(args.opacity),
     spriteX:
       colorIndex * spriteCanvasData.spriteWidth + colorIndex * SPRITE_SPACING,
