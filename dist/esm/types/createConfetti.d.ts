@@ -27,16 +27,24 @@ interface LinearConfigRandom<T> {
     maxAddValue: T;
 }
 type LinearConfig<T> = LinearConfigConstant<T> | LinearConfigRandom<T>;
-interface OscillatingConfigConstant<T, Direction> {
+type Direction = 1 | -1;
+type DirectionVector2 = {
+    x: Direction;
+    y: Direction;
+};
+type DirectionVector3 = DirectionVector2 & {
+    z: Direction;
+};
+interface OscillatingConfigConstant<T, TDirection> {
     type: "oscillating";
     value: T;
     start: T;
     final: T;
     duration: T;
-    direction: Direction;
+    direction: TDirection;
     easingFunction: EasingFunction;
 }
-interface OscillatingConfigRandom<T, Direction> {
+interface OscillatingConfigRandom<T, TDirection> {
     type: "oscillating-random";
     minValue: T;
     maxValue: T;
@@ -46,46 +54,41 @@ interface OscillatingConfigRandom<T, Direction> {
     maxFinal: T;
     minDuration: T;
     maxDuration: T;
-    minDirection: Direction;
-    maxDirection: Direction;
+    minDirection: TDirection;
+    maxDirection: TDirection;
     easingFunctions: EasingFunction[];
 }
-type OscillatingConfig<T, Direction> = OscillatingConfigConstant<T, Direction> | OscillatingConfigRandom<T, Direction>;
-type StaticConfigNumber = StaticConfig<number>;
-type StaticConfigVector2 = StaticConfig<Vector2>;
-type StaticConfigVector3 = StaticConfig<Vector3>;
-type LinearConfigNumber = LinearConfig<number>;
-type LinearConfigVector2 = LinearConfig<Vector2>;
-type LinearConfigVector3 = LinearConfig<Vector3>;
-type Direction = 1 | -1;
-type OscillatingNumber = OscillatingConfig<number, Direction>;
-type OscillatingVector2 = OscillatingConfig<Vector2, {
-    x: Direction;
-    y: Direction;
-}>;
-type OscillatingVector3 = OscillatingConfig<Vector3, {
-    x: Direction;
-    y: Direction;
-    z: Direction;
-}>;
-type UpdatableValueConfigNumber = StaticConfigNumber | LinearConfigNumber | OscillatingNumber;
-type UpdatableValueConfigVector2 = StaticConfigVector2 | LinearConfigVector2 | OscillatingVector2;
-type UpdatableValueConfigVector3 = StaticConfigVector3 | LinearConfigVector3 | OscillatingVector3;
+type OscillatingConfig<T, TDirection> = OscillatingConfigConstant<T, TDirection> | OscillatingConfigRandom<T, TDirection>;
+type Config<T, TDirection> = StaticConfig<T> | LinearConfig<T> | OscillatingConfig<T, TDirection>;
+type ConfigNumber = Config<number, Direction>;
+type ConfigVector2 = Config<Vector2, DirectionVector2>;
+type ConfigVector3 = Config<Vector3, DirectionVector3>;
+type UpdatableValueConfigNumber = ConfigNumber;
+type UpdatableValueConfigVector2 = ConfigVector2;
+type UpdatableValueConfigVector3 = ConfigVector3;
+type UpdatableValueConfigNumberInput = ConfigNumber;
+type UpdatableValueConfigVector2Input = ConfigNumber | ConfigVector2;
+type UpdatableValueConfigVector3Input = ConfigNumber | ConfigVector3;
 export interface CreateConfettiArgsFull {
     id?: string;
     position: UpdatableValueConfigVector2;
     velocity: UpdatableValueConfigVector2;
     rotation: UpdatableValueConfigVector3;
     dragCoefficient: UpdatableValueConfigVector2;
-    width?: UpdatableValueConfigNumber;
-    height?: UpdatableValueConfigNumber;
-    size?: UpdatableValueConfigNumber;
+    size: UpdatableValueConfigNumber;
     opacity: UpdatableValueConfigNumber;
 }
-export type CreateConfettiArgsDefaults = Pick<CreateConfettiArgsFull, "velocity" | "rotation" | "dragCoefficient" | "opacity">;
-export type CreateConfettiArgs = Partial<CreateConfettiArgsFull> & Pick<CreateConfettiArgsFull, "position">;
+export type CreateConfettiArgs = {
+    id?: string;
+    position: UpdatableValueConfigVector2Input;
+    velocity?: UpdatableValueConfigVector2Input;
+    rotation?: UpdatableValueConfigVector3Input;
+    dragCoefficient?: UpdatableValueConfigVector2Input;
+    size: UpdatableValueConfigVector2Input;
+    opacity?: UpdatableValueConfigNumberInput;
+};
 export declare function getUpdatableValueNumber(config: UpdatableValueConfigNumber): StaticUpdatableValue | LinearUpdatableValue | OscillatingUpdatableValue;
-export declare function getUpdatableValueVector2(config: UpdatableValueConfigVector2): UpdatableVector2Value;
-export declare function getUpdatableValueVector3(config: UpdatableValueConfigVector3): UpdatableVector3Value;
+export declare function getUpdatableValueVector2(config: UpdatableValueConfigVector2Input): UpdatableVector2Value;
+export declare function getUpdatableValueVector3(config: UpdatableValueConfigVector3Input): UpdatableVector3Value;
 export default function createConfetti(id: string, rawArgs: CreateConfettiArgs, spriteCanvasData: SpriteCanvasData, requestedSprite?: SpriteProp, requestedColor?: string | null): Confetti;
 export {};

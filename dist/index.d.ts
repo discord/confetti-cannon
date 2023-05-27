@@ -9,13 +9,15 @@ declare class Environment {
     });
 }
 
-interface Vector2 {
-    x: number;
-    y: number;
+interface Vector2Template<T> {
+    x: T;
+    y: T;
 }
-interface Vector3 extends Vector2 {
-    z: number;
+interface Vector3Template<T> extends Vector2Template<T> {
+    z: T;
 }
+type Vector2 = Vector2Template<number>;
+type Vector3 = Vector3Template<number>;
 type SpriteProp = {
     src: string;
     colorize: boolean;
@@ -59,8 +61,7 @@ type ConfettiArgs = {
     position: UpdatableVector2Value;
     velocity: UpdatableVector2Value;
     rotation: UpdatableVector3Value;
-    width: UpdatableValue;
-    height: UpdatableValue;
+    size: UpdatableVector2Value;
     dragCoefficient: UpdatableVector2Value;
     opacity: UpdatableValue;
     spriteX: number;
@@ -73,8 +74,7 @@ declare class Confetti {
     position: UpdatableVector2Value;
     velocity: UpdatableVector2Value;
     rotation: UpdatableVector3Value;
-    width: UpdatableValue;
-    height: UpdatableValue;
+    size: UpdatableVector2Value;
     dragCoefficient: UpdatableVector2Value;
     opacity: UpdatableValue;
     spriteX: number;
@@ -94,6 +94,8 @@ declare class Confetti {
     };
     draw(spriteCanvas: HTMLCanvasElement, context: CanvasRenderingContext2D): void;
     shouldDestroy(canvas: HTMLCanvasElement, environment: Environment): boolean;
+    get width(): number;
+    get height(): number;
     addForce(force: Vector2): void;
 }
 
@@ -172,16 +174,24 @@ interface LinearConfigRandom<T> {
     maxAddValue: T;
 }
 type LinearConfig<T> = LinearConfigConstant<T> | LinearConfigRandom<T>;
-interface OscillatingConfigConstant<T, Direction> {
+type Direction = 1 | -1;
+type DirectionVector2 = {
+    x: Direction;
+    y: Direction;
+};
+type DirectionVector3 = DirectionVector2 & {
+    z: Direction;
+};
+interface OscillatingConfigConstant<T, TDirection> {
     type: "oscillating";
     value: T;
     start: T;
     final: T;
     duration: T;
-    direction: Direction;
+    direction: TDirection;
     easingFunction: EasingFunction;
 }
-interface OscillatingConfigRandom<T, Direction> {
+interface OscillatingConfigRandom<T, TDirection> {
     type: "oscillating-random";
     minValue: T;
     maxValue: T;
@@ -191,49 +201,34 @@ interface OscillatingConfigRandom<T, Direction> {
     maxFinal: T;
     minDuration: T;
     maxDuration: T;
-    minDirection: Direction;
-    maxDirection: Direction;
+    minDirection: TDirection;
+    maxDirection: TDirection;
     easingFunctions: EasingFunction[];
 }
-type OscillatingConfig<T, Direction> = OscillatingConfigConstant<T, Direction> | OscillatingConfigRandom<T, Direction>;
-type StaticConfigNumber = StaticConfig<number>;
-type StaticConfigVector2 = StaticConfig<Vector2>;
-type StaticConfigVector3 = StaticConfig<Vector3>;
-type LinearConfigNumber = LinearConfig<number>;
-type LinearConfigVector2 = LinearConfig<Vector2>;
-type LinearConfigVector3 = LinearConfig<Vector3>;
-type Direction = 1 | -1;
-type OscillatingNumber = OscillatingConfig<number, Direction>;
-type OscillatingVector2 = OscillatingConfig<Vector2, {
-    x: Direction;
-    y: Direction;
-}>;
-type OscillatingVector3 = OscillatingConfig<Vector3, {
-    x: Direction;
-    y: Direction;
-    z: Direction;
-}>;
-type UpdatableValueConfigNumber = StaticConfigNumber | LinearConfigNumber | OscillatingNumber;
-type UpdatableValueConfigVector2 = StaticConfigVector2 | LinearConfigVector2 | OscillatingVector2;
-type UpdatableValueConfigVector3 = StaticConfigVector3 | LinearConfigVector3 | OscillatingVector3;
-interface CreateConfettiArgsFull {
+type OscillatingConfig<T, TDirection> = OscillatingConfigConstant<T, TDirection> | OscillatingConfigRandom<T, TDirection>;
+type Config<T, TDirection> = StaticConfig<T> | LinearConfig<T> | OscillatingConfig<T, TDirection>;
+type ConfigNumber = Config<number, Direction>;
+type ConfigVector2 = Config<Vector2, DirectionVector2>;
+type ConfigVector3 = Config<Vector3, DirectionVector3>;
+type UpdatableValueConfigNumber = ConfigNumber;
+type UpdatableValueConfigNumberInput = ConfigNumber;
+type UpdatableValueConfigVector2Input = ConfigNumber | ConfigVector2;
+type UpdatableValueConfigVector3Input = ConfigNumber | ConfigVector3;
+type CreateConfettiArgs = {
     id?: string;
-    position: UpdatableValueConfigVector2;
-    velocity: UpdatableValueConfigVector2;
-    rotation: UpdatableValueConfigVector3;
-    dragCoefficient: UpdatableValueConfigVector2;
-    width?: UpdatableValueConfigNumber;
-    height?: UpdatableValueConfigNumber;
-    size?: UpdatableValueConfigNumber;
-    opacity: UpdatableValueConfigNumber;
-}
-type CreateConfettiArgsDefaults = Pick<CreateConfettiArgsFull, "velocity" | "rotation" | "dragCoefficient" | "opacity">;
-type CreateConfettiArgs = Partial<CreateConfettiArgsFull> & Pick<CreateConfettiArgsFull, "position">;
+    position: UpdatableValueConfigVector2Input;
+    velocity?: UpdatableValueConfigVector2Input;
+    rotation?: UpdatableValueConfigVector3Input;
+    dragCoefficient?: UpdatableValueConfigVector2Input;
+    size: UpdatableValueConfigVector2Input;
+    opacity?: UpdatableValueConfigNumberInput;
+};
 declare function getUpdatableValueNumber(config: UpdatableValueConfigNumber): StaticUpdatableValue | LinearUpdatableValue | OscillatingUpdatableValue;
-declare function getUpdatableValueVector2(config: UpdatableValueConfigVector2): UpdatableVector2Value;
-declare function getUpdatableValueVector3(config: UpdatableValueConfigVector3): UpdatableVector3Value;
+declare function getUpdatableValueVector2(config: UpdatableValueConfigVector2Input): UpdatableVector2Value;
+declare function getUpdatableValueVector3(config: UpdatableValueConfigVector3Input): UpdatableVector3Value;
 declare function createConfetti(id: string, rawArgs: CreateConfettiArgs, spriteCanvasData: SpriteCanvasData, requestedSprite?: SpriteProp, requestedColor?: string | null): Confetti;
 
+type CreateConfettiArgsDefaults = Pick<Required<CreateConfettiArgs>, "velocity" | "rotation" | "dragCoefficient" | "opacity">;
 declare const CREATE_CONFETTI_DEFAULTS: CreateConfettiArgsDefaults;
 
 type ClickListener = (e: MouseEvent, confetti: Confetti | null) => void;
@@ -270,4 +265,4 @@ interface ConfettiCannon {
 }
 declare function useConfettiCannon(confettiCanvas: React.RefObject<ConfettiCanvasHandle>, spriteCanvas: React.RefObject<SpriteCanvasHandle>): ConfettiCannon;
 
-export { CREATE_CONFETTI_DEFAULTS, Confetti, ConfettiCannon, _default as ConfettiCanvas, CreateConfettiArgs, CreateConfettiRequestedOptions, Direction$1 as Direction, EasingFunction, Environment, LinearUpdatableValue, OscillatingUpdatableValue, _default$1 as SpriteCanvas, SpriteProp, StaticUpdatableValue, Vector2, Vector3, createConfetti, easeInOutQuad, getUpdatableValueNumber, getUpdatableValueVector2, getUpdatableValueVector3, useConfettiCannon };
+export { CREATE_CONFETTI_DEFAULTS, Confetti, ConfettiCannon, _default as ConfettiCanvas, CreateConfettiArgs, CreateConfettiArgsDefaults, CreateConfettiRequestedOptions, Direction$1 as Direction, EasingFunction, Environment, LinearUpdatableValue, OscillatingUpdatableValue, _default$1 as SpriteCanvas, SpriteProp, StaticUpdatableValue, Vector2, Vector2Template, Vector3, Vector3Template, createConfetti, easeInOutQuad, getUpdatableValueNumber, getUpdatableValueVector2, getUpdatableValueVector3, useConfettiCannon };

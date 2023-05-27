@@ -6,8 +6,7 @@ type ConfettiArgs = {
     position: UpdatableVector2Value;
     velocity: UpdatableVector2Value;
     rotation: UpdatableVector3Value;
-    width: UpdatableValue;
-    height: UpdatableValue;
+    size: UpdatableVector2Value;
     dragCoefficient: UpdatableVector2Value;
     opacity: UpdatableValue;
     spriteX: number;
@@ -20,8 +19,7 @@ export default class Confetti {
     position: UpdatableVector2Value;
     velocity: UpdatableVector2Value;
     rotation: UpdatableVector3Value;
-    width: UpdatableValue;
-    height: UpdatableValue;
+    size: UpdatableVector2Value;
     dragCoefficient: UpdatableVector2Value;
     opacity: UpdatableValue;
     spriteX: number;
@@ -41,6 +39,8 @@ export default class Confetti {
     };
     draw(spriteCanvas: HTMLCanvasElement, context: CanvasRenderingContext2D): void;
     shouldDestroy(canvas: HTMLCanvasElement, environment: Environment): boolean;
+    get width(): number;
+    get height(): number;
     addForce(force: Vector2): void;
 }
 export {};
