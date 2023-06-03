@@ -80,11 +80,11 @@ A `SpriteCanvas` is used to pre-render your confetti. You'll need to render this
 
 A `ConfettiCanvas` is the canvas that will render your confetti on screen
 
-| Prop          | Type                                | Description                                                   |
-| ------------- | ----------------------------------- | ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `environment` | `Environment`                       | An object representing the environment effecting the confetti |
-| `onClick`     | `(e: MouseEvent, confetti: Confetti | null) => void`                                                | Event fired when the user clicks the canvas, if they clicked a confetti, that confetti is included                |
-| `onMouseDown` | `(e: MouseEvent, confetti: Confetti | null) => void`                                                | Event fired when the user mouses down on the canvas, if they moused down on a confetti, that confetti is included |
+| Prop          | Type                                                  | Description                                                                                                       |
+| ------------- | ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `environment` | `Environment`                                         | An object representing the environment effecting the confetti                                                     |
+| `onClick`     | `(e: MouseEvent, confetti: Confetti \| null) => void` | Event fired when the user clicks the canvas, if they clicked a confetti, that confetti is included                |
+| `onMouseDown` | `(e: MouseEvent, confetti: Confetti \| null) => void` | Event fired when the user mouses down on the canvas, if they moused down on a confetti, that confetti is included |
 
 to create an `Environment`, use `new Environment()`.
 
