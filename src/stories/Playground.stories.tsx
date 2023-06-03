@@ -205,7 +205,6 @@ function PlaygroundStory({
 const meta = {
   title: "Playground",
   component: PlaygroundStory,
-  tags: ["autodocs"],
   args: {
     autoFire: false,
     numberToFire: 5,
@@ -238,14 +237,6 @@ const meta = {
     maxSize: 40,
     sprites: SpriteCanvasStory.args.sprites,
     colors: SpriteCanvasStory.args.colors,
-  },
-  parameters: {
-    docs: {
-      description: {
-        component: `Tweak some settings and click the canvas to spawn some
-          confetti.`,
-      },
-    },
   },
 } satisfies Meta<typeof PlaygroundStory>;
 

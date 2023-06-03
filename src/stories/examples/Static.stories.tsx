@@ -142,16 +142,6 @@ function StaticStory({
 const meta = {
   title: "Examples/Static",
   component: StaticStory,
-  tags: ["autodocs"],
-  parameters: {
-    docs: {
-      description: {
-        component: `This example gives a few options to create confetti that
-          doesn't move. Click the canvas to spawn a confetti, click on it again
-          to despawn it.`,
-      },
-    },
-  },
   args: {
     showSpriteCanvas: false,
     size: 40,
