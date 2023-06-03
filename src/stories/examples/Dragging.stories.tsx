@@ -32,11 +32,6 @@ function DraggingStory() {
 
   const addConfetti = React.useCallback(
     (x: number, y: number) => {
-      const spriteCanvasRef = spriteCanvas.current?.getCanvas();
-      if (confettiCanvas.current == null || spriteCanvasRef == null) {
-        return;
-      }
-
       const createConfettiArgs: CreateConfettiArgs = {
         position: {
           type: "static",
