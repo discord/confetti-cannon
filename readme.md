@@ -1,12 +1,24 @@
 # Confetti Cannon
 
-![Example](./example.gif)
+Launch Confetti
+
+![Example](https://github.com/discord/confetti-cannon/blob/main/example.gif)
+
+# Install
+`npm i confetti-cannon`
 
 # How to use
 
 This is the basic use of the cannon where we render everything we need and then create confetti on the canvas where the user clicks. For more advanced uses, check out the stories.
 
 ```tsx
+import {
+  ConfettiCanvas,
+  Environment,
+  SpriteCanvas,
+  useConfettiCannon,
+} from "confetti-cannon";
+
 const SPRITES = [
   require("./images/square.svg"),
   require("./images/circle.svg"),
