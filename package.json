@@ -1,6 +1,6 @@
 {
   "name": "confetti-cannon",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -12,8 +12,9 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "@discord",
+  "keywords": ["confetti", "cannon"],
+  "license": "MIT",
   "devDependencies": {
     "@babel/preset-env": "^7.21.5",
     "@babel/preset-react": "^7.18.6",
