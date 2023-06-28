@@ -2,6 +2,7 @@
   "name": "confetti-cannon",
   "version": "1.0.3",
   "description": "",
+  "homepage": "https://discord.github.io/confetti-cannon/",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
@@ -10,11 +11,15 @@
     "build": "rm -rf ./dist && rollup -c --bundleConfigAsCjs",
     "test": "echo \"Error: no test specified\" && exit 1",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "deploy-storybook": "gh-pages -d storybook-static"
   },
   "repository": "github:discord/confetti-cannon",
   "author": "@discord",
-  "keywords": ["confetti", "cannon"],
+  "keywords": [
+    "confetti",
+    "cannon"
+  ],
   "license": "MIT",
   "devDependencies": {
     "@babel/preset-env": "^7.21.5",
@@ -39,6 +44,7 @@
     "eslint": "^8.41.0",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "gh-pages": "^5.0.0",
     "prettier": "2.8.8",
     "prettier-plugin-organize-imports": "^3.2.2",
     "prop-types": "^15.8.1",
