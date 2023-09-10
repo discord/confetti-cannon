@@ -148,7 +148,8 @@ interface SpriteCanvasData {
 interface SpriteCanvasHandle {
     getCanvas: () => HTMLCanvasElement | null;
     getCreateData: () => SpriteCanvasData;
-    onReady: (listener: (isReady: boolean) => void) => void;
+    addReadyListener: (listener: (isReady: boolean) => void) => string;
+    removeReadyListener: (listenerId: string) => void;
     isReady: boolean;
 }
 declare const _default$1: React.ForwardRefExoticComponent<SpriteCanvasProps & React.RefAttributes<SpriteCanvasHandle>>;
