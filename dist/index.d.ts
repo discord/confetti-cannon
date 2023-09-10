@@ -148,6 +148,8 @@ interface SpriteCanvasData {
 interface SpriteCanvasHandle {
     getCanvas: () => HTMLCanvasElement | null;
     getCreateData: () => SpriteCanvasData;
+    onReady: (listener: (isReady: boolean) => void) => void;
+    isReady: boolean;
 }
 declare const _default$1: React.ForwardRefExoticComponent<SpriteCanvasProps & React.RefAttributes<SpriteCanvasHandle>>;
 
@@ -261,7 +263,8 @@ interface ConfettiCannon {
     addConfetti: (confetti: Confetti) => void;
     deleteConfetti: (id: string) => void;
     clearConfetti: () => void;
+    isReady: boolean;
 }
-declare function useConfettiCannon(confettiCanvas: React.RefObject<ConfettiCanvasHandle>, spriteCanvas: React.RefObject<SpriteCanvasHandle>): ConfettiCannon;
+declare function useConfettiCannon(confettiCanvas: ConfettiCanvasHandle | null, spriteCanvas: SpriteCanvasHandle | null): ConfettiCannon;
 
-export { CREATE_CONFETTI_DEFAULTS, Confetti, ConfettiCannon, _default as ConfettiCanvas, CreateConfettiArgs, CreateConfettiArgsDefaults, CreateConfettiRequestedOptions, Direction$1 as Direction, EasingFunction, Environment, LinearUpdatableValue, OscillatingUpdatableValue, _default$1 as SpriteCanvas, SpriteProp, StaticUpdatableValue, Vector2, Vector2Template, Vector3, Vector3Template, createConfetti, easeInOutQuad, getUpdatableValueNumber, getUpdatableValueVector2, getUpdatableValueVector3, useConfettiCannon };
+export { CREATE_CONFETTI_DEFAULTS, Confetti, ConfettiCannon, _default as ConfettiCanvas, ConfettiCanvasHandle, CreateConfettiArgs, CreateConfettiArgsDefaults, CreateConfettiRequestedOptions, Direction$1 as Direction, EasingFunction, Environment, LinearUpdatableValue, OscillatingUpdatableValue, _default$1 as SpriteCanvas, SpriteCanvasHandle, SpriteProp, StaticUpdatableValue, Vector2, Vector2Template, Vector3, Vector3Template, createConfetti, easeInOutQuad, getUpdatableValueNumber, getUpdatableValueVector2, getUpdatableValueVector3, useConfettiCannon };

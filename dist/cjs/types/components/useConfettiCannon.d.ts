@@ -1,4 +1,3 @@
-import * as React from "react";
 import Confetti from "../Confetti";
 import { SpriteProp } from "../Types";
 import { CreateConfettiArgs } from "../createConfetti";
@@ -14,5 +13,6 @@ export interface ConfettiCannon {
     addConfetti: (confetti: Confetti) => void;
     deleteConfetti: (id: string) => void;
     clearConfetti: () => void;
+    isReady: boolean;
 }
-export default function useConfettiCannon(confettiCanvas: React.RefObject<ConfettiCanvasHandle>, spriteCanvas: React.RefObject<SpriteCanvasHandle>): ConfettiCannon;
+export default function useConfettiCannon(confettiCanvas: ConfettiCanvasHandle | null, spriteCanvas: SpriteCanvasHandle | null): ConfettiCannon;

@@ -38,7 +38,6 @@ declare function PlaygroundStory({ autoFire, numberToFire, showSpriteCanvas, gra
 declare const meta: {
     title: string;
     component: typeof PlaygroundStory;
-    tags: string[];
     args: {
         autoFire: false;
         numberToFire: number;
@@ -71,13 +70,6 @@ declare const meta: {
         maxSize: number;
         sprites: any[];
         colors: string[];
-    };
-    parameters: {
-        docs: {
-            description: {
-                component: string;
-            };
-        };
     };
 };
 export default meta;

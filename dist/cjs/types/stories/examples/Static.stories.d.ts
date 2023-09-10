@@ -17,14 +17,6 @@ declare function StaticStory({ showSpriteCanvas, size, positionAddX, positionAdd
 declare const meta: {
     title: string;
     component: typeof StaticStory;
-    tags: string[];
-    parameters: {
-        docs: {
-            description: {
-                component: string;
-            };
-        };
-    };
     args: {
         showSpriteCanvas: false;
         size: number;

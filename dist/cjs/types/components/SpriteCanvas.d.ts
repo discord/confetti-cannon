@@ -22,6 +22,8 @@ export interface SpriteCanvasData {
 export interface SpriteCanvasHandle {
     getCanvas: () => HTMLCanvasElement | null;
     getCreateData: () => SpriteCanvasData;
+    onReady: (listener: (isReady: boolean) => void) => void;
+    isReady: boolean;
 }
 declare const _default: React.ForwardRefExoticComponent<SpriteCanvasProps & React.RefAttributes<SpriteCanvasHandle>>;
 export default _default;

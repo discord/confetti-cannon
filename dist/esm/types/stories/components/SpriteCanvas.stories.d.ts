@@ -2,7 +2,7 @@
 import type { StoryObj } from "@storybook/react";
 declare const meta: {
     title: string;
-    component: import("react").ForwardRefExoticComponent<import("../../components/SpriteCanvas").SpriteCanvasProps & import("react").RefAttributes<import("../../components/SpriteCanvas").SpriteCanvasHandle>>;
+    component: import("react").ForwardRefExoticComponent<import("../../components/SpriteCanvas").SpriteCanvasProps & import("react").RefAttributes<import("../../").SpriteCanvasHandle>>;
     tags: string[];
     parameters: {
         docs: {
