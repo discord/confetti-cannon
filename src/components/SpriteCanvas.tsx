@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import * as React from "react";
+import { v4 as uuid } from "uuid";
 import { SPRITE_SPACING } from "../ConstantsInternal";
 import { SpriteProp } from "../Types";
 import { hexToRgb } from "../Utils";
@@ -30,7 +31,8 @@ export interface SpriteCanvasData {
 export interface SpriteCanvasHandle {
   getCanvas: () => HTMLCanvasElement | null;
   getCreateData: () => SpriteCanvasData;
-  onReady: (listener: (isReady: boolean) => void) => void;
+  addReadyListener: (listener: (isReady: boolean) => void) => string;
+  removeReadyListener: (listenerId: string) => void;
   isReady: boolean;
 }
 
@@ -51,7 +53,9 @@ const SpriteCanvas: React.ForwardRefRenderFunction<
   const canvas = React.useRef<HTMLCanvasElement | null>(null);
   const sprites = React.useRef<Sprite[]>([]);
   const isReady = React.useRef<boolean>(false);
-  const onReadyListeners = React.useRef<Array<(isReady: boolean) => void>>([]);
+  const onReadyListeners = React.useRef<{
+    [id: string]: (isReady: boolean) => void;
+  }>({});
 
   React.useImperativeHandle(
     forwardedRef,
@@ -64,8 +68,13 @@ const SpriteCanvas: React.ForwardRefRenderFunction<
           spriteWidth,
           spriteHeight,
         }),
-        onReady: (listener: (isReady: boolean) => void) => {
-          onReadyListeners.current.push(listener);
+        addReadyListener: (listener: (isReady: boolean) => void) => {
+          const listenerId = uuid();
+          onReadyListeners.current[listenerId] = listener;
+          return listenerId;
+        },
+        removeReadyListener: (listenerId: string) => {
+          delete onReadyListeners.current[listenerId];
         },
         isReady: isReady.current,
       };
@@ -141,21 +150,26 @@ const SpriteCanvas: React.ForwardRefRenderFunction<
     );
   }, [spriteProps]);
 
+  const callReadyListeners = React.useCallback((isReady: boolean) => {
+    for (const listenerId in onReadyListeners.current) {
+      onReadyListeners.current[listenerId](isReady);
+    }
+  }, []);
+
   const getCanvasReady = React.useCallback(async () => {
     await createSprites();
     drawSprites();
     isReady.current = true;
-    onReadyListeners.current.forEach((listener) => listener(true));
-  }, [createSprites, drawSprites]);
+    callReadyListeners(true);
+  }, [callReadyListeners, createSprites, drawSprites]);
 
   React.useEffect(() => {
     getCanvasReady();
   }, [getCanvasReady]);
 
   React.useEffect(() => {
-    const listeners = onReadyListeners.current;
-    return () => listeners.forEach((listener) => listener(false));
-  }, []);
+    return () => callReadyListeners(false);
+  }, [callReadyListeners]);
 
   React.useEffect(() => {
     if (canvas.current != null) {

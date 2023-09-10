@@ -33,7 +33,13 @@ export default function useConfettiCannon(
   const [isReady, setIsReady] = React.useState(spriteCanvas?.isReady ?? false);
 
   React.useEffect(() => {
-    spriteCanvas?.onReady((isReady) => setIsReady(isReady));
+    const listenerId = spriteCanvas?.addReadyListener(setIsReady);
+
+    return () => {
+      if (listenerId != null) {
+        spriteCanvas?.removeReadyListener(listenerId);
+      }
+    };
   }, [spriteCanvas]);
 
   const createConfetti = React.useCallback(
