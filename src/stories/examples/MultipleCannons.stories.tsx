@@ -5,9 +5,11 @@ import { v4 as uuid } from "uuid";
 import {
   Confetti,
   ConfettiCanvas,
+  ConfettiCanvasHandle,
   CreateConfettiArgs,
   Environment,
   SpriteCanvas,
+  SpriteCanvasHandle,
   easeInOutQuad,
   getUpdatableValueVector2,
   getUpdatableValueVector3,
@@ -96,13 +98,13 @@ const CONFETTI_CONFETTI_CONFIG: Partial<CreateConfettiArgs> &
 };
 
 function MultipleCannonsStory() {
-  const confettiCanvas =
-    React.useRef<React.ElementRef<typeof ConfettiCanvas>>(null);
+  const [confettiCanvas, setConfettiCanvas] =
+    React.useState<ConfettiCanvasHandle | null>(null);
 
-  const confettiSpriteCanvas =
-    React.useRef<React.ElementRef<typeof SpriteCanvas>>(null);
-  const fallingCharacterSpriteCanvas =
-    React.useRef<React.ElementRef<typeof SpriteCanvas>>(null);
+  const [confettiSpriteCanvas, setConfettiSpriteCanvas] =
+    React.useState<SpriteCanvasHandle | null>(null);
+  const [fallingCharacterSpriteCanvas, setFallingCharacterSpriteCanvas] =
+    React.useState<SpriteCanvasHandle | null>(null);
 
   const environment = React.useMemo(() => new Environment({ wind: -5 }), []);
 
@@ -179,28 +181,28 @@ function MultipleCannonsStory() {
     ) {
       return handleClickFallingCharacter(confetti);
     }
-    const { x, y } = getClickPosition(e, confettiCanvas.current?.getCanvas());
+    const { x, y } = getClickPosition(e, confettiCanvas?.getCanvas());
     addFallingCharacter(x, y);
   };
 
   return (
     <>
       <SpriteCanvas
-        ref={fallingCharacterSpriteCanvas}
+        ref={setFallingCharacterSpriteCanvas}
         sprites={FALLING_CHARACTER_SPRITES}
         colors={FALLING_CHARACTER_COLORS}
         spriteWidth={FALLING_CHARACTER_SIZE}
         spriteHeight={FALLING_CHARACTER_SIZE}
       />
       <SpriteCanvas
-        ref={confettiSpriteCanvas}
+        ref={setConfettiSpriteCanvas}
         sprites={SPRITES}
         colors={COLORS}
         spriteWidth={MAX_CONFETTI_SIZE}
         spriteHeight={MAX_CONFETTI_SIZE}
       />
       <ConfettiCanvas
-        ref={confettiCanvas}
+        ref={setConfettiCanvas}
         className={classNames(styles.bordered, styles.sizedLarge)}
         onClick={handleClick}
         environment={environment}

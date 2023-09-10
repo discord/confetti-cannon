@@ -4,9 +4,11 @@ import * as React from "react";
 import {
   Confetti,
   ConfettiCanvas,
+  ConfettiCanvasHandle,
   CreateConfettiArgs,
   Environment,
   SpriteCanvas,
+  SpriteCanvasHandle,
   useConfettiCannon,
 } from "../../";
 import { getClickPosition } from "../../Utils";
@@ -40,11 +42,10 @@ function StaticStory({
   opacityAdd,
   sizeAdd,
 }: StaticStoryProps) {
-  const confettiCanvas = React.useRef<React.ElementRef<
-    typeof ConfettiCanvas
-  > | null>(null);
-  const spriteCanvas =
-    React.useRef<React.ElementRef<typeof SpriteCanvas>>(null);
+  const [confettiCanvas, setConfettiCanvas] =
+    React.useState<ConfettiCanvasHandle | null>(null);
+  const [spriteCanvas, setSpriteCanvas] =
+    React.useState<SpriteCanvasHandle | null>(null);
   const environment = React.useMemo(
     () => new Environment({ gravity: 0, wind: 0 }),
     []
@@ -104,14 +105,14 @@ function StaticStory({
       cannon.deleteConfetti(confetti.id);
       return;
     }
-    const { x, y } = getClickPosition(e, confettiCanvas.current?.getCanvas());
+    const { x, y } = getClickPosition(e, confettiCanvas?.getCanvas());
     addConfetti(x, y);
   };
 
   return (
     <>
       <SpriteCanvas
-        ref={spriteCanvas}
+        ref={setSpriteCanvas}
         className={styles.bordered}
         visible={showSpriteCanvas}
         sprites={SpriteCanvasStory.args.sprites}
@@ -120,7 +121,7 @@ function StaticStory({
         spriteHeight={size}
       />
       <ConfettiCanvas
-        ref={confettiCanvas}
+        ref={setConfettiCanvas}
         className={classNames(
           styles.bordered,
           isSmall ? styles.sizedSmall : styles.sized

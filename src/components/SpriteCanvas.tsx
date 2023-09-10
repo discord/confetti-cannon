@@ -30,6 +30,8 @@ export interface SpriteCanvasData {
 export interface SpriteCanvasHandle {
   getCanvas: () => HTMLCanvasElement | null;
   getCreateData: () => SpriteCanvasData;
+  onReady: (listener: (isReady: boolean) => void) => void;
+  isReady: boolean;
 }
 
 const SpriteCanvas: React.ForwardRefRenderFunction<
@@ -48,6 +50,8 @@ const SpriteCanvas: React.ForwardRefRenderFunction<
 ) => {
   const canvas = React.useRef<HTMLCanvasElement | null>(null);
   const sprites = React.useRef<Sprite[]>([]);
+  const isReady = React.useRef<boolean>(false);
+  const onReadyListeners = React.useRef<Array<(isReady: boolean) => void>>([]);
 
   React.useImperativeHandle(
     forwardedRef,
@@ -60,6 +64,10 @@ const SpriteCanvas: React.ForwardRefRenderFunction<
           spriteWidth,
           spriteHeight,
         }),
+        onReady: (listener: (isReady: boolean) => void) => {
+          onReadyListeners.current.push(listener);
+        },
+        isReady: isReady.current,
       };
     },
     [colors, spriteHeight, spriteWidth]
@@ -122,19 +130,32 @@ const SpriteCanvas: React.ForwardRefRenderFunction<
       return { colorize, image, src, loadPromise };
     });
 
-    Promise.all(loadingSprites.map((sprite) => sprite.loadPromise)).then(() => {
-      sprites.current = loadingSprites.map((sprite) => ({
-        colorize: sprite.colorize,
-        image: sprite.image,
-        src: sprite.src,
-      }));
-      drawSprites();
-    });
-  }, [drawSprites, spriteProps]);
+    return Promise.all(loadingSprites.map((sprite) => sprite.loadPromise)).then(
+      () => {
+        sprites.current = loadingSprites.map((sprite) => ({
+          colorize: sprite.colorize,
+          image: sprite.image,
+          src: sprite.src,
+        }));
+      }
+    );
+  }, [spriteProps]);
+
+  const getCanvasReady = React.useCallback(async () => {
+    await createSprites();
+    drawSprites();
+    isReady.current = true;
+    onReadyListeners.current.forEach((listener) => listener(true));
+  }, [createSprites, drawSprites]);
 
   React.useEffect(() => {
-    createSprites();
-  }, [createSprites]);
+    getCanvasReady();
+  }, [getCanvasReady]);
+
+  React.useEffect(() => {
+    const listeners = onReadyListeners.current;
+    return () => listeners.forEach((listener) => listener(false));
+  }, []);
 
   React.useEffect(() => {
     if (canvas.current != null) {

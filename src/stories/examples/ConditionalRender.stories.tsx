@@ -10,7 +10,6 @@ import {
   SpriteCanvasHandle,
   useConfettiCannon,
 } from "../../";
-import { getClickPosition } from "../../Utils";
 import styles from "../Stories.module.css";
 
 const SPRITES = [
@@ -32,7 +31,9 @@ const COLORS = [
 
 const MAX_SIZE = 40;
 
-function BasicStory() {
+function ConditionalRenderStory() {
+  const [shouldRender, setShouldRender] = React.useState(false);
+
   const [confettiCanvas, setConfettiCanvas] =
     React.useState<ConfettiCanvasHandle | null>(null);
   const [spriteCanvas, setSpriteCanvas] =
@@ -72,35 +73,38 @@ function BasicStory() {
     [cannon]
   );
 
-  const handleClick = (e: MouseEvent) => {
-    const { x, y } = getClickPosition(e, confettiCanvas?.getCanvas());
-    addConfetti(x, y);
-  };
+  React.useEffect(() => {
+    addConfetti(20, 20);
+  }, [addConfetti]);
 
   return (
     <>
-      <SpriteCanvas
-        ref={setSpriteCanvas}
-        className={styles.bordered}
-        sprites={SPRITES}
-        colors={COLORS}
-        spriteWidth={MAX_SIZE}
-        spriteHeight={MAX_SIZE}
-      />
-      <ConfettiCanvas
-        ref={setConfettiCanvas}
-        className={classNames(styles.bordered, styles.sized)}
-        onClick={handleClick}
-        environment={environment}
-      />
+      <button onClick={() => setShouldRender(!shouldRender)}>Render</button>
+      {shouldRender ? (
+        <>
+          <SpriteCanvas
+            ref={setSpriteCanvas}
+            className={styles.bordered}
+            sprites={SPRITES}
+            colors={COLORS}
+            spriteWidth={MAX_SIZE}
+            spriteHeight={MAX_SIZE}
+          />
+          <ConfettiCanvas
+            ref={setConfettiCanvas}
+            className={classNames(styles.bordered, styles.sized)}
+            environment={environment}
+          />
+        </>
+      ) : null}
     </>
   );
 }
 
 const meta = {
-  title: "Examples/Basic",
-  component: BasicStory,
-} satisfies Meta<typeof BasicStory>;
+  title: "Examples/ConditionalRenderStory",
+  component: ConditionalRenderStory,
+} satisfies Meta<typeof ConditionalRenderStory>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

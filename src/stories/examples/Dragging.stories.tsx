@@ -4,9 +4,11 @@ import * as React from "react";
 import {
   Confetti,
   ConfettiCanvas,
+  ConfettiCanvasHandle,
   CreateConfettiArgs,
   Environment,
   SpriteCanvas,
+  SpriteCanvasHandle,
   useConfettiCannon,
 } from "../../";
 import { getClickPosition } from "../../Utils";
@@ -16,11 +18,10 @@ import SpriteCanvasStory from "../components/SpriteCanvas.stories";
 const SIZE = 40;
 
 function DraggingStory() {
-  const confettiCanvas = React.useRef<React.ElementRef<
-    typeof ConfettiCanvas
-  > | null>(null);
-  const spriteCanvas =
-    React.useRef<React.ElementRef<typeof SpriteCanvas>>(null);
+  const [confettiCanvas, setConfettiCanvas] =
+    React.useState<ConfettiCanvasHandle | null>(null);
+  const [spriteCanvas, setSpriteCanvas] =
+    React.useState<SpriteCanvasHandle | null>(null);
   const environment = React.useMemo(
     () => new Environment({ gravity: 0, wind: 0 }),
     []
@@ -56,14 +57,14 @@ function DraggingStory() {
       lastMouseEventTime.current = Date.now();
       return;
     }
-    const { x, y } = getClickPosition(e, confettiCanvas.current?.getCanvas());
+    const { x, y } = getClickPosition(e, confettiCanvas?.getCanvas());
     lastMousePosition.current = { x, y };
     addConfetti(x, y);
   };
 
   const handleMouseMove = (e: MouseEvent) => {
     if (draggingConfetti.current != null) {
-      const { x, y } = getClickPosition(e, confettiCanvas.current?.getCanvas());
+      const { x, y } = getClickPosition(e, confettiCanvas?.getCanvas());
       draggingConfetti.current.position.x = x;
       draggingConfetti.current.position.y = y;
       lastMouseEventTime.current = Date.now();
@@ -71,11 +72,12 @@ function DraggingStory() {
   };
 
   const handleMouseUp = (e: MouseEvent) => {
-    if (draggingConfetti.current == null) {
+    const canvas = confettiCanvas?.getCanvas();
+    if (draggingConfetti.current == null || canvas == null) {
       return;
     }
 
-    const { x, y } = getClickPosition(e, confettiCanvas.current?.getCanvas());
+    const { x, y } = getClickPosition(e, canvas);
 
     const deltaTime = Math.max(Date.now() - lastMouseEventTime.current ?? 1, 1);
     const velocityX = (x - lastMousePosition.current.x) / deltaTime;
@@ -89,7 +91,7 @@ function DraggingStory() {
   return (
     <>
       <SpriteCanvas
-        ref={spriteCanvas}
+        ref={setSpriteCanvas}
         className={styles.bordered}
         sprites={SpriteCanvasStory.args.sprites}
         colors={SpriteCanvasStory.args.colors}
@@ -97,7 +99,7 @@ function DraggingStory() {
         spriteHeight={SIZE}
       />
       <ConfettiCanvas
-        ref={confettiCanvas}
+        ref={setConfettiCanvas}
         className={classNames(styles.bordered, styles.sized)}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}

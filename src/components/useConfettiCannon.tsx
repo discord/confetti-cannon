@@ -23,19 +23,26 @@ export interface ConfettiCannon {
   addConfetti: (confetti: Confetti) => void;
   deleteConfetti: (id: string) => void;
   clearConfetti: () => void;
+  isReady: boolean;
 }
 
 export default function useConfettiCannon(
-  confettiCanvas: React.RefObject<ConfettiCanvasHandle>,
-  spriteCanvas: React.RefObject<SpriteCanvasHandle>
+  confettiCanvas: ConfettiCanvasHandle | null,
+  spriteCanvas: SpriteCanvasHandle | null
 ): ConfettiCannon {
+  const [isReady, setIsReady] = React.useState(spriteCanvas?.isReady ?? false);
+
+  React.useEffect(() => {
+    spriteCanvas?.onReady((isReady) => setIsReady(isReady));
+  }, [spriteCanvas]);
+
   const createConfetti = React.useCallback(
     (
       createConfettiArgs: CreateConfettiArgs,
       { sprite, color }: CreateConfettiRequestedOptions = {}
     ) => {
-      const spriteData = spriteCanvas.current?.getCreateData();
-      const spriteCanvasRef = spriteCanvas.current?.getCanvas();
+      const spriteData = spriteCanvas?.getCreateData();
+      const spriteCanvasRef = spriteCanvas?.getCanvas();
 
       if (
         spriteCanvasRef == null ||
@@ -45,7 +52,7 @@ export default function useConfettiCannon(
         return;
       }
 
-      return confettiCanvas.current?.createConfetti(
+      return confettiCanvas?.createConfetti(
         createConfettiArgs,
         spriteCanvasRef,
         spriteData,
@@ -80,9 +87,9 @@ export default function useConfettiCannon(
 
   const addConfetti = React.useCallback(
     (confetti: Confetti) => {
-      const spriteCanvasRef = spriteCanvas.current?.getCanvas();
+      const spriteCanvasRef = spriteCanvas?.getCanvas();
       if (spriteCanvasRef != null) {
-        confettiCanvas.current?.addConfetti(confetti, spriteCanvasRef);
+        confettiCanvas?.addConfetti(confetti, spriteCanvasRef);
       }
     },
     [confettiCanvas, spriteCanvas]
@@ -90,21 +97,34 @@ export default function useConfettiCannon(
 
   const deleteConfetti = React.useCallback(
     (id: string) => {
-      confettiCanvas.current?.deleteConfetti(id);
+      confettiCanvas?.deleteConfetti(id);
     },
     [confettiCanvas]
   );
 
   const clearConfetti = React.useCallback(
-    () => confettiCanvas.current?.clearConfetti(),
+    () => confettiCanvas?.clearConfetti(),
     [confettiCanvas]
   );
 
-  return {
-    createConfetti,
-    createMultipleConfetti,
-    addConfetti,
-    clearConfetti,
-    deleteConfetti,
-  };
+  return React.useMemo(
+    () => ({
+      createConfetti,
+      createMultipleConfetti,
+      addConfetti,
+      clearConfetti,
+      deleteConfetti,
+      isReady: isReady && spriteCanvas != null && confettiCanvas != null,
+    }),
+    [
+      addConfetti,
+      clearConfetti,
+      confettiCanvas,
+      createConfetti,
+      createMultipleConfetti,
+      deleteConfetti,
+      isReady,
+      spriteCanvas,
+    ]
+  );
 }

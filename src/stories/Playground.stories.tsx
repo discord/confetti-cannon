@@ -3,9 +3,11 @@ import classNames from "classnames";
 import * as React from "react";
 import {
   ConfettiCanvas,
+  ConfettiCanvasHandle,
   CreateConfettiArgs,
   Environment,
   SpriteCanvas,
+  SpriteCanvasHandle,
   SpriteProp,
   useConfettiCannon,
 } from "../";
@@ -81,10 +83,10 @@ function PlaygroundStory({
   sprites,
   colors,
 }: PlaygroundStoryProps) {
-  const confettiCanvas =
-    React.useRef<React.ElementRef<typeof ConfettiCanvas>>(null);
-  const spriteCanvas =
-    React.useRef<React.ElementRef<typeof SpriteCanvas>>(null);
+  const [confettiCanvas, setConfettiCanvas] =
+    React.useState<ConfettiCanvasHandle | null>(null);
+  const [spriteCanvas, setSpriteCanvas] =
+    React.useState<SpriteCanvasHandle | null>(null);
   const environment = React.useMemo(
     () => new Environment({ gravity, wind }),
     [gravity, wind]
@@ -168,7 +170,7 @@ function PlaygroundStory({
   );
 
   const handleClick = (e: MouseEvent) => {
-    const { x, y } = getClickPosition(e, confettiCanvas.current?.getCanvas());
+    const { x, y } = getClickPosition(e, confettiCanvas?.getCanvas());
     addConfetti(x, y);
   };
 
@@ -183,7 +185,7 @@ function PlaygroundStory({
   return (
     <>
       <SpriteCanvas
-        ref={spriteCanvas}
+        ref={setSpriteCanvas}
         className={styles.bordered}
         visible={showSpriteCanvas}
         sprites={sprites}
@@ -192,7 +194,7 @@ function PlaygroundStory({
         spriteHeight={maxSize}
       />
       <ConfettiCanvas
-        ref={confettiCanvas}
+        ref={setConfettiCanvas}
         className={classNames(styles.bordered, styles.sized)}
         onClick={handleClick}
         environment={environment}

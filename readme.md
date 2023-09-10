@@ -17,6 +17,8 @@ import {
   Environment,
   SpriteCanvas,
   useConfettiCannon,
+  ConfettiCanvasHandle,
+  SpriteCanvasHandle,
 } from "confetti-cannon";
 
 const SPRITES = [
@@ -27,10 +29,10 @@ const COLORS = ["#FF73FA", "#FFC0FF"];
 const SIZE = 40;
 
 function Example() {
-  const confettiCanvas =
-    React.useRef<React.ElementRef<typeof ConfettiCanvas>>(null);
-  const spriteCanvas =
-    React.useRef<React.ElementRef<typeof SpriteCanvas>>(null);
+  const [confettiCanvas, setConfettiCanvas] =
+    React.useState<ConfettiCanvasHandle | null>(null);
+  const [spriteCanvas, setSpriteCanvas] =
+    React.useState<SpriteCanvasHandle | null>(null);
   const environment = React.useMemo(() => new Environment(), []);
   const cannon = useConfettiCannon(confettiCanvas, spriteCanvas);
 
@@ -51,21 +53,21 @@ function Example() {
   );
 
   const handleClick = (e: MouseEvent) => {
-    const { x, y } = getClickPosition(e, confettiCanvas.current?.getCanvas());
+    const { x, y } = getClickPosition(e, confettiCanvas?.getCanvas());
     addConfetti(x, y);
   };
 
   return (
     <>
       <SpriteCanvas
-        ref={spriteCanvas}
+        ref={setSpriteCanvas}
         sprites={SPRITES}
         colors={COLORS}
         spriteWidth={SIZE}
         spriteHeight={SIZE}
       />
       <ConfettiCanvas
-        ref={confettiCanvas}
+        ref={setConfettiCanvas}
         onClick={handleClick}
         environment={environment}
       />
@@ -107,7 +109,7 @@ to create an `Environment`, use `new Environment()`.
 
 ## useConfettiCannon
 
-`useConfettiCannon` is the hook that will allow you to launch confetti. This takes a `ConfettiCanvas` and a `SpriteCanvas` and provides a few function to create confetti.
+`useConfettiCannon` is the hook that will allow you to launch confetti. This takes a `ConfettiCanvas` and a `SpriteCanvas` and provides a few functions to create confetti.
 
 ### Cannon methods
 
