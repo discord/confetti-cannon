@@ -17,4 +17,4 @@ export declare function getClickPosition(e: React.MouseEvent | MouseEvent, eleme
     x: number;
     y: number;
 };
-export declare function calculateAirResistance(dragCoefficient: number, velocity: number): number;
+export declare function calculateAirResistance(dragCoefficient: number, velocity: number, airResistanceArea: number, fluidDensity: number): number;

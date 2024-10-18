@@ -110,6 +110,7 @@ export type CreateConfettiArgs = {
   dragCoefficient?: ConfigVector2Input;
   size: ConfigVector2Input;
   opacity?: ConfigNumberInput;
+  airResistanceArea?: ConfigNumberInput;
 };
 
 type CreateConfettiArgsFullInput = Required<CreateConfettiArgs>;
@@ -510,6 +511,7 @@ export default function createConfetti(
     dragCoefficient: getUpdatableValueVector2(args.dragCoefficient),
     size,
     opacity: getUpdatableValueNumber(args.opacity),
+    airResistanceArea: getUpdatableValueVector2(args.airResistanceArea),
     spriteX:
       colorIndex * spriteCanvasData.spriteWidth + colorIndex * SPRITE_SPACING,
     spriteY:

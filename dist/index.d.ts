@@ -3,9 +3,11 @@ import * as React from 'react';
 declare class Environment {
     gravity: number;
     wind: number;
-    constructor({ gravity, wind }?: {
+    density: number;
+    constructor({ gravity, wind, density, }?: {
         gravity?: number;
         wind?: number;
+        density?: number;
     });
 }
 
@@ -64,6 +66,7 @@ type ConfettiArgs = {
     size: UpdatableVector2Value;
     dragCoefficient: UpdatableVector2Value;
     opacity: UpdatableValue;
+    airResistanceArea: UpdatableVector2Value;
     spriteX: number;
     spriteY: number;
     spriteWidth: number;
@@ -77,6 +80,7 @@ declare class Confetti {
     size: UpdatableVector2Value;
     dragCoefficient: UpdatableVector2Value;
     opacity: UpdatableValue;
+    airResistanceArea: UpdatableVector2Value;
     spriteX: number;
     spriteY: number;
     spriteWidth: number;
@@ -224,13 +228,14 @@ type CreateConfettiArgs = {
     dragCoefficient?: ConfigVector2Input;
     size: ConfigVector2Input;
     opacity?: ConfigNumberInput;
+    airResistanceArea?: ConfigNumberInput;
 };
 declare function getUpdatableValueNumber(config: ConfigNumber): StaticUpdatableValue | LinearUpdatableValue | OscillatingUpdatableValue;
 declare function getUpdatableValueVector2(config: ConfigVector2Input): UpdatableVector2Value;
 declare function getUpdatableValueVector3(config: ConfigVector3Input): UpdatableVector3Value;
 declare function createConfetti(id: string, rawArgs: CreateConfettiArgs, spriteCanvasData: SpriteCanvasData, requestedSprite?: SpriteProp, requestedColor?: string | null): Confetti;
 
-type CreateConfettiArgsDefaults = Pick<Required<CreateConfettiArgs>, "velocity" | "rotation" | "dragCoefficient" | "opacity">;
+type CreateConfettiArgsDefaults = Pick<Required<CreateConfettiArgs>, "velocity" | "rotation" | "dragCoefficient" | "airResistanceArea" | "opacity">;
 declare const CREATE_CONFETTI_DEFAULTS: CreateConfettiArgsDefaults;
 
 type ClickListener = (e: MouseEvent, confetti: Confetti | null) => void;

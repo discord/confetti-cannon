@@ -62,8 +62,19 @@ export function getClickPosition(
 
 export function calculateAirResistance(
   dragCoefficient: number,
-  velocity: number
+  velocity: number,
+  airResistanceArea: number,
+  fluidDensity: number
 ) {
   const directionMultiplier = velocity > 0 ? -1 : 1;
-  return dragCoefficient * velocity * velocity * directionMultiplier;
+  const absoluteVelocity = Math.abs(velocity);
+  return (
+    0.5 *
+    dragCoefficient *
+    fluidDensity *
+    airResistanceArea *
+    absoluteVelocity *
+    absoluteVelocity *
+    directionMultiplier
+  );
 }

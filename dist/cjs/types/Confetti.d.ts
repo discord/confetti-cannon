@@ -9,6 +9,7 @@ type ConfettiArgs = {
     size: UpdatableVector2Value;
     dragCoefficient: UpdatableVector2Value;
     opacity: UpdatableValue;
+    airResistanceArea: UpdatableVector2Value;
     spriteX: number;
     spriteY: number;
     spriteWidth: number;
@@ -22,6 +23,7 @@ export default class Confetti {
     size: UpdatableVector2Value;
     dragCoefficient: UpdatableVector2Value;
     opacity: UpdatableValue;
+    airResistanceArea: UpdatableVector2Value;
     spriteX: number;
     spriteY: number;
     spriteWidth: number;

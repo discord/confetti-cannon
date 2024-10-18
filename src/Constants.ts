@@ -2,7 +2,7 @@ import { CreateConfettiArgs } from "./createConfetti";
 
 export type CreateConfettiArgsDefaults = Pick<
   Required<CreateConfettiArgs>,
-  "velocity" | "rotation" | "dragCoefficient" | "opacity"
+  "velocity" | "rotation" | "dragCoefficient" | "airResistanceArea" | "opacity"
 >;
 
 export const CREATE_CONFETTI_DEFAULTS: CreateConfettiArgsDefaults = {
@@ -15,6 +15,10 @@ export const CREATE_CONFETTI_DEFAULTS: CreateConfettiArgsDefaults = {
     value: 0,
   },
   dragCoefficient: {
+    type: "static",
+    value: 1.66,
+  },
+  airResistanceArea: {
     type: "static",
     value: 0.001,
   },

@@ -83,6 +83,7 @@ export type CreateConfettiArgs = {
     dragCoefficient?: ConfigVector2Input;
     size: ConfigVector2Input;
     opacity?: ConfigNumberInput;
+    airResistanceArea?: ConfigNumberInput;
 };
 export declare function getUpdatableValueNumber(config: ConfigNumber): StaticUpdatableValue | LinearUpdatableValue | OscillatingUpdatableValue;
 export declare function getUpdatableValueVector2(config: ConfigVector2Input): UpdatableVector2Value;

@@ -16,6 +16,7 @@ type ConfettiArgs = {
   size: UpdatableVector2Value;
   dragCoefficient: UpdatableVector2Value;
   opacity: UpdatableValue;
+  airResistanceArea: UpdatableVector2Value;
 
   spriteX: number;
   spriteY: number;
@@ -32,6 +33,7 @@ export default class Confetti {
   size: UpdatableVector2Value;
   dragCoefficient: UpdatableVector2Value;
   opacity: UpdatableValue;
+  airResistanceArea: UpdatableVector2Value;
 
   spriteX: number;
   spriteY: number;
@@ -47,6 +49,7 @@ export default class Confetti {
     this.velocity = args.velocity;
     this.rotation = args.rotation;
     this.dragCoefficient = args.dragCoefficient;
+    this.airResistanceArea = args.airResistanceArea;
 
     this.size = args.size;
 
@@ -66,12 +69,16 @@ export default class Confetti {
 
     const airResistanceForceX = calculateAirResistance(
       this.dragCoefficient.x,
-      this.velocity.x
+      this.velocity.x,
+      this.airResistanceArea.x,
+      environment.density
     );
 
     const airResistanceForceY = calculateAirResistance(
       this.dragCoefficient.y,
-      this.velocity.y
+      this.velocity.y,
+      this.airResistanceArea.y,
+      environment.density
     );
 
     return {
