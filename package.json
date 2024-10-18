@@ -1,6 +1,6 @@
 {
   "name": "confetti-cannon",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "",
   "homepage": "https://discord.github.io/confetti-cannon/",
   "main": "dist/cjs/index.js",
