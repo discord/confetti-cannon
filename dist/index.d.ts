@@ -226,9 +226,9 @@ type CreateConfettiArgs = {
     velocity?: ConfigVector2Input;
     rotation?: ConfigVector3Input;
     dragCoefficient?: ConfigVector2Input;
+    airResistanceArea?: ConfigVector2Input;
     size: ConfigVector2Input;
     opacity?: ConfigNumberInput;
-    airResistanceArea?: ConfigNumberInput;
 };
 declare function getUpdatableValueNumber(config: ConfigNumber): StaticUpdatableValue | LinearUpdatableValue | OscillatingUpdatableValue;
 declare function getUpdatableValueVector2(config: ConfigVector2Input): UpdatableVector2Value;

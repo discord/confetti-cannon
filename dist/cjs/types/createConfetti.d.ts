@@ -72,6 +72,7 @@ export interface CreateConfettiArgsFull {
     velocity: ConfigVector2;
     rotation: ConfigVector3;
     dragCoefficient: ConfigVector2;
+    airResistanceArea?: ConfigVector2Input;
     size: ConfigNumber;
     opacity: ConfigNumber;
 }
@@ -81,9 +82,9 @@ export type CreateConfettiArgs = {
     velocity?: ConfigVector2Input;
     rotation?: ConfigVector3Input;
     dragCoefficient?: ConfigVector2Input;
+    airResistanceArea?: ConfigVector2Input;
     size: ConfigVector2Input;
     opacity?: ConfigNumberInput;
-    airResistanceArea?: ConfigNumberInput;
 };
 export declare function getUpdatableValueNumber(config: ConfigNumber): StaticUpdatableValue | LinearUpdatableValue | OscillatingUpdatableValue;
 export declare function getUpdatableValueVector2(config: ConfigVector2Input): UpdatableVector2Value;
