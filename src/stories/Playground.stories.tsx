@@ -22,6 +22,7 @@ interface PlaygroundStoryProps {
   showSpriteCanvas: boolean;
   gravity: number;
   wind: number;
+  density: number;
   positionSpreadX: number;
   positionSpreadY: number;
   minVelocityX: number;
@@ -42,6 +43,8 @@ interface PlaygroundStoryProps {
   maxRotationAddValueZ: number;
   dragCoefficientX: number;
   dragCoefficientY: number;
+  airResistanceAreaX: number;
+  airResistanceAreaY: number;
   opacity: number;
   opacityAddValue: number;
   minSize: number;
@@ -56,6 +59,7 @@ function PlaygroundStory({
   showSpriteCanvas,
   gravity,
   wind,
+  density,
   positionSpreadX,
   positionSpreadY,
   minVelocityX,
@@ -76,6 +80,8 @@ function PlaygroundStory({
   maxRotationAddValueZ,
   dragCoefficientX,
   dragCoefficientY,
+  airResistanceAreaX,
+  airResistanceAreaY,
   opacity,
   opacityAddValue,
   minSize,
@@ -88,8 +94,8 @@ function PlaygroundStory({
   const [spriteCanvas, setSpriteCanvas] =
     React.useState<SpriteCanvasHandle | null>(null);
   const environment = React.useMemo(
-    () => new Environment({ gravity, wind }),
-    [gravity, wind]
+    () => new Environment({ gravity, wind, density }),
+    [gravity, wind, density]
   );
   const cannon = useConfettiCannon(confettiCanvas, spriteCanvas);
 
@@ -125,6 +131,10 @@ function PlaygroundStory({
           type: "static",
           value: { x: dragCoefficientX, y: dragCoefficientY },
         },
+        airResistanceArea: {
+          type: "static",
+          value: { x: airResistanceAreaX, y: airResistanceAreaY },
+        },
         opacity: {
           type: "linear",
           value: opacity,
@@ -140,6 +150,8 @@ function PlaygroundStory({
       cannon.createMultipleConfetti(createConfettiArgs, numberToFire);
     },
     [
+      airResistanceAreaX,
+      airResistanceAreaY,
       cannon,
       dragCoefficientX,
       dragCoefficientY,
@@ -213,6 +225,7 @@ const meta = {
     showSpriteCanvas: false,
     gravity: ConfettiCanvasStory.args.gravity,
     wind: ConfettiCanvasStory.args.wind,
+    density: ConfettiCanvasStory.args.density,
     positionSpreadX: 25,
     positionSpreadY: 25,
     minVelocityX: -20,
@@ -231,8 +244,10 @@ const meta = {
     maxRotationAddValueY: 25,
     minRotationAddValueZ: -25,
     maxRotationAddValueZ: 25,
-    dragCoefficientX: 0.001,
-    dragCoefficientY: 0.001,
+    dragCoefficientX: 1.66,
+    dragCoefficientY: 1.66,
+    airResistanceAreaX: 0.001,
+    airResistanceAreaY: 0.001,
     opacity: 1,
     opacityAddValue: -0.01,
     minSize: 20,

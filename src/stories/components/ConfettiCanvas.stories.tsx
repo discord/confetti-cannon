@@ -10,6 +10,7 @@ function ConfettiCanvasStory({
 }: {
   className: string;
   gravity: number;
+  density: number;
   wind: number;
 }) {
   return (
@@ -34,6 +35,7 @@ const meta = {
   args: {
     gravity: -9.8,
     wind: 2,
+    density: 1.2041,
     className: classNames(styles.sized, styles.bordered),
   },
 } satisfies Meta<typeof ConfettiCanvasStory>;
