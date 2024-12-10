@@ -13,9 +13,13 @@ export class UpdatableVector2Value {
   _x: UpdatableValue;
   _y: UpdatableValue;
 
-  constructor(x: UpdatableValue, y: UpdatableValue) {
+  constructor(
+    x: UpdatableValue,
+    y: UpdatableValue,
+    uniformVectorValues: boolean | undefined
+  ) {
     this._x = x;
-    this._y = y;
+    this._y = uniformVectorValues ? x : y;
   }
 
   update(deltaTime: number) {
@@ -50,9 +54,14 @@ export class UpdatableVector2Value {
 export class UpdatableVector3Value extends UpdatableVector2Value {
   _z: UpdatableValue;
 
-  constructor(x: UpdatableValue, y: UpdatableValue, z: UpdatableValue) {
-    super(x, y);
-    this._z = z;
+  constructor(
+    x: UpdatableValue,
+    y: UpdatableValue,
+    z: UpdatableValue,
+    uniformVectorValues: boolean | undefined
+  ) {
+    super(x, y, uniformVectorValues);
+    this._z = uniformVectorValues ? x : z;
   }
 
   update(deltaTime: number) {

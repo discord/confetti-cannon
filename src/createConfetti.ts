@@ -89,8 +89,12 @@ type ConfigVector2 = Config<Vector2, DirectionVector2>;
 type ConfigVector3 = Config<Vector3, DirectionVector3>;
 
 type ConfigNumberInput = ConfigNumber;
-type ConfigVector2Input = ConfigVector2 | ConfigNumber;
-type ConfigVector3Input = ConfigVector3 | ConfigNumber;
+type ConfigVector2Input = (ConfigVector2 | ConfigNumber) & {
+  uniformVectorValues?: boolean;
+};
+type ConfigVector3Input = (ConfigVector3 | ConfigNumber) & {
+  uniformVectorValues?: boolean;
+};
 
 export interface CreateConfettiArgsFull {
   id?: string;
@@ -199,7 +203,8 @@ function getValueVector2Annotated(config: ConfigVector2Annotated) {
       const value = getVector2(config.value);
       return new UpdatableVector2Value(
         new StaticUpdatableValue(value.x),
-        new StaticUpdatableValue(value.y)
+        new StaticUpdatableValue(value.y),
+        config.uniformVectorValues
       );
     }
     case "static-random": {
@@ -207,7 +212,8 @@ function getValueVector2Annotated(config: ConfigVector2Annotated) {
       const maxValue = getVector2(config.maxValue);
       return new UpdatableVector2Value(
         new StaticUpdatableValue(getRandomValue(minValue.x, maxValue.x)),
-        new StaticUpdatableValue(getRandomValue(minValue.y, maxValue.y))
+        new StaticUpdatableValue(getRandomValue(minValue.y, maxValue.y)),
+        config.uniformVectorValues
       );
     }
     case "linear": {
@@ -215,7 +221,8 @@ function getValueVector2Annotated(config: ConfigVector2Annotated) {
       const addValue = getVector2(config.addValue);
       return new UpdatableVector2Value(
         new LinearUpdatableValue(value.x, addValue.x),
-        new LinearUpdatableValue(value.y, addValue.y)
+        new LinearUpdatableValue(value.y, addValue.y),
+        config.uniformVectorValues
       );
     }
     case "linear-random": {
@@ -231,7 +238,8 @@ function getValueVector2Annotated(config: ConfigVector2Annotated) {
         new LinearUpdatableValue(
           getRandomValue(minValue.y, maxValue.y),
           getRandomValue(minAddValue.x, maxAddValue.x)
-        )
+        ),
+        config.uniformVectorValues
       );
     }
     case "oscillating": {
@@ -256,7 +264,8 @@ function getValueVector2Annotated(config: ConfigVector2Annotated) {
           duration.x,
           direction.y,
           config.easingFunction
-        )
+        ),
+        config.uniformVectorValues
       );
     }
     case "oscillating-random": {
@@ -286,7 +295,8 @@ function getValueVector2Annotated(config: ConfigVector2Annotated) {
           getRandomValue(minDuration.y, maxDuration.y),
           getRandomDirection(minDirection.y, maxDirection.y),
           getRandomFromList(config.easingFunctions)[0]
-        )
+        ),
+        config.uniformVectorValues
       );
     }
   }
@@ -299,7 +309,8 @@ function getValueVector3Annotated(config: ConfigVector3Annotated) {
       return new UpdatableVector3Value(
         new StaticUpdatableValue(value.x),
         new StaticUpdatableValue(value.y),
-        new StaticUpdatableValue(value.z)
+        new StaticUpdatableValue(value.z),
+        config.uniformVectorValues
       );
     }
     case "static-random": {
@@ -308,7 +319,8 @@ function getValueVector3Annotated(config: ConfigVector3Annotated) {
       return new UpdatableVector3Value(
         new StaticUpdatableValue(getRandomValue(minValue.x, maxValue.x)),
         new StaticUpdatableValue(getRandomValue(minValue.y, maxValue.y)),
-        new StaticUpdatableValue(getRandomValue(minValue.z, maxValue.z))
+        new StaticUpdatableValue(getRandomValue(minValue.z, maxValue.z)),
+        config.uniformVectorValues
       );
     }
     case "linear": {
@@ -317,7 +329,8 @@ function getValueVector3Annotated(config: ConfigVector3Annotated) {
       return new UpdatableVector3Value(
         new LinearUpdatableValue(value.x, addValue.x),
         new LinearUpdatableValue(value.y, addValue.y),
-        new LinearUpdatableValue(value.z, addValue.z)
+        new LinearUpdatableValue(value.z, addValue.z),
+        config.uniformVectorValues
       );
     }
     case "linear-random": {
@@ -337,7 +350,8 @@ function getValueVector3Annotated(config: ConfigVector3Annotated) {
         new LinearUpdatableValue(
           getRandomValue(minValue.z, maxValue.z),
           getRandomValue(minAddValue.z, maxAddValue.z)
-        )
+        ),
+        config.uniformVectorValues
       );
     }
     case "oscillating": {
@@ -370,7 +384,8 @@ function getValueVector3Annotated(config: ConfigVector3Annotated) {
           duration.z,
           direction.z,
           config.easingFunction
-        )
+        ),
+        config.uniformVectorValues
       );
     }
     case "oscillating-random": {
@@ -408,7 +423,8 @@ function getValueVector3Annotated(config: ConfigVector3Annotated) {
           getRandomValue(minDuration.z, maxDuration.z),
           getRandomDirection(minDirection.z, maxDirection.z),
           getRandomFromList(config.easingFunctions)[0]
-        )
+        ),
+        config.uniformVectorValues
       );
     }
   }
@@ -492,8 +508,6 @@ export default function createConfetti(
 ) {
   const args = provideDefaults(rawArgs, id);
 
-  const size = getUpdatableValueVector2(args.size);
-
   const [sprite, spriteIndex] = getSpriteWithIndex(
     requestedSprite,
     spriteCanvasData
@@ -510,7 +524,7 @@ export default function createConfetti(
     velocity: getUpdatableValueVector2(args.velocity),
     rotation: getUpdatableValueVector3(args.rotation),
     dragCoefficient: getUpdatableValueVector2(args.dragCoefficient),
-    size,
+    size: getUpdatableValueVector2(args.size),
     opacity: getUpdatableValueNumber(args.opacity),
     airResistanceArea: getUpdatableValueVector2(args.airResistanceArea),
     spriteX:
