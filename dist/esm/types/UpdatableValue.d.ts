@@ -7,7 +7,7 @@ export declare abstract class UpdatableValue {
 export declare class UpdatableVector2Value {
     _x: UpdatableValue;
     _y: UpdatableValue;
-    constructor(x: UpdatableValue, y: UpdatableValue);
+    constructor(x: UpdatableValue, y: UpdatableValue, uniformVectorValues: boolean | undefined);
     update(deltaTime: number): void;
     previewUpdate(deltaTime: number): {
         x: number;
@@ -20,7 +20,7 @@ export declare class UpdatableVector2Value {
 }
 export declare class UpdatableVector3Value extends UpdatableVector2Value {
     _z: UpdatableValue;
-    constructor(x: UpdatableValue, y: UpdatableValue, z: UpdatableValue);
+    constructor(x: UpdatableValue, y: UpdatableValue, z: UpdatableValue, uniformVectorValues: boolean | undefined);
     update(deltaTime: number): void;
     previewUpdate(deltaTime: number): {
         z: number;

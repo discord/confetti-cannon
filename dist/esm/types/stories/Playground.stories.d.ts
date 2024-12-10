@@ -7,6 +7,7 @@ interface PlaygroundStoryProps {
     showSpriteCanvas: boolean;
     gravity: number;
     wind: number;
+    density: number;
     positionSpreadX: number;
     positionSpreadY: number;
     minVelocityX: number;
@@ -27,6 +28,8 @@ interface PlaygroundStoryProps {
     maxRotationAddValueZ: number;
     dragCoefficientX: number;
     dragCoefficientY: number;
+    airResistanceAreaX: number;
+    airResistanceAreaY: number;
     opacity: number;
     opacityAddValue: number;
     minSize: number;
@@ -34,7 +37,7 @@ interface PlaygroundStoryProps {
     sprites: SpriteProp[];
     colors: string[];
 }
-declare function PlaygroundStory({ autoFire, numberToFire, showSpriteCanvas, gravity, wind, positionSpreadX, positionSpreadY, minVelocityX, maxVelocityX, minVelocityY, maxVelocityY, minRotationX, maxRotationX, minRotationY, maxRotationY, minRotationZ, maxRotationZ, minRotationAddValueX, maxRotationAddValueX, minRotationAddValueY, maxRotationAddValueY, minRotationAddValueZ, maxRotationAddValueZ, dragCoefficientX, dragCoefficientY, opacity, opacityAddValue, minSize, maxSize, sprites, colors, }: PlaygroundStoryProps): React.JSX.Element;
+declare function PlaygroundStory({ autoFire, numberToFire, showSpriteCanvas, gravity, wind, density, positionSpreadX, positionSpreadY, minVelocityX, maxVelocityX, minVelocityY, maxVelocityY, minRotationX, maxRotationX, minRotationY, maxRotationY, minRotationZ, maxRotationZ, minRotationAddValueX, maxRotationAddValueX, minRotationAddValueY, maxRotationAddValueY, minRotationAddValueZ, maxRotationAddValueZ, dragCoefficientX, dragCoefficientY, airResistanceAreaX, airResistanceAreaY, opacity, opacityAddValue, minSize, maxSize, sprites, colors, }: PlaygroundStoryProps): React.JSX.Element;
 declare const meta: {
     title: string;
     component: typeof PlaygroundStory;
@@ -44,6 +47,7 @@ declare const meta: {
         showSpriteCanvas: false;
         gravity: number;
         wind: number;
+        density: number;
         positionSpreadX: number;
         positionSpreadY: number;
         minVelocityX: number;
@@ -64,6 +68,8 @@ declare const meta: {
         maxRotationAddValueZ: number;
         dragCoefficientX: number;
         dragCoefficientY: number;
+        airResistanceAreaX: number;
+        airResistanceAreaY: number;
         opacity: number;
         opacityAddValue: number;
         minSize: number;

@@ -34,7 +34,7 @@ declare abstract class UpdatableValue {
 declare class UpdatableVector2Value {
     _x: UpdatableValue;
     _y: UpdatableValue;
-    constructor(x: UpdatableValue, y: UpdatableValue);
+    constructor(x: UpdatableValue, y: UpdatableValue, uniformVectorValues: boolean | undefined);
     update(deltaTime: number): void;
     previewUpdate(deltaTime: number): {
         x: number;
@@ -47,7 +47,7 @@ declare class UpdatableVector2Value {
 }
 declare class UpdatableVector3Value extends UpdatableVector2Value {
     _z: UpdatableValue;
-    constructor(x: UpdatableValue, y: UpdatableValue, z: UpdatableValue);
+    constructor(x: UpdatableValue, y: UpdatableValue, z: UpdatableValue, uniformVectorValues: boolean | undefined);
     update(deltaTime: number): void;
     previewUpdate(deltaTime: number): {
         z: number;
@@ -218,8 +218,12 @@ type ConfigNumber = Config<number, Direction>;
 type ConfigVector2 = Config<Vector2, DirectionVector2>;
 type ConfigVector3 = Config<Vector3, DirectionVector3>;
 type ConfigNumberInput = ConfigNumber;
-type ConfigVector2Input = ConfigVector2 | ConfigNumber;
-type ConfigVector3Input = ConfigVector3 | ConfigNumber;
+type ConfigVector2Input = (ConfigVector2 | ConfigNumber) & {
+    uniformVectorValues?: boolean;
+};
+type ConfigVector3Input = (ConfigVector3 | ConfigNumber) & {
+    uniformVectorValues?: boolean;
+};
 type CreateConfettiArgs = {
     id?: string;
     position: ConfigVector2Input;

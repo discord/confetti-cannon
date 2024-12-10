@@ -3,6 +3,7 @@ import * as React from "react";
 declare function ConfettiCanvasStory({ className, ...args }: {
     className: string;
     gravity: number;
+    density: number;
     wind: number;
 }): React.JSX.Element;
 declare const meta: {
@@ -19,6 +20,7 @@ declare const meta: {
     args: {
         gravity: number;
         wind: number;
+        density: number;
         className: string;
     };
 };

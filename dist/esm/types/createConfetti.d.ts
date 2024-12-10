@@ -64,8 +64,12 @@ type ConfigNumber = Config<number, Direction>;
 type ConfigVector2 = Config<Vector2, DirectionVector2>;
 type ConfigVector3 = Config<Vector3, DirectionVector3>;
 type ConfigNumberInput = ConfigNumber;
-type ConfigVector2Input = ConfigVector2 | ConfigNumber;
-type ConfigVector3Input = ConfigVector3 | ConfigNumber;
+type ConfigVector2Input = (ConfigVector2 | ConfigNumber) & {
+    uniformVectorValues?: boolean;
+};
+type ConfigVector3Input = (ConfigVector3 | ConfigNumber) & {
+    uniformVectorValues?: boolean;
+};
 export interface CreateConfettiArgsFull {
     id?: string;
     position: ConfigVector2;
