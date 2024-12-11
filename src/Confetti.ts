@@ -108,6 +108,7 @@ export default class Confetti {
     this.size.update(deltaTime);
 
     this.opacity.update(deltaTime);
+    this.opacity.value = Math.max(this.opacity.value, 0);
 
     this._lastUpdatedAt = newUpdateTime;
   }
