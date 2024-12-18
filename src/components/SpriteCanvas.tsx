@@ -1,10 +1,16 @@
-import classNames from "classnames";
 import * as React from "react";
 import { v4 as uuid } from "uuid";
 import { SPRITE_SPACING } from "../ConstantsInternal";
 import { SpriteProp } from "../Types";
 import { hexToRgb } from "../Utils";
-import styles from "./SpriteCanvas.module.css";
+
+const CANVAS_HIDDEN_STYLES: React.CSSProperties = {
+  display: "none",
+  position: "absolute",
+  width: 0,
+  height: 0,
+  left: "-100%",
+};
 
 export interface Sprite {
   image: HTMLImageElement;
@@ -183,9 +189,8 @@ const SpriteCanvas: React.ForwardRefRenderFunction<
   return (
     <canvas
       ref={canvas}
-      className={classNames(className, {
-        [styles.spriteCanvasHidden]: !visible,
-      })}
+      className={className}
+      style={!visible ? CANVAS_HIDDEN_STYLES : undefined}
     />
   );
 };
