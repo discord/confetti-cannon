@@ -251,6 +251,8 @@ interface ConfettiCanvasProps extends Omit<React.HTMLAttributes<HTMLCanvasElemen
     onMouseDown?: ClickListener;
     onMouseMove?: MouseListener;
     onMouseUp?: MouseListener;
+    requestAnimationFrame?: (handler: FrameRequestCallback) => number;
+    cancelAnimationFrame?: (id: number) => void;
     onBeforeRender?: (context: CanvasRenderingContext2D) => void;
     onAfterRender?: (context: CanvasRenderingContext2D) => void;
 }
