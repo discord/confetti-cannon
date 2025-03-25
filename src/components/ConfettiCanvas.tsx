@@ -21,6 +21,8 @@ interface ConfettiCanvasProps
   onMouseDown?: ClickListener;
   onMouseMove?: MouseListener;
   onMouseUp?: MouseListener;
+  requestAnimationFrame?: (handler: FrameRequestCallback) => number;
+  cancelAnimationFrame?: (id: number) => void;
   onBeforeRender?: (context: CanvasRenderingContext2D) => void;
   onAfterRender?: (context: CanvasRenderingContext2D) => void;
 }
@@ -54,6 +56,8 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
     onMouseUp,
     onBeforeRender,
     onAfterRender,
+    requestAnimationFrame = window.requestAnimationFrame,
+    cancelAnimationFrame = window.cancelAnimationFrame,
     ...props
   },
   forwardedRef
@@ -95,8 +99,7 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
     onAfterRender?.(context);
 
     if (allConfetti.current.size > 0) {
-      animationFrameRequestId.current =
-        window.requestAnimationFrame(handleTick);
+      animationFrameRequestId.current = requestAnimationFrame(handleTick);
     } else {
       context.clearRect(0, 0, canvasRef.width, canvasRef.height);
       animationFrameRequestId.current = null;
@@ -107,15 +110,14 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
       frameRate.current = 1000 / (now - lastFrameUpdatedAt.current);
     }
     lastFrameUpdatedAt.current = now;
-  }, [environment, onAfterRender, onBeforeRender]);
+  }, [environment, onAfterRender, onBeforeRender, requestAnimationFrame]);
 
   React.useEffect(() => {
     if (animationFrameRequestId.current != null) {
-      window.cancelAnimationFrame(animationFrameRequestId.current);
-      animationFrameRequestId.current =
-        window.requestAnimationFrame(handleTick);
+      cancelAnimationFrame(animationFrameRequestId.current);
+      animationFrameRequestId.current = requestAnimationFrame(handleTick);
     }
-  }, [handleTick]);
+  }, [cancelAnimationFrame, handleTick, requestAnimationFrame]);
 
   const addConfetti = React.useCallback(
     (confetti: Confetti, spriteCanvas: HTMLCanvasElement) => {
