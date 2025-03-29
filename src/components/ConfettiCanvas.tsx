@@ -5,6 +5,7 @@ import Environment from "../Environment";
 import { SpriteProp } from "../Types";
 import { getClickPosition, isInRect, mapFind, setCanvasSize } from "../Utils";
 import createConfettiHelper, { CreateConfettiArgs } from "../createConfetti";
+import useReady from "../useReady";
 import { SpriteCanvasData } from "./SpriteCanvas";
 
 type ClickListener = (e: MouseEvent, confetti: Confetti | null) => void;
@@ -39,6 +40,9 @@ export interface ConfettiCanvasHandle {
   deleteConfetti: (id: string) => void;
   clearConfetti: () => void;
   getCanvas: () => HTMLCanvasElement | null;
+  addReadyListener: (listener: (isReady: boolean) => void) => string;
+  removeReadyListener: (listenerId: string) => void;
+  isReady: boolean;
 }
 
 const CLICK_BUFFER_FRAME_COUNT = 2;
@@ -63,6 +67,8 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
   forwardedRef
 ) => {
   const canvas = React.useRef<HTMLCanvasElement | null>(null);
+  const { isReady, addReadyListener, removeReadyListener, setIsReady } =
+    useReady();
 
   const allConfetti = React.useRef<
     Map<string, { confetti: Confetti; spriteCanvas: HTMLCanvasElement }>
@@ -176,9 +182,21 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
         deleteConfetti,
         clearConfetti,
         getCanvas,
+        addReadyListener,
+        removeReadyListener,
+        isReady,
       };
     },
-    [createConfetti, addConfetti, deleteConfetti, clearConfetti, getCanvas]
+    [
+      createConfetti,
+      addConfetti,
+      deleteConfetti,
+      clearConfetti,
+      getCanvas,
+      addReadyListener,
+      removeReadyListener,
+      isReady,
+    ]
   );
 
   const handleMouseEvent = React.useCallback(
@@ -297,6 +315,7 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
     const canvasRef = canvas.current;
     const observer = new ResizeObserver(() => {
       setCanvasSize(canvas.current);
+      setIsReady(true);
     });
     if (canvasRef != null) {
       observer.observe(canvasRef);
@@ -306,7 +325,7 @@ const ConfettiCanvas: React.ForwardRefRenderFunction<
         observer.unobserve(canvasRef);
       }
     };
-  }, []);
+  }, [setIsReady]);
 
   return <canvas {...props} className={className} ref={canvas} />;
 };

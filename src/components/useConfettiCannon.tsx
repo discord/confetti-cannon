@@ -30,10 +30,15 @@ export default function useConfettiCannon(
   confettiCanvas: ConfettiCanvasHandle | null,
   spriteCanvas: SpriteCanvasHandle | null
 ): ConfettiCannon {
-  const [isReady, setIsReady] = React.useState(spriteCanvas?.isReady ?? false);
+  const [isSpriteCanvasReady, setIsSpriteCanvasReady] = React.useState(
+    spriteCanvas?.isReady ?? false
+  );
+  const [isConfettiCanvasReady, setIsConfettiCanvasReady] = React.useState(
+    confettiCanvas?.isReady ?? false
+  );
 
   React.useEffect(() => {
-    const listenerId = spriteCanvas?.addReadyListener(setIsReady);
+    const listenerId = spriteCanvas?.addReadyListener(setIsSpriteCanvasReady);
 
     return () => {
       if (listenerId != null) {
@@ -41,6 +46,18 @@ export default function useConfettiCannon(
       }
     };
   }, [spriteCanvas]);
+
+  React.useEffect(() => {
+    const listenerId = confettiCanvas?.addReadyListener(
+      setIsConfettiCanvasReady
+    );
+
+    return () => {
+      if (listenerId != null) {
+        confettiCanvas?.removeReadyListener(listenerId);
+      }
+    };
+  }, [confettiCanvas]);
 
   const createConfetti = React.useCallback(
     (
@@ -120,7 +137,11 @@ export default function useConfettiCannon(
       addConfetti,
       clearConfetti,
       deleteConfetti,
-      isReady: isReady && spriteCanvas != null && confettiCanvas != null,
+      isReady:
+        spriteCanvas != null &&
+        confettiCanvas != null &&
+        isConfettiCanvasReady &&
+        isSpriteCanvasReady,
     }),
     [
       addConfetti,
@@ -129,7 +150,8 @@ export default function useConfettiCannon(
       createConfetti,
       createMultipleConfetti,
       deleteConfetti,
-      isReady,
+      isConfettiCanvasReady,
+      isSpriteCanvasReady,
       spriteCanvas,
     ]
   );
