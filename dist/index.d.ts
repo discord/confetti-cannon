@@ -262,6 +262,9 @@ interface ConfettiCanvasHandle {
     deleteConfetti: (id: string) => void;
     clearConfetti: () => void;
     getCanvas: () => HTMLCanvasElement | null;
+    addReadyListener: (listener: (isReady: boolean) => void) => string;
+    removeReadyListener: (listenerId: string) => void;
+    isReady: boolean;
 }
 declare const _default: React.ForwardRefExoticComponent<ConfettiCanvasProps & React.RefAttributes<ConfettiCanvasHandle>>;
 
