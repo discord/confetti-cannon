@@ -23,6 +23,11 @@ export default function useReady() {
       addReadyListener: (listener: (isReady: boolean) => void) => {
         const listenerId = uuid();
         onReadyListeners.current[listenerId] = listener;
+
+        if (isReady.current) {
+          listener(isReady.current);
+        }
+
         return listenerId;
       },
       removeReadyListener: (listenerId: string) => {
